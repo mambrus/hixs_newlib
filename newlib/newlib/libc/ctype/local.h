@@ -20,13 +20,13 @@
 #define WC_UPPER	11
 #define WC_XDIGIT	12
 
-extern char __lc_ctype[12];
-
-/* Japanese encoding types supported */
-#define JP_JIS		1
-#define JP_SJIS		2
-#define JP_EUCJP	3
+extern char *__locale_charset(_NOARGS);
 
 /* internal function to translate JP to Unicode */
-wint_t _EXFUN (__jp2uc, (wint_t, int));
-
+#ifdef __CYGWIN__
+/* Under Cygwin, the incoming wide character is already given in UTF due
+   to the requirements of the underlying OS. */
+#define _jp2uc(c) (c)
+#else
+wint_t _EXFUN (_jp2uc, (wint_t));
+#endif

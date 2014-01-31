@@ -93,6 +93,7 @@ _DEFUN(_fgetws_r, (ptr, ws, n, fp),
   const char *src;
   unsigned char *nl;
 
+  __sfp_lock_acquire ();
   _flockfile (fp);
   ORIENT (fp, 1);
 
@@ -108,7 +109,7 @@ _DEFUN(_fgetws_r, (ptr, ws, n, fp),
   wsp = ws;
   do
     {
-      src = fp->_p;
+      src = (char *) fp->_p;
       nl = memchr (fp->_p, '\n', fp->_r);
       nconv = _mbsrtowcs_r (ptr, wsp, &src,
 			    nl != NULL ? (nl - fp->_p + 1) : fp->_r,
@@ -143,10 +144,12 @@ _DEFUN(_fgetws_r, (ptr, ws, n, fp),
     goto error;
   *wsp++ = L'\0';
   _funlockfile (fp);
+  __sfp_lock_release ();
   return ws;
 
 error:
   _funlockfile (fp);
+  __sfp_lock_release ();
   return NULL;
 }
 

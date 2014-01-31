@@ -32,13 +32,21 @@
 #include <newlib.h>
 
 #ifdef _MB_CAPABLE
+/* Under Cygwin, the incoming wide character is already given in UTF due
+   to the requirements of the underlying OS. */
+#ifndef __CYGWIN__
 
 #include <_ansi.h>
 #include <wctype.h>
 #include "local.h"
 #include "jp2uc.h"
 
-wint_t
+/* Japanese encoding types supported */
+#define JP_JIS		1
+#define JP_SJIS		2
+#define JP_EUCJP	3
+
+static wint_t
 _DEFUN (__jp2uc, (c, type), wint_t c _AND int type)
 {
   int index, adj;
@@ -142,4 +150,17 @@ _DEFUN (__jp2uc, (c, type), wint_t c _AND int type)
   return WEOF; 
 }
 
+wint_t
+_DEFUN (_jp2uc, (c), wint_t c)
+{
+  if (!strcmp (__locale_charset (), "JIS"))
+    c = __jp2uc (c, JP_JIS);
+  else if (!strcmp (__locale_charset (), "SJIS"))
+    c = __jp2uc (c, JP_SJIS);
+  else if (!strcmp (__locale_charset (), "EUCJP"))
+    c = __jp2uc (c, JP_EUCJP);
+  return c;
+}
+
+#endif /* !__CYGWIN__ */
 #endif /* _MB_CAPABLE */

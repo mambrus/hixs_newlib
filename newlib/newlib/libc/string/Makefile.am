@@ -85,7 +85,8 @@ ELIX_2_SOURCES = \
 	strcasestr.c \
 	strndup_r.c \
 	wcpcpy.c \
-	wcpncpy.c
+	wcpncpy.c \
+	wcsdup.c
 endif !ELIX_LEVEL_1
 
 if ELIX_LEVEL_1
@@ -98,7 +99,9 @@ if ELIX_LEVEL_3
 ELIX_4_SOURCES =
 else
 ELIX_4_SOURCES = \
-	memmem.c
+	memmem.c \
+	wcscasecmp.c \
+	wcsncasecmp.c
 endif !ELIX_LEVEL_3
 endif !ELIX_LEVEL_2
 endif !ELIX_LEVEL_1
@@ -127,9 +130,9 @@ memchr.def	strcat.def	strerror.def	strerror_r.def strrchr.def \
 memcmp.def	strchr.def	strlen.def	strnlen.def strspn.def \
 strcasecmp.def	strncasecmp.def strcasestr.def	strlwr.def  strupr.def \
 memccpy.def 	mempcpy.def	stpcpy.def	stpncpy.def \
-wcscat.def	wcschr.def	wcscmp.def	wcscoll.def \
-wcscpy.def	wcscspn.def	wcpcpy.def	wcpncpy.def \
-wcslcat.def	wcslcpy.def	wcslen.def	wcsncat.def \
+wcscasecmp.def	wcscat.def	wcschr.def	wcscmp.def wcscoll.def \
+wcscpy.def	wcscspn.def	wcpcpy.def	wcpncpy.def wcsdup.def \
+wcslcat.def	wcslcpy.def	wcslen.def	wcsncasecmp.def wcsncat.def \
 wcsncmp.def	wcsncpy.def	wcsnlen.def	wcspbrk.def \
 wcsrchr.def	wcsspn.def	wcsstr.def 	wcstok.def  \
 wcswidth.def	wcsxfrm.def	wcwidth.def	wmemchr.def \

@@ -1,3 +1,1823 @@
+2009-12-17  Jeff Johnston  <jjohnstn@redhat.com>
+
+        * NEWS: Update with 1.18.0 info.
+        * README: Ditto.
+        * acinclude.m4: Change version number to 1.18.0.
+        * aclocal.m4: Regenerated.
+        * configure: Ditto.
+        * doc/aclocal.m4: Ditto.
+        * doc/configure: Ditto.
+        * libc/*/aclocal.m4: Ditto.
+        * libc/*/configure: Ditto.
+        * libc/libc.texinfo: Ditto.
+        * libm/*/aclocal.m4: Ditto.
+        * libm/*/configure: Ditto.
+        * libm/libm.texinfo: Ditto.
+        * libc/sys/linux/shared.ld: Add VERS_1.18
+
+2009-12-17  Jeff Johnston <jjohnstn@redhat.com>
+
+	* libc/include/_syslist.h: Add _mkdir transform.
+
+2009-12-17  Jerker Back  <jerker.back@gmail.com>
+
+	* libc/iconv/lib/local.h[!__GNUC__]: Add alternative version of
+	ICONV_ZERO_MB_STATE_T macro.
+	* libc/iconv/lib/ucsconv.c (ucs_based_conversion_get_state): Use
+	temporary local variable nullstate to hold empty mbstate_t.
+
+2009-12-17  Jerker Back  <jerker.back@gmail.com>
+
+	* libc/include/_ansi.h: Add new _EXFNPTR macro for using with
+	function pointer arguments.
+	* libc/iconv/lib/conv.h: Use _EXFNPTR rather than _EXPARM macro.
+	* libc/iconv/lib/ucsconv.h: Ditto.
+	* libc/include/stdlib.h: Use new _EXFNPTR macro for function pointers.
+	* libc/include/sys/reent.h: Ditto.
+	* libc/include/sys/unistd.h: Ditto.
+	* libc/search/bsearch.c: Ditto.
+	* libc/stdio/fseek.c: Ditto.
+	* libc/stdio64/fseeko64.c: Ditto.
+	* libc/stdlib/atexit.c: Ditto.
+	* libc/stdlib/on_exit.c: Ditto.
+
+2009-12-17  Ralf CorsÃ©pius <ralf.corsepius@rtems.org>
+
+	* libc/include/machine/ieeefp.h: Rework __IEEE_*_ENDIAN handling.
+	* libc/machine/arm/machine/endian.h: Remove (Conflicts with 
+	libc/include/machine/endian.h)
+
+2009-12-17  Ralf CorsÃ©pius <ralf.corsepius@rtems.org>
+
+	* libc/include/machine/setjmp.h: Set up _JBLEN #ifdef __m68k__.
+
+2009-12-17  Ralf Corsepius <ralf.corsepius@rtems.org>
+
+	* libc/include/pthread.h: Add pthread_atfork, pthread_rwlock_unlock 
+	* libc/include/sys/stat.h: Use struct timespec st_*tim,
+	blksize_t st_blksize, blkcnt_t st_blocks.
+	Add st_*time compatibility macros.
+
+2009-12-16  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* libc/sys/rtems/machine/param.h: Only use sizeof(double) -1
+	for ALIGNBYTES on SPARC.
+
+2009-12-16  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/sys/errno.h: Move EHOSTDOWN, EPFNOSUPPORT,
+	and ETOOMANYREFS into general list as they are referenced
+	by OpenGroup and needed by RTEMS.
+
+2009-12-16  Ralf CorsÃ©pius <ralf.corsepius@rtems.org>
+
+	* libc/search/hcreate.c: Don't include <sys/queue.h> (Unused).
+
+2009-12-16  Ralf CorsÃ©pius <ralf.corsepius@rtems.org>
+
+	* libc/sys/rtems/machine/_types.h: New (Derived from 
+	machine/_default_types.h).
+        * libc/sys/rtems/crt0.c: Rework. Introduce macro RTEMS_STUB.
+	* libc/sys/rtems/sys/param.h:
+        Update copyright notice from FreeBSD.
+        Remove HZ.
+        Add #include <sys/priority.h>
+        Remove priority handling (moved to sys/priority.h).
+        Remove CLBYTES (Unused, abandoned in BSD).
+	* libc/sys/rtems/sys/queue.h: Update copyright (from FreeBSD).
+        Remove CIRCLEQ_*.
+
+2009-12-15  Conny Marco Menebrocker  <c-m-m@gmx.de>
+
+	* libc/machine/xc16x/Makefile.am: Fix typo and refer
+	to puts.c instead of putc.c.
+	* libc/machine/xc16x/Makefile.in: Regenerated.
+
+2009-12-14  Maxim Kuvyrkov <maxim@codesourcery.com>
+
+	* libc/machine/m68k/memcpy.S: Patch to support
+	boards which do not support unaligned read/write.
+
+2009-12-10  Conny Marco Menebrocker  <c-m-m@gmx.de>
+
+	* configure.host: Add xc16x support.
+	* libc/include/machine/ieeefp.h: Ditto.
+	* libc/include/sys/config.h: Ditto.
+	* libc/machine/configure.in: Ditto.
+	* libc/machine/Makefile.in: Regenerated.
+	* libc/machine/aclocal.m4: Ditto.
+	* libc/machine/configure: Ditto.
+	* libc/machine/xc16x/Makefile.am: New file.
+	* libc/machine/xc16x/Makefile.in: Ditto.
+	* libc/machine/xc16x/aclocal.m4: Ditto.
+	* libc/machine/xc16x/configure: Ditto.
+	* libc/machine/xc16x/configure.in: Ditto.
+	* libc/machine/xc16x/putchar.c: Ditto.
+	* libc/machine/xc16x/puts.c: Ditto.
+	* libc/machine/xc16x/setjmp.S: Ditto.
+
+2009-12-08  Eric Blake  <ebb9@byu.net>
+
+	Fix some *at declarations.
+	* libc/include/stdio.h (symlinkat): Move this...
+	* libc/include/sys/_default_fcntl.h (unlinkat): ...and this...
+	* libc/include/sys/unistd.h (symlinkat, unlinkat): ...here, to
+	match POSIX.
+
+2009-12-03  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/stdlib/strtod.c:  Correct "NO_REENT" to "_REENT_ONLY".
+	* libc/stdlib/wcstod.c:  Ditto.
+	* libc/stdlib/dtoastub.c:  Ditto.
+
+2009-11-23  Corinna Vinschen  <corinna@vinschen.de>
+
+	Use NetBSD fix for CVE-2009-0689 security vulnerability.
+	* libc/include/sys/reent.h (_Kmax): Define here based on the sizeof
+	size_t, as in latest NetBSD.
+	* libc/reent/reent.c (_reclaim_reent): Use _Kmax rather than constant
+	value 15.
+	* libc/stdlib/mprec.c (_Kmax): Don't define here.  Explain why.
+
+2009-11-20  Nick Clifton  <nickc@redhat.com>
+
+	* libc/machine/rx/strncat.S (_strncat): Replace use of r6
+	(call-saved) with r14 (call-used).
+
+2009-11-18  Dave Korn  <dave.korn.cygwin@googlemail.com>
+
+	* libm/machine/i386/f_tan.S (_f_tan): Free fp stack register
+	containing useless constant before advancing fp sp over it.
+	(_f_tanf): Likewise.
+
+2009-11-18  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdio/vfprintf.c: Include ../stdlib/local.h.  Replace call to
+	_mbtowc_r with direct call to __mbtowc.
+	* libc/stdio/vfscanf.c: Ditto.
+	* libc/stdlib/btowc.c: Include local.h.  Replace call to _mbtowc_r
+	with direct call to __mbtowc.
+	* libc/stdlib/mblen.c: Ditto.
+	* libc/stdlib/mblen_r.c: Ditto.
+	* libc/stdlib/mbrtowc.c: Ditto.
+	* libc/stdlib/mbstowcs_r.c: Ditto.
+	* libc/stdlib/mbtowc.c: Ditto.
+	* libc/stdlib/wcrtomb.c: Include local.h.  Replace call to _wctomb_r
+	with direct call to __wctomb.
+	* libc/stdlib/wcsnrtombs.c: Ditto.
+	(_wcsnrtombs_r): Ditto.
+	* libc/stdlib/wcstombs_r.c: Ditto.
+	* libc/stdlib/wctob.c: Ditto.
+	* libc/stdlib/wctomb.c: Ditto.
+
+	* libc/stdlib/mbrtowc.c (mbrtowc): Implement independently from
+	_mbrtowc_r, unless PREFER_SIZE_OVER_SPEED or __OPTIMIZE_SIZE__ are
+	defined.
+	* libc/stdlib/wcrtomb.c (wcrtomb): Implement independently from
+	_wcrtomb_r, unless PREFER_SIZE_OVER_SPEED or __OPTIMIZE_SIZE__ are
+	defined.
+
+	* libc/stdlib/mbtowc_r.c (__utf8_mbtowc): Drop unnecessary test for
+	ch >= 0.
+
+2009-11-17  Yaakov Selkowitz  <yselkowitz@users.sourceforge.net>
+
+	* libm/common/fdlibm.h (logb, logbf): Move decls from here...
+	* libc/include/math.h (logb, logbf): ...to here.
+
+2009-11-06  Jon Turney  <jon.turney@dronecode.org.uk>
+
+	* libc/include/ctype.h (__ctype_lookup): Fix precedence.
+
+2009-10-30  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdio/fflush.c (_fflush_r): Store old errno to check for
+	low-level seek error condition.  Restore old errno in case of
+	success.  Don't use new position after seek as error condition,
+	rather check for return value of -1 and errno.  Handle EINVAL
+	just like ESPIPE.  Only set fp->_offset if errno is 0.
+
+2009-10-27  Nick Clifton  <nickc@redhat.com>
+
+	* MAINTAINERS (ARM): Add myself as an ARM maintainer.
+
+2009-10-26  DJ Delorie  <dj@redhat.com>
+
+	* configure.host: Add support for RX architecture.
+	* libc/include/machine/ieeefp.h: Likewise.
+	* libc/include/machine/setjmp.h: Likewise.
+	* libc/include/machine/configure.in: Likewise.
+	* libc/include/machine/configure: Regenerate.
+	* libc/machine/rx: New directory.
+	* libc/machine/rx/*: New files to support RX architecture.
+
+2009-10-24  Eric Blake  <ebb9@byu.net>
+
+	* libc/include/ctype.h (__ctype_lookup): New macro.
+	(isalpha, isupper, islower, isdigit, isxdigit, isspace, ispunct)
+	(isalnum, isprint, isgraph, iscntrl, isblank): Use it to fix bug
+	on 64-bit machines.
+
+2009-10-20  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* configure.host: Don't set -O2 flag in newlib_cflags.  Leave
+	that to CFLAGS.
+	* acinclude.m4: Don't reset CFLAGS before calling _AC_PROG_CC_G
+	as it sets the same flags as we are using.
+	* aclocal.m4: Regenerated.
+	* configure: Ditto.
+	* Makefile.in: Ditto.
+	* iconvdata/aclocal.m4: Ditto.
+	* iconvdata/configure: Ditto.
+	* iconvdata/Makefile.in: Ditto.
+	* doc/aclocal.m4: Ditto.
+	* doc/configure: Ditto.
+	* doc/Makefile.in: Ditto.
+	* libc/aclocal.m4: Ditto.
+	* libc/configure: Ditto.
+	* libc/Makefile.in: Ditto.
+	* libc/*Makefile.in: Ditto.
+	* libc/*aclocal.m4: Ditto.
+	* libc/*configure: Ditto.
+	* libm/*Makefile.in: Ditto.
+	* libm/*aclocal.m4: Ditto.
+	* libm/*configure: Ditto.
+
+2009-10-16  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/sys/config.h[__CYGWIN__]: Set __USE_XOPEN2K flag
+	if not __STRICT_ANSI__ or stdc version C99 or greater.
+	* libc/include/stdio.h[__STRICT_ANSI__]: Add __USE_XOPEN2K check
+	for fseeko and ftello prototypes.
+
+2009-10-15  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/wchar.h (struct tm0: Declare as incomplete type.
+
+2009-10-15  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/nl_langinfo.c (nl_langinfo): Add Cygwin-specific temporary
+	exception for KOI8 charsets.
+
+2009-10-13  Eric Blake  <ebb9@byu.net>
+
+	* libc/include/sys/unistd.h: Add _PC*, _CS*, and _SC* constants
+	new to POSIX 2008.
+
+2009-10-13  Yaakov Selkowitz  <yselkowitz@users.sourceforge.net>
+
+	* libc/include/sys/signal.h: Include <sys/types.h> always.
+	[__CYGWIN__, __rtems__]: Define kill first argument as pid_t per
+	standards.
+
+2009-10-09  Dave Korn  <dave.korn@artimi.com>
+
+	* libc/include/sys/time.h (_TIMEVAL_DEFINED): Define when
+	defining struct timeval.
+
+2009-10-09  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (DEFAULT_LOCALE): New define.
+	(__default_locale): New global variable set to the default locale.
+	(__get_locale_env): Return __default_locale rather than fixed "C".
+
+2009-10-08  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* configure.host: For RTEMS, define HAVE_ASSERT_FUNC.
+	* libc/stdlib/assert.c (_assert_func): Do not specify
+	__assert_func if HAVE_ASSERT_FUNC flag is set.
+
+2009-10-08  Eric Blake  <ebb9@byu.net>
+
+	* libc/include/getopt.h (__getopt_r, __getopt_long_r)
+	(__getopt_long_only_r): Protect declarations, to avoid compiler
+	warning.
+
+2009-10-07  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/nl_langinfo.c (nl_langinfo): Just return current locale
+	charset on Cygwin.
+
+2009-10-03  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/mbtowc_r.c (__utf8_mbtowc): Allow CESU-8 surrogate
+	value encoding.
+	* libc/stdlib/wctomb_r.c (__utf8_mbtowc): Allow CESU-8 surrogate
+	value decoding.
+
+2009-09-29  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (loadlocale): Allow "C." same as "C-" as locale
+	prefix.  Add some words to documentation.
+
+2009-09-29  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/sb_charsets.c: Throughout, translate undefined
+	characters to their corresponding Windows Unicode value.
+
+2009-09-28  Michael Eager <eager@eagercon.com>
+
+	* configure.host: Add microblaze.
+	* libc/include/machine/ieeefp.h [MICROBLAZE]: Define __IEEE_BIG_ENDIAN.
+	* libc/include/machine/setjmp.h [MICROBLAZE]: Define _JBLEN, _JBTYPE.
+	* libc/include/sys/config.h [MICROBLAZE]: Define _REENT_SMALL,
+	_UNIX98_THREAD_MUTEX_ATTRIBUTES.
+	* libc/include/sys/types.h: Treat XMK like rtems, define
+	PTHREAD_MUTEX_NORMAL, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE,
+	PTHREAD_MUTEX_DEFAULT, PTHREAD_STACK_MIN, define stuct pthread_attr_s.
+	* libc/machine/configure.in: Add microblaze.
+	* libc/machine/configure: Add microblaze (not regenerated).
+	* libc/machine/microblaze/configure.in: NEW.
+	* libc/machine/microblaze/configure: Generate.
+	* libc/machine/microblaze/Makefile.am: NEW.
+	* libc/machine/microblaze/Makefile.in: Generate.
+	* libc/machine/microblaze/{abort.c, strcmp.c, strcpy.c, strlen.c,
+	mallocr.c, longjmp.S, setjmp.S}: NEW.
+	* libc/stdlib/mallocr.c [MICROBLAZE]: Don't declare sbrk prototype,
+	mALLOc(): return malloc value.
+
+2009-09-27  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (lc_ctype_charset): Set to "UTF-8" on Cygwin.
+	(lc_message_charset): Ditto.
+	(loadlocale): Set charset of the "C" locale to "UTF-8" on Cygwin.
+	* libc/stdlib/mbtowc_r.c (__mbtowc): Default to __utf8_mbtowc on
+	Cygwin.
+	* libc/stdlib/wctomb_r.c (__wctomb): Default to __utf8_wctomb on
+	Cygwin.
+
+2009-09-26  Eric Blake  <ebb9@byu.net>
+
+	* libc/include/sys/unistd.h (execvpe, fexecve) [__CYGWIN__]:
+	Add declarations.
+
+2009-09-24  Eric Blake  <ebb9@byu.net>
+
+	* libc/include/sys/unistd.h (eaccess, euidaccess) [__CYGWIN__]:
+	Add declarations.
+
+2009-09-23  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c: Drop Cygwin-specific windows.h include.
+	(loadlocale): Call __set_charset_from_codepage with 0 codepage.
+
+2009-09-22  Ralf Corsépius <ralf.corsepius@rtems.org>
+
+	* libc/include/stdlib.h: Add posix_memalign.
+
+2009-09-22  Ralf Corsépius <ralf.corsepius@rtems.org>
+
+	* configure.host (*-rtems*): Remove -DMISSING_SYSCALL_NAMES.
+	Add -DHAVE_BLKSIZE, -D_NO_WORDEXP -D_NO_POPEN.
+
+2009-09-22  Ralf Corsépius <ralf.corsepius@rtems.org>
+
+	* configure.host (m32c): Move setting -DABORT_PROVIDED to second
+	"case $host".
+
+2009-09-18  Christopher Faylor  <me+cygwin@cgf.cx>
+
+	* libc/include/sys/unistd.h: Declare getpagesize as returning
+	POSIX-mandated int.
+	* libc/sys/linux/sys/unistd.h: Ditto.
+
+2009-08-31  Takaki Makino  <t@snowelm.com>
+
+	* libm/machine/i386/f_pow.c(_f_pow): Alter ASM so it works with
+	newer gcc versions.
+	* libm/maachine/i386/f_powf.c(_f_powf): Ditto.
+
+2009-08-25  Andy Koppe  <andy.koppe@gmail.com>
+
+	* libc/stdlib/sb_charsets.c (__micro_atoi): Allow five-digit codepage
+	numbers.
+	* libc/locale/locale.c (loadlocale): Set MB_CUR_MAX to 1 for KOI8
+	charsets.
+	* libc/stdlib/local.h (__cp_conv): Remove incorrect number of codepages.
+
+2009-08-24  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c: Update documentation.
+	(loadlocale): Map "KOI8-R" and "KOI8-U" to CP20866 and CP21866.
+
+2009-08-24  Andy Koppe  <andy.koppe@gmail.com>
+
+	* libc/stdlib/sb_charsets.c (__cp_conv): Add KOI8-R (Russian, CP20866)
+	and KOI8-U (Ukrainian, CP21866) to Windows codepage conversion tables.
+	* libc/ctype/ctype_cp.h (__ctype_cp): Likewise for ctype tables.
+
+2009-08-24  Andy Koppe  <andy.koppe@gmail.com>
+
+	* libc/ctype/iswspace.c (iswspace): Include "non-breaking
+	space" (U+00A0).
+	* libc/ctype/iswblank.c (iswblank): Likewise.
+
+2009-08-21  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (loadlocale): Throughout check charset string
+	case insensitive and store internal charset string uppercased.  Allow
+	"UTF8" additionally to "UTF-8".  Add this change to documentation.
+
+2009-08-21  Eric Blake  <ebb9@byu.net>
+
+	* libc/include/iconv.h (iconv): Match POSIX prototype.
+	* libc/iconv/lib/iconv.c (iconv): Likewise.
+
+2009-08-21  Craig Howland <howland@LGSInnovations.com>
+
+	* libm/common/s_remquo.c (remquo):  Fix sign of quotient when |x|==|y|.
+	* libc/stdio/mktemp.c:  Add #include <stdlib.h> for function prototypes.
+
+2009-08-19  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* iconvdata/Makefile.am (all): Remove.
+	* libc/sys/a29khif/Makefile.am (all-am): Rename from ...
+	(all): ... this.
+	* libc/sys/arc/Makefile.am: Likewise.
+	* libc/sys/arm/Makefile.am: Likewise.
+	* libc/sys/d10v/Makefile.am: Likewise.
+	* libc/sys/decstation/Makefile.am: Likewise.
+	* libc/sys/h8300hms/Makefile.am: Likewise.
+	* libc/sys/h8500hms/Makefile.am: Likewise.
+	* libc/sys/linux/Makefile.am: Likewise.
+	* libc/sys/linux/machine/i386/Makefile.am: Likewise.
+	* libc/sys/m88kbug/Makefile.am: Likewise.
+	* libc/sys/mmixware/Makefile.am: Likewise.
+	* libc/sys/netware/Makefile.am: Likewise.
+	* libc/sys/rdos/Makefile.am: Likewise.
+	* libc/sys/rtems/Makefile.am: Likewise.
+	* libc/sys/sh/Makefile.am: Likewise.
+	* libc/sys/sparc64/Makefile.am: Likewise.
+	* libc/sys/sun4/Makefile.am: Likewise.
+	* libc/sys/sysmec/Makefile.am: Likewise.
+	* libc/sys/sysnec810/Makefile.am: Likewise.
+	* libc/sys/sysnecv850/Makefile.am: Likewise.
+	* libc/sys/sysvi386/Makefile.am: Likewise.
+	* libc/sys/sysvnecv70/Makefile.am: Likewise.
+	* libc/sys/tic80/Makefile.am: Likewise.
+	* libc/sys/w65/Makefile.am: Likewise.
+	* libc/sys/z8ksim/Makefile.am: Likewise.
+	* iconvdata/Makefile.in: Regenerate.
+	* libc/sys/a29khif/Makefile.in: Likewise.
+	* libc/sys/arc/Makefile.in: Likewise.
+	* libc/sys/arm/Makefile.in: Likewise.
+	* libc/sys/d10v/Makefile.in: Likewise.
+	* libc/sys/decstation/Makefile.in: Likewise.
+	* libc/sys/h8300hms/Makefile.in: Likewise.
+	* libc/sys/h8500hms/Makefile.in: Likewise.
+	* libc/sys/linux/Makefile.in: Likewise.
+	* libc/sys/linux/machine/i386/Makefile.in: Likewise.
+	* libc/sys/m88kbug/Makefile.in: Likewise.
+	* libc/sys/mmixware/Makefile.in: Likewise.
+	* libc/sys/netware/Makefile.in: Likewise.
+	* libc/sys/rdos/Makefile.in: Likewise.
+	* libc/sys/rtems/Makefile.in: Likewise.
+	* libc/sys/sh/Makefile.in: Likewise.
+	* libc/sys/sparc64/Makefile.in: Likewise.
+	* libc/sys/sun4/Makefile.in: Likewise.
+	* libc/sys/sysmec/Makefile.in: Likewise.
+	* libc/sys/sysnec810/Makefile.in: Likewise.
+	* libc/sys/sysnecv850/Makefile.in: Likewise.
+	* libc/sys/sysvi386/Makefile.in: Likewise.
+	* libc/sys/sysvnecv70/Makefile.in: Likewise.
+	* libc/sys/tic80/Makefile.in: Likewise.
+	* libc/sys/w65/Makefile.in: Likewise.
+	* libc/sys/z8ksim/Makefile.in: Likewise.
+
+	* configure.in (newlib_cv_ldbl_eq_dbl): Rename cache variable
+	from newlib_ldbl_eq_dbl.
+	* configure: Regenerate.
+
+2009-08-19  Eric Blake  <ebb9@byu.net>
+
+	* libc/Makefile.am (SUBDEFS): Correctly build popen docs.
+	* libc/libc.texinfo (Top): Add posix node to menu.
+
+2009-08-18  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* newlib.hin: Add comment regarding file being manually edited.
+	* Makefile.am: Add no-op rule for newlib.hin.
+	* Makefile.in: Regenerated.
+
+2009-08-18  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* acconfig.h: Add templates for _HAVE_LONG_DOUBLE and _LDBL_EQ_DBL.
+
+2009-08-18  Eric Blake  <ebb9@byu.net>
+
+	* libc/posix/popen.c (popen): Fix documented prototype.
+
+	Improve popen compatibility with glibc.
+	* libc/posix/popen.c (popen): The 2006-08-22 change to use
+	FD_CLOEXEC disagrees with other implementations; instead, use
+	pidlist to work even when fcntl is not available.  Meanwhile,
+	support the 'e' modifier to set CLOEXEC, as in glibc.  Drop
+	cygwin-specific code, now that cygwin has its own version.
+	* libc/posix/Makefile.am (CHEWOUT_FILES): Document popen.
+	* libc/posix/posix.tex: New file.
+
+2009-08-17  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/string/wcsncpy.c (wcsncpy):  Re-write function based on small
+	version of strncpy() (fixing two bugs).
+
+2009-08-13  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdio/mktemp.c (mkdtemp): Fix typo in function name.
+
+2009-08-12  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdio/mktemp.c (_gettemp): Do not call _mkdir_r unless
+	HAVE_MKDIR is defined.
+
+2009-08-12  Hans-Peter Nilsson  <hp@axis.com>
+
+	* libc/include/reent.h: Add prototype and definition of _mkdir_r.
+	* libc/reent/Makefile.am (GENERAL_SOURCES): Add mkdirr.c.
+	(CHEWOUT_FILES): Add mkdirr.def.
+	* libc/reent/Makefile.in: Regenerate.
+	* libc/reent/mkdirr.c: New file.
+
+2009-08-10  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdlib/wcstombs.c: Change documentation to specify size_t
+	return type instead of int.
+
+2009-07-29  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdlib/a64l.c: Fix to use 'a' instead of 'A' in calculation
+	when a lower-case character is detected.
+
+2009-07-29  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/mbtowc_r.c (__utf8_mbtowc): Rework UTF-16 surrogate
+	pair handling to be more bullet-proof even with incomplete UTF-8
+	sequences.  Add check for 4 byte sequences resulting in values
+	outside the valid Unicode range.  Add a comment to clarify checking
+	for invalid CESU-8 sequences.
+
+2009-07-28  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/mbtowc_r.c (__utf8_mbtowc): Fix incrementing n in case
+	of handling incomplete sequences.
+
+2009-07-22  Eric Blake  <ebb9@byu.net>
+
+	Avoid a fault from locking a closed standard file.
+	* libc/stdio/fflush.c (_fflush_r): Give up early if stream has
+	been previously closed.
+
+2009-07-09  Craig Howland <howland@LGSInnovations.com>
+
+	* libm/math/ef_scalb.c:  Replace isnanf() (pre-C99 function call) with
+	isnan() (C99 macro).
+	* libm/math/wf_log.c:  Ditto.
+	* libm/math/wf_j0.c:  Ditto.
+	* libm/math/wf_sqrt.c:  Ditto.
+	* libm/math/wf_pow.c:  Ditto.
+	* libm/math/wf_fmod.c:  Ditto.
+	* libm/math/wf_remainder.c:  Ditto.
+	* libm/math/wf_scalb.c:  Ditto.
+	* libm/math/wf_atanh.c:  Ditto.
+	* libm/math/wf_cosh.c:  Ditto.
+	* libm/math/wf_acos.c:  Ditto.
+	* libm/math/wf_acosh.c:  Ditto.
+	* libm/math/wf_jn.c:  Ditto.
+	* libm/math/wf_log10.c:  Ditto.
+	* libm/math/wf_asin.c:  Ditto.
+	* libm/math/wf_j1.c:  Ditto.
+	* libm/common/sf_isnan.c:  Add #include <ieeefp.h>, fix comment.
+	* libm/common/sf_isinf.c:  Add #include <ieeefp.h>, adjust comment to
+	match that from s_isinf.c.
+	* libc/include/machine/ieeefp.h:  Simplify isinf and isnan macros to
+	remove un-necessary extension use (in a similar manner to as was
+	recently done in math.h).
+	* libc/include/math.h:  Remove isnanf and isinff prototypes (are in
+	ieeefp.h).
+	* libm/machine/spu/sf_isinf.c:  Fix comment (remove <math.h>).
+
+2009-07-06  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* libc/include/sys/features.h: Enable UNIX98 mutex attributes
+	for RTEMS.
+
+2009-07-03  Eric Blake  <ebb9@byu.net>
+
+	Add mkdtemp, mkstemps.
+	* libc/stdio/mktemp.c: Fix documentation.
+	(_gettemp): Add domkdir and length parameters.  Check for
+	insufficient 'X' suffix.  Drop cygwin-specific code.
+	(_mkstemp_r, _mktemp_r, mkstemp, mktemp): Adjust clients.
+	(_mkdtemp_r, _mkstemps_r, mkdtemp, mkstemps): New functions.
+	* libc/include/stdlib.h (_mkdtemp_r, _mkstemps_r, mkdtemp)
+	(mkstemps): Declare them.
+
+	Add fpurge.
+	* libc/stdio/fpurge.c (fpurge, _fpurge_r): New file.
+	* libc/stdio/Makefile.am (ELIX_4_SOURCES, CHEWOUT_FILES, fpurge):
+	Build it.
+	* libc/stdio/Makefile.in: Regenerated.
+	* libc/include/stdio.h (fpurge, _fpurge_r): New declarations.
+	* libc/stdio/stdio.tex: Build documentation.
+
+2009-06-23  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* Makefile.am (MATHOBJS_IN_LIBC): Add s_fpclassify and
+	sf_fpclassify as these are now used for infinity testing.
+	* Makefile.in: Regenerated.
+
+2009-06-19  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* libc/sys/rtems/machine/param.h: Change ALIGNBYTES
+	so it can point to an aligned structure or double.
+
+2009-06-18  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (loadlocale): Add handling of "@cjknarrow"
+	modifier on _MB_CAPABLE targets.  Add comment to explain.  Improve
+	documentation.
+
+2009-06-17  Michael Eager <eager@eagercon.com>
+
+	* libc/include/pthread.h: Support XMK (Xilinx) BSP, add RTEMS to
+	PTHREAD_MUTEX_NORMAL.
+	* libc/include/sys/features.h: Same.
+	* libc/include/sys/types.h: Same.
+
+2009-06-16  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/locale.h (struct lconv): Add missing members required
+	by POSIX.1-2008.
+	* libc/locale/locale.c (lconv): Initialize new members to default
+	values in "C" locale.
+
+2009-06-16  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdio/vfprintf.c (_VFPRINTF_R): Use actual length of
+	radix char instead of assuming length 1.
+	* libc/stdlib/gdtoa-gethex.c: Remove use of USE_LOCALE.
+	(gethex): Allow multibyte decimal point.
+	Fix compiler warnings due to different signedness of pointer types.
+	* libc/stdlib/strtod.c: Remove use of USE_LOCALE.
+	(_strtod_r): Allow multibyte decimal point.
+	* libc/stdlib/wcstod.c (_wcstod_r): Evaluate correct wide char
+	endptr position if the decimal point is a multibyte char.
+
+2009-06-16  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/ctype/local.h (__locale_charset): Add arguments to
+	prototype
+	* libc/stdlib/local.h (__locale_charset): Ditto.
+
+2009-06-16  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/include/math.h:  Simplify fpclassify, isinf, isnan, and signbit
+	macros to remove un-necessary extension use.  isinf and isnan also
+	changed to use fpclassify.  isfinite macro modified to run faster by
+	only calling fpclassify once instead of possibly twice.
+
+2009-06-09  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/ctype/tolower.c (tolower): Cast conversion result from
+	mbtowc/wctomb to unsigned char to avoid negative return values.
+	* libc/ctype/toupper.c (toupper): Ditto.
+
+2009-06-03  IWAMURO Motonori  <deenheart@gmail.com>
+
+	* libc/string/wcwidth.c: Optimize for speed.
+
+2009-06-03  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (lc_ctype_cjk_lang): New static int.
+	(loadlocale): In case of setting LC_CTYPE, set lc_ctype_cjk_lang
+	to 1 if the language is "jp", "ko", or "zh", to 0 otherwise.
+	(__locale_cjk_lang): New function.
+	* libc/string/local.h (__locale_cjk_lang): Declare.
+	* libc/string/wcwidth.c: Fix comments.
+	(__wcwidth): Handle CJK Ambiguous Width characters according
+	to setting returned by __locale_cjk_lang.
+
+2009-06-02  Richard Earnshaw  <rearnsha@arm.com>
+
+	* libc/include/sys/config.h: Remove specification of _REENT_SMALL for
+	thumb2.
+
+2009-06-02  IWAMURO Motonori  <deenheart@gmail.com>
+
+	* libc/ctype/jp2uc.c: Skip all definition if defined __CYGWIN__.
+	(__jp2uc): Change the scope to static function.
+	* libc/ctype/local.h (_jp2uc): Define as macro if defined __CYGWIN__.
+	* libc/string/local.h (_jp2uc): Include ../ctype/local.h.
+
+2009-05-27  Neal H. Walfield  <neal@gnu.org>
+
+	* libc/include/machine/setjmp.h (sigjmp_buf): Size according to
+	_JBTYPE and the size of sigset_t.
+
+2009-05-15  Craig Howland <howland@LGSInnovations.com>
+
+	* configure.in:  Add configuration test for long double type existing
+	and set flag _HAVE_LONG_DOUBLE if true.  Fix INIT_ARRAY (.init_array)
+	and _LDBL_EQ_DBL tests to not link so that will work with
+	cross-compilers.
+	* configure: Regenerated.
+	* Makefile.in: Ditto.
+	* newlib.hin: Add _HAVE_LONG_DOUBLE flag.
+	* libc/include/math.h:  Change non-builtin defines for HUGE_VAL,
+	HUGE_VALF, and HUGE_VALL to be constant expressions.  Add definitions
+	for the non-builtin case for INFINITY and NAN.  Gate HUGE_VALL and
+	union __ldmath definitions with (new) _HAVE_LONG_DOUBLE.
+	*libm/common/s_infconst.c:  Change definitions to use values from
+	float.h instead of non-so-portable integer forms.  Mark as being
+	deprecated (because now removed from math.h, are not used anywhere
+	in Newlib, itself).
+
+2009-05-15  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/string/local.h: New file.
+	* libc/string/wcswidth.c (wcswidth):  Convert japanese wide
+	characters to Unicode here.  Handle surrogate pairs for UTF-16
+	systems.  Call __wcwidth rather than wcwidth.
+	* libc/string/wcwidth.c: New implementation using Markus Kuhn's
+	wcwidth implementation for Unicode.
+	(bisearch): New static function.
+	(__wcwidth): New function.  Take wint_t rather than wchar_t as
+	parameter to allow full Unicode handling on UTF-16 systems.
+	Move old wcwidth implementation here for non-multibyte aware
+	systems.
+	(wcwidth): Convert japanese wide characters to Unicode here.
+	Call __wcwidth rather than using iswprint/iswcntrl.
+
+2009-05-14  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/ctype/local.h (JP_JIS, JP_SJIS, JP_EUCJP): Move definition
+	to jp2uc.c.
+	(__jp2uc): Remove declaration.
+	(_jp2uc): Declare.
+	* libc/ctype/jp2uc.c (JP_JIS, JP_SJIS, JP_EUCJP): Define.
+	(__jp2uc): Remove Cygwin special case.
+	(_jp2uc): New function.  On Cygwin, just return c.
+	* libc/ctype/iswalpha.c (iswalpha): Just call _jp2uc.
+	* libc/ctype/iswblank.c (iswblank): Ditto.
+	* libc/ctype/iswcntrl.c (iswcntrl): Ditto.
+	* libc/ctype/iswprint.c (iswprint): Ditto.
+	* libc/ctype/iswpunct.c (iswpunt): Ditto.
+	* libc/ctype/iswspace.c (iswspace): Ditto.
+	* libc/ctype/towlower.c (towlower): Ditto.
+	* libc/ctype/towupper.c (towupper): Ditto.
+
+2009-05-13  Paul Brook  <paul@codesourcery.com>
+
+	* libc/machine/arm/setjmp.S: Don't bother saving IP.  Copy SP to
+	IP before saving.  Likewise when restoring.
+
+2009-05-13  Paul Brook  <paul@codesourcery.com>
+
+	* libc/machine/arm/setjmp.S: Add ARMv6-M implementation.
+
+2009-05-13  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (setlocale): Don't build on Cygwin.
+
+2009-05-11  Craig Howland <howland@LGSInnovations.com>
+
+	* libm/machine/i386/f_llrint.c: Remove llrint() definition.
+	* libm/machine/i386/f_llrintf.c: Remove llrintf() definition.
+
+2009-05-08  Nick Clifton  <nickc@redhat.com>
+
+	* MAINTAINERS: Add myself as a maintainer for the MN10300 and to
+	the write-after-approval list.
+
+2009-04-30  Anthony Green  <green@moxielogic.com>
+
+	* MAINTAINERS: Add myself as moxie maintainer and to the
+	write-after-approval list.
+
+2009-04-30  Eric Blake  <ebb9@byu.net>
+
+	Allow gcc warning for toupper even with extended charsets.
+	* libc/include/ctype.h (toupper, tolower)
+	[_MB_EXTENDED_CHARSETS_ISO]: Allow gcc warning when called with
+	'char' even when we must call the function for correct behavior.
+	[!_MB_EXTENDED_CHARSETS_ISO]: Fix regression in result type.
+
+2009-04-24  Jeff johnston  <jjohnstn@redhat.com>
+
+	* libc/stdio/fgetc.c: Make sure sfp lock is acquired before the
+	file lock and released before the file lock to avoid a deadlock
+	scenario.
+	* libc/stdio/fgets.c: Ditto.
+	* libc/stdio/fgetwc.c: Ditto.
+	* libc/stdio/fgetws.c: Ditto.
+	* libc/stdio/fread.c: Ditto.
+	* libc/stdio/fseek.c: Ditto.
+	* libc/stdio/getc.c: Ditto.
+	* libc/stdio/getdelim.c: Ditto.
+	* libc/stdio/gets.c: Ditto.
+
+2009-04-24  Jeff johnston  <jjohnstn@redhat.com>
+
+	* configure.in: Add configuration test for long double equals dbl
+	and set flag _LDBL_EQ_DBL if true.
+	* configure: Regenerated.
+	* newlib.hin: Add _LDBL_EQ_DBL flag.
+	* libc/include/math.h: Use _LDBL_EQ_DBL flag instead of
+	_HAVE_LDBL_MATH.
+	* libc/include/stdlib.h: Use _LDBL_EQ_DBL flag instead of
+	_HAVE_LDBL_STDLIB.
+	* libc/common/local.h: Remove _LDBL_EQ_DBL flag setting.
+	* libc/stdlib/local.h: Ditto.
+
+2009-04-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* libc/include/stdint.h (UINTPTR_MAX): Define to __UINTPTR_MAX__
+	if __UINTPTR_MAX__ defined.
+
+2009-04-24  Eric Blake  <ebb9@byu.net>
+
+	Be namespace clean in ctype.h.
+	* libc/include/ctype.h (_tolower, _toupper, isalpha, isupper)
+	(islower, isdigit, isxdigit, isspace, ispunct, isalnum)
+	(isprint, isgraph, iscntrl, isblank, toupper, tolower)
+	(isascii, toascii): Don't use 'c' as macro parameter name.
+
+	Trigger gcc warning if isFoo macros are called with plain char.
+	* libc/include/ctype.h (isalpha, isupper, islower, isdigit)
+	(isxdigit, isspace, ispunct, isalnum, isprint, isgraph)
+	(iscntrl, isblank, toupper, tolower): Rewrite to let 'gcc -Wall'
+	warn when user calls macro with a char argument.
+
+2009-04-23  Mike Burgess  <wizardsguild@earthlink.net>
+
+	* libc/string/strcasecmp.c: Optimized rewrite.
+	* libc/string/strncasecmp.c: Fix description.
+	* libc/string/strlwr.c: Avoid passing signed char to tolower.
+	* libc/string/strupr.c: Avoid passing signed char to tolower.
+
+2009-04-23  Paul Brook  <paul@codesourcery.com>
+	    Kazu Hirata  <kazu@codesourcery.com>
+
+	* libc/stdlib/__atexit.c (__register_exitproc): Use weak reference
+	to malloc.  Allocate dynamically only if it is present.
+	* libc/stdlib/__call_atexit.c (__call_exitprocs): Use weak
+	reference to free.  Call free only if it is present.
+
+2009-04-22 Anthony Green <green@moxielogic.com>
+
+	* configure.host: Add moxie support.
+	* libc/machine/configure.in: Add moxie support.
+	* libc/machine/configure: Rebuilt.
+	* libc/machine/moxie/aclocal.m4: New file.
+	* libc/machine/moxie/configure: New file.
+	* libc/machine/moxie/configure.in: New file.
+	* libc/machine/moxie/Makefile.am: New file.
+	* libc/machine/moxie/Makefile.in: New file.
+	* libc/machine/moxie/setjmp.S: New file.
+	* libc/include/machine/setjmp.h (_JBLEN): Define for moxie.
+	* libc/include/machine/ieeefp.h: Add moxie support.
+
+2009-04-22  Kazu Hirata  <kazu@codesourcery.com>
+
+	* libc/stdio/local.h (__chclass, __state_table, __action_table):
+	Add extern to the declarations.
+	* libc/stdlib/local.h (__iso_8859_conv, __cp_conv): Likewise.
+
+2009-04-21  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/ctype/ctype_.c (_CTYPE_DATA_128_255): Rename from
+	_CTYPE_DATA_128_256.
+	* libc/ctype/ctype_cp.h: Split off all character class values for
+	character 255 from the rest of the definitions.
+	(__ctype_cp): Use the new definitions.  Make sure that the table
+	always contains 0 for EOF (-1).
+	* libc/ctype/ctype_iso.h: Ditto.
+
+2009-04-21  Sandra Loosemore  <sandra@codesourcery.com>
+
+	* libc/reent/impure.c (__sf_fake_stdin, __sf_fake_stdout)
+	(__sf_fake_stderr): Declare locally with weak attribute.
+
+2009-04-21  Mark Mitchell  <mark@codesourcery.com>
+
+	* libc/include/_ansi.h: Move C++ defines to top of file.
+	(_NOTHROW): New macro.
+	(_EXFUN_NOTHROW): Likewise.
+	* libc/include/stdlib.h (calloc): Declare with _EXFUN_NOTHROW.
+	(free): Likewise.
+	(malloc): Likewise.
+	(realloc): Likewise.
+	(_malloc_r): Likewise.
+	(_callor_r): Likewise.
+	(_free_r): Likewise.
+	(_realloc_r): Likewise.
+
+2009-04-20  Jeff johnston  <jjohnstn@redhat.com>
+
+	* libc/include/math.h: Change _LDBL_EQ_DBL flag usage to
+	be _HAVE_LDBL_MATH.
+	* libc/include/stdlib.h: Change _LDBL_EQ_DBL flag usage to
+	be _HAVE_LDBL_STDLIB.
+
+2009-04-17  Jeff johnston  <jjohnstn@redhat.com>
+
+	* libc/include/machine/ieeefp.h (_LDBL_EQ_DBL): Remove.
+	* libc/stdlib/local.h (_LDBL_EQ_DBL): Add.
+	* libc/stdlib/strtold.c: Include local.h.
+	* libc/stdlib/wcstold.c: Likewise.
+	* libm/common/atanl.c: Likewise.
+	* libm/common/cosl.c: Likewise.
+	* libm/common/sinl.c: Likewise.
+	* libm/common/modfl.c: Likewise.
+	* libm/common/frexpl.c: Likewise.
+	* libm/common/tanhl.c: Likewise.
+	* libm/common/tanl.c: Likewise.
+	* libm/common/expm1l.c: Likewise.
+	* libm/common/log1pl.c: Likewise.
+	* libm/common/ceill.c: Likewise.
+	* libm/common/fabsl.c: Likewise.
+	* libm/common/floorl.c: Likewise.
+	* libm/common/acosl.c: Likewise.
+	* libm/common/asinl.c: Likewise.
+	* libm/common/atan2l.c: Likewise.
+	* libm/common/coshl.c: Likewise.
+	* libm/common/expl.c: Likewise.
+	* libm/common/fmodl.c: Likewise.
+	* libm/common/hypotl.c: Likewise.
+	* libm/common/ldexpl.c: Likewise.
+	* libm/common/log10l.c: Likewise.
+	* libm/common/logl.c: Likewise.
+	* libm/common/powl.c: Likewise.
+	* libm/common/sqrtl.c: Likewise.
+	* libm/common/copysignl.c: Likewise.
+	* libm/common/ilogbl.c: Likewise.
+	* libm/common/nanl.c: Likewise.
+	* libm/common/cbrtl.c: Likewise.
+	* libm/common/asinhl.c: Likewise.
+	* libm/common/nextafterl.c: Likewise.
+	* libm/common/rintl.c: Likewise.
+	* libm/common/scalbnl.c: Likewise.
+	* libm/common/exp2l.c: Likewise.
+	* libm/common/fdiml.c: Likewise.
+	* libm/common/fmal.c: Likewise.
+	* libm/common/fmaxl.c: Likewise.
+	* libm/common/fminl.c: Likewise.
+	* libm/common/lrintl.c: Likewise.
+	* libm/common/lroundl.c: Likewise.
+	* libm/common/nearbyintl.c: Likewise.
+	* libm/common/remquol.c: Likewise.
+	* libm/common/roundl.c: Likewise.
+	* libm/common/scalblnl.c: Likewise.
+	* libm/common/truncl.c: Likewise.
+	* libm/common/acoshl.c: Likewise.
+	* libm/common/atanhl.c: Likewise.
+	* libm/common/erfcl.c: Likewise.
+	* libm/common/erfl.c: Likewise.
+	* libm/common/lgammal.c: Likewise.
+	* libm/common/remainderl.c: Likewise.
+	* libm/common/tgammal.c: Likewise.
+	* libm/common/sinhl.c: Likewise.
+	* libm/common/llroundl.c: Likewise.
+	* libm/common/llrintl.c: Likewise.
+	* libm/common/local.h: New file with _LDBL_EQ_DBL macro.
+
+2009-04-17  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/include/machine/ieeefp.h: _LDBL_EQ_DBL check fixed.
+	* libc/include/math.h (llrintl): Declare.
+	* libm/common/llrintl.c: New File.
+	* libm/common/Makefile.am: New File added.
+	* libm/common/Makefile.in: Regenerate.
+
+2009-04-17  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/configure.in: Change AC_TRY_COMPILE to AC_TRY_COMMAND to
+	avoid executable test.
+	* libc/configure: Regenerate.
+
+2009-04-17  Jeff johnston  <jjohnstn@redhat.com>
+
+	* configure.in: Remove _HAVE_ARRAY_ALIASING check.
+	* configure: Regenerated.
+	* Makefile.in: Regenerated.
+	* newlib.hin: Remove _HAVE_ARRAY_ALIASING flag.
+	* libc/ctype/ctype_.c: Do not check for _HAVE_ARRAY_ALIASING.
+	* libm/configure.in: Change AC_TRY_COMPILE to AC_TRY_COMMAND to
+	avoid executable test.
+	* libm/configure: Regenerated.
+
+2009-04-16  Jeff johnston  <jjohnstn@redhat.com>
+
+	* libc/misc/init.c (__libc_fini_array): Process fini_array in
+	reverse order as compliant with the ELF specification.
+
+2009-04-16  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/Makefile.am: Add new File.
+	* libc/machine/spu/Makefile.in: Regenerate.
+	* libc/machine/spu/fdopen.c: New file.
+
+2009-04-16  Hans-Peter Nilsson  <hp@axis.com>
+
+	* libc/include/stdint.h (INTPTR_MIN, INTPTR_MAX, UINTPTR_MAX): Define.
+
+2009-04-16  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libm/libm.texinfo: Add long double function support chapter.
+	* libc/include/machine/ieeefp.h: Add _LDBL_EQ_DBL define.
+	* libc/include/stdlib.h: Include <machine/ieeefp.h>.
+	(strtold, wcstold): Declare.
+	* libc/stdlib/strtold.c: New File.
+	* libc/stdlib/wcstold.c: Likewise.
+	* libc/configure.in: Add long double check.
+	* libc/configure: Regenerate.
+	* libc/stdlib/Makefile.am: Add strtold.c and wcstold.c.
+	* libc/stdlib/Makefile.in: Regenerate.
+	* libc/include/math.h (atanl, cosl, sinl, tanl, tanhl): Declare.
+	(frexpl, modfl, ceill, fabsl, floorl, log1pl, expm1l, acosl): Ditto.
+	(asinl, atan2l, coshl, sinhl, expl, ldexpl, logl, log10l, powl): Ditto.
+	(sqrtl, fmodl, hypotl, copysignl, nanl, ilogbl, asinhl, cbrt): Ditto.
+	(nextafterl, rintl, scalbnl, exp2l, scalblnl, tgammal): Ditto.
+	(nearbyintl, lrintl, llrintl, roundl, lroundl, llround): Ditto.
+	(llroundl, truncl, remquol, fdiml, fmaxl, fminl, fmal, acoshl): Ditto.
+	(atanhl, remainderl, lgammal, erfl, erfcl): Ditto.
+	* libm/common/atanl.c: New File.
+	* libm/common/cosl.c: Likewise.
+	* libm/common/sinl.c: Likewise.
+	* libm/common/modfl.c: Likewise.
+	* libm/common/frexpl.c: Likewise.
+	* libm/common/tanhl.c: Likewise.
+	* libm/common/tanl.c: Likewise.
+	* libm/common/expm1l.c: Likewise.
+	* libm/common/log1pl.c: Likewise.
+	* libm/common/ceill.c: Likewise.
+	* libm/common/fabsl.c: Likewise.
+	* libm/common/floorl.c: Likewise.
+	* libm/common/acosl.c: Likewise.
+	* libm/common/asinl.c: Likewise.
+	* libm/common/atan2l.c: Likewise.
+	* libm/common/coshl.c: Likewise.
+	* libm/common/expl.c: Likewise.
+	* libm/common/fmodl.c: Likewise.
+	* libm/common/hypotl.c: Likewise.
+	* libm/common/ldexpl.c: Likewise.
+	* libm/common/log10l.c: Likewise.
+	* libm/common/logl.c: Likewise.
+	* libm/common/powl.c: Likewise.
+	* libm/common/sqrtl.c: Likewise.
+	* libm/common/copysignl.c: Likewise.
+	* libm/common/ilogbl.c: Likewise.
+	* libm/common/nanl.c: Likewise.
+	* libm/common/cbrtl.c: Likewise.
+	* libm/common/asinhl.c: Likewise.
+	* libm/common/nextafterl.c: Likewise.
+	* libm/common/rintl.c: Likewise.
+	* libm/common/scalbnl.c: Likewise.
+	* libm/common/exp2l.c: Likewise.
+	* libm/common/fdiml.c: Likewise.
+	* libm/common/fmal.c: Likewise.
+	* libm/common/fmaxl.c: Likewise.
+	* libm/common/fminl.c: Likewise.
+	* libm/common/lrintl.c: Likewise.
+	* libm/common/lroundl.c: Likewise.
+	* libm/common/nearbyintl.c: Likewise.
+	* libm/common/remquol.c: Likewise.
+	* libm/common/roundl.c: Likewise.
+	* libm/common/scalblnl.c: Likewise.
+	* libm/common/truncl.c: Likewise.
+	* libm/common/acoshl.c: Likewise.
+	* libm/common/atanhl.c: Likewise.
+	* libm/common/erfcl.c: Likewise.
+	* libm/common/erfl.c: Likewise.
+	* libm/common/lgammal.c: Likewise.
+	* libm/common/remainderl.c: Likewise.
+	* libm/common/tgammal.c: Likewise.
+	* libm/common/sinhl.c: Likewise.
+	* libm/common/llroundl.c: Likewise.
+	* libm/configure.in: Add long double check.
+	* libm/configure: Regenerate.
+	* libm/common/Makefile.am: Add new files.
+	* libm/common/Makefile.in: Regenerate.
+
+2009-04-09  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/ctype/ctype_.c (_CTYPE_DATA_0_127): Remove _B flag from TAB.
+	* libc/ctype/ctype_cp.h: Mark non-cased letters in tables for codepages
+	720, 862, 874, 1255, and 1256 to _U|_L.  Fix a couple of incorrect
+	class mappings.
+	* libc/ctype/ctype_iso.h: Mark non-cased letters in ISO-8859 tables
+	6, 8, and 11 to _U|_L.  Fix a couple of incorrect class mappings.
+	* libc/ctype/isblank.c (isblank): Special case TAB.
+	* libc/ctype/islower.c (islower): Check explicitely for _L flag only
+	in (_U|_L).
+	* libc/ctype/isupper.c (isupper): Ditto, but check for _U flag.
+	* libc/include/ctype.h (islower): Same in macro.
+	(isupper): Ditto.
+	(isblank): Special case TAB.  Redefine macro for GCC only.
+
+2009-04-09  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/local.h (__mbtowc): Declare extern.
+	(__wctomb): Ditto.
+
+2009-04-09  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/mbctype.h (_iseucjp1): Like _iseucjp, but also
+	recognizes 0x8e and 0x8f lead bytes.
+	(_iseucjp2): Rename from _iseucjp.
+	* libc/stdlib/mbtowc_r.c (__eucjp_mbtowc): Convert JIS-X-0212
+	triplebyte sequences as well.
+	* libc/stdlib/wctomb_r.c (__eucjp_wctomb): Convert to JIS-X-0212
+	triplebyte sequences as well.
+
+2009-04-08  Ken Werner  <ken.werner@de.ibm.com>
+
+	* configure.in: Add square brackets for the array aliasing conftest.
+	* configure: Regenerate.
+
+2009-04-06  Mike Burgess  <wizardsguild@earthlink.net>
+
+	* libc/string/strncasecmp.c: Optimized rewrite.
+
+2009-04-06  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/include/sys/features.h: Undefine _POSIX_TIMERS for spu.
+	* libc/include/machine/time.h (nanosleep): Declare.
+
+2009-04-06  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (loadlocale): Set mbc_max to 3 for EUCJP.
+
+2009-04-04  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/wcstombs.c: Fix datatypes in documentation.
+
+2009-04-04  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/stdio.h (_ELIDABLE_INLINE): Move definition from here...
+	* libc/include/_ansi.h (_ELIDABLE_INLINE): ..to here.
+
+2009-04-03  Yaakov Selkowitz  <yselkowitz@users.sourceforge.net>
+
+	* libc/include/stdio.h [__SCLE] (__sgetc_r): Prototype before define
+	to avoid a warning with -Wmissing-prototypes.
+
+2009-04-03  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/mmap_ea.c (mmap_ea): Check length argument.
+
+2009-04-03  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/sys/linux_syscalls.h: include <sys/types.h>
+	(linux_getpid, linux_gettid): Declare.
+
+2009-04-03  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/spu-gmon.c: Tweaks to support simultaneous SPU
+	profiling.
+
+2009-04-03  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/include/math.h: Remove duplicate copysign prototype.
+	Fix __math_68881 define typo.  Guard functions of the rint family.
+
+2009-04-03  Craig Howland <howland@LGSInnovations.com>
+
+	* libm/common/s_llrint.c: New file, implementing llrint().
+	* libm/common/sf_llrint.c: New file, implementing llrintf().
+	* libm/common/Makefile.am:  Add s_llrint.c (src); sf_llrint.c (fsrc).
+	* libm/common/Makefile.in:  Regenerate.
+
+2009-04-02  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/ctype/ctype_c.c: Move inclusion of ctype_iso.h and
+	ctype_cp.h out of ALLOW_NEGATIVE_CTYPE_INDEX case.
+	(__ctype_ptr__): Constify in !_MB_CAPABLE case.  Otherwise,
+	de-constify in !ALLOW_NEGATIVE_CTYPE_INDEX case, too.  Add comment.
+	(__set_ctype): Set __ctype_ptr__ pointer according to definition
+	of ALLOW_NEGATIVE_CTYPE_INDEX.
+	* libc/include/ctype.h (__ctype_ptr__): Constify in !_MB_CAPABLE case.
+
+2009-03-31  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/ctype/Makefile.am: Remove _tolower.c and _toupper.c
+	source files.  Add a dependency rule for ctype_o to note
+	changes in ctype_iso.h and ctype_cp.h.
+	* libc/ctype/Makefile.in: Regenerate.
+	* libc/ctype/_tolower.c: Remove file.
+	* libc/ctype/_toupper.c: Remove file.
+	* libc/ctype/ctype_.c: Make sure ALLOW_NEGATIVE_CTYPE_INDEX
+	is always defined on Cygwin.
+	(_ctype_b): Don't make `static const' on Cygwin.
+	(ctype_iso.h): Include if _MB_EXTENDED_CHARSETS_ISO is set.
+	(ctype_cp.h): Include if _MB_EXTENDED_CHARSETS_WINDOWS is set.
+	(__ctype_ptr): Drop definition.
+	(__ctype_ptr__): De-constify.  Mark as __EXPORT symbol.
+	(_ctype_): Add Cygwin-specifc asm define.
+	(__set_ctype): New function to set __ctype_ptr__ according to
+	current charset.
+	* libc/ctype/ctype_cp.h: New file containing Windows codepage
+	specific character class tables.
+	* libc/ctype/ctype_iso.h: New file containing ISO-8859-x
+	specific character class tables.
+	* libc/ctype/tolower.c (tolower): Reimplement to support any singlebyte
+	charset if one of the extended charsets is enabled.
+	* libc/ctype/toupper.c (toupper): Ditto.
+	* libc/include/ctype.h (_tolower): Define as macro per POSIX.
+	(_toupper): Ditto.
+	(__ctype_ptr__): De-constify.
+	(toupper): Disable macro on systems supporting extended charsets.
+	(tolower): Ditto.
+	* libc/include/sys/config.h (__EXPORT): Define empty if not defined.
+	* libc/locale/locale.c (__mb_cur_max): Mark as __EXPORT symbol.
+	(__set_ctype): Declare unconditionally.
+	(loadlocale): Remove __CYGWIN__ guard around __set_ctype call.
+
+2009-03-26  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (loadlocale): Revert to charset "GBK" instead
+	of "GB2312".  Fix documentation accordingly.
+
+2009-03-26  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/ctype/ctype_.c (_CTYPE_DATA_0_127): Mark TAB as blank character.
+	* libc/ctype/isblank.c: Replace hardcoded test with test for having _B
+	marker in ctype array.
+	* libc/include/ctype.h (isblank): Add macro.
+
+2009-03-25  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/include/math.h:  (llround, llroundf): Declare.
+	* libm/common/s_llround.c: New file, implementing llround().
+	* libm/common/sf_llround.c: New file, implementing llroundf().
+	* libm/common/sf_lround.c: Remove spurious cast in _DOUBLE_IS_32BITS
+	version of function.
+	* libm/common/sf_lrint.c: Ditto.
+	* libm/common/sf_logb.c:  Corrected return for subnormal argument
+	by replacing existing function with a version created from sf_ilogb.c.
+	* libm/common/s_logb.c: Ditto, except starting point s_ilogb.c.  Also
+	added documentation for logb() and logbf().
+	* libm/common/s_signbit.c:  Add signbit() documentation.
+	* libm/common/s_log2.c: Update return values to match what w_log2.c has,
+	since log2 uses log(); add note about being derived instead of direct.
+	* libm/common/sf_fma.c: Add casts to attempt to get correct results,
+	as well as comments pointing out problems with the implementation.
+	* libm/common/s_fma.c: Add fma() and fmaf() documentation.
+	* libm/common/sf_remquo.c: Incorrect quotient returns for large values
+	corrected by discarding existing function and replacing with Sun
+	verion, with some enhancements.
+	* libm/common/s_remquo.c: Ditto.  Add remquo() and remquof()
+	documentation.
+	* libm/common/s_fmax.c: Add fmax() and fmaxf() documentation.
+	* libm/common/s_fmin.c: Add fmin() and fminf() documentation.
+	* libm/common/s_fdim.c: Return NAN for NAN arg, add fdim() and fdimf()
+	documentation.
+	* libm/common/sf_fdim.c: Return NAN for NAN arg, HUGE_VALF for inf arg.
+	* libm/common/s_trunc.c: Add trunc() and truncf() documentation.
+	* libm/common/s_rint.c: Add rint() and rintf() documentation.
+	* libm/common/s_round.c: Add round() and roundf() documentation.
+	* libm/common/s_scalbn.c: Add scalbln() and scalblnf() documentation.
+	* libm/common/s_infinity.c: Add infinity() and infinityf()
+	documentation.
+	* libm/common/s_lround.c: Add lround(), lroundf(), llround(), and
+	llroundf() documentation.
+	* libm/common/s_lrint.c: Add lrint(), lrintf(), llrint(), and llrintf()
+	documentation.
+	* libm/common/isgreater.c: New file for documenting math.h function-like
+	macros isgreater(), isgreaterequal(), isless(), islessequal(),
+	islessgreater(), and isunordered().
+	* libm/common/s_isnan.c: Add documentation for function-like macros
+	fpclassify(), isfinite(), isinf(), isnan(), and isnormal().
+	* libm/common/s_nearbyint.c: Add nearbyint() and nearbyintf()
+	documentation.
+	* libm/common/Makefile.am: Add s_llround.c (src); sf_llround.c (fsrc);
+	s_fdim.def, s_fma.def, s_fmax.def, s_fmin.def,
+	s_logb.def, s_lrint.def, s_lround.def, s_nearbyint.def, s_remquo.def,
+	s_rint.def, s_round.def, s_signbit.def, s_trunc.def, and
+	isgreater.def (chobj);
+	re-name all existing chew files (chobj) to match source file base
+	names (put in underscores), delete all special targets for chew files
+	(leaving all to be generated by rule).
+	* libm/common/Makefile.in: regenerate.
+	* libm/math/w_exp2.c: Add "base 2" to documentation description (and
+	delete TRAD_SYNOPSIS).
+	* libm/math/w_gamma.c: Add tgamma() and tgammaf() documentation, along
+	with some history behind the function names.
+	* libm/math/math.tex: Add includes for newly-added documentation (see
+	.def additions to common/Makefile.am and math/Makefile.am in this
+	ChangeLog list), adjusted existing .def file names to match source file
+	base names (added underscores); add mention of HUGE_VALF; rename
+	"Version of library" section to "Error Handling" and add some text
+	about floating-point exception; added section "Standards Compliance And
+	Portability".
+	* libm/math/Makefile.am: Add w_exp2.def (chobj);
+	re-name all existing chew files (chobj) to match source file base
+	names, delete all special targets for chew files (leaving all to be
+	generated by rule).
+	* libm/math/Makefile.in: regenerated
+	* doc/makedoc.c: Change silent ignoring of commands < 5 characters
+	to a failure when reading macro file for commands < 4 characters;
+	add -v (verbose) option for printing some debugging information;
+	get rid of spurious translation of "@*" to "*" (no source files used @*,
+	so no existing doc pages were affected); clean up some compiler
+	warnings.
+	* doc/doc.str: add BUGS and SEEALSO sections (to match texi2pod.pl
+	which has them); Remove ITEM command (redundant with makedoc built-in
+	"o", not used in any present source file so nothing is lost, anyway).
+	* HOWTO: New file to hold information for maintainers regarding how
+	to do things.  Initial sections on documentation and ELIX levels.
+
+2009-03-25  Richard Earnshaw  <rearnsha@arm.com>
+
+	* libc/machine/arm/strcmp.c (strcmp_unaligned): Correctly
+	detect the nul-byte in a big-endian string.
+
+2009-03-25  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/string/wcsdup.c: Fix documentation error.
+	* libc/string/Makefile.am: Fix CHEWOUT files to contain
+	wcsdup.def rather than wcsdup.
+	* libc/string/Makefile.in: Regenerated.
+
+2009-03-25  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (loadlocale): Only change __wctomb and __mbtowc
+	pointers if category is LC_CTYPE.
+
+2009-03-25  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (loadlocale): Rename charset "GBK" to
+	"GB2312".  Fix documentation accordingly.
+
+2009-03-24  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (loadlocale): Rename charset "CP949" to
+	"eucKR".  Fix documentation accordingly.
+
+2009-03-24  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (loadlocale): Allow charset starting with 'e'
+	for "eucJP" charset support.
+
+2009-03-24  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/sys/errno.h: Move EFTYPE to general usage because
+	it is used in libc/search.
+
+2009-03-24  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/ctype/iswalpha.c: Handle all wchar_t as unicode on
+	_MB_CAPABLE systems.
+	* libc/ctype/iswblank.c: Ditto.
+	* libc/ctype/iswcntrl.c: Ditto.
+	* libc/ctype/iswprint.c: Ditto.
+	* libc/ctype/iswpunct.c: Ditto.
+	* libc/ctype/iswspace.c: Ditto.
+	* libc/ctype/jp2uc.c (__jp2uc): On Cygwin, just return c.
+	Explain why.
+	* libc/ctype/towlower.c: Ditto.
+	* libc/ctype/towupper.c: Ditto.
+	* libc/include/sys/config.h: Define _MB_EXTENDED_CHARSETS_ISO
+	and _MB_EXTENDED_CHARSETS_WINDOWS if _MB_EXTENDED_CHARSETS_ALL is
+	defined.  Define _MB_EXTENDED_CHARSETS_ALL on Cygwin only for now.
+	* libc/include/sys/reent.h (struct _reent): Mark _current_category
+	and _current_locale as unused.
+	* libc/locale/locale.c: Add new charset support to documentation.
+	Include ../stdio/local.h from here.
+	(lc_ctype_charset): Set to "ASCII" by default.
+	(lc_message_charset): Ditto.
+	(_setlocale_r): Don't set _current_category and _current_locale.
+	(loadlocale): Add Cygwin codepage support.  On _MB_CAPABLE
+	systems, set __mbtowc and __wctomb function pointers to function
+	corresponding with current charset.  Don't allow non-existant
+	ISO-8859-12 charset.  Add support for Windows singlebyte codepages.
+	On Cygwin, add support for GBK, CP949, and BIG5.  On Cygwin,
+	call __set_ctype() in case the catorgy is LC_CTYPE.  Don't set
+	_current_category and _current_locale.
+	* libc/stdlib/Makefile.am (GENERAL_SOURCES): Add sb_charsets.c.
+	* libc/stdlib/Makefile.in: Regenerate.
+	* libc/stdlib/local.h: Add prototype for __locale_charset.
+	Add prototypes for __mbtowc and __wctomb pointers.
+	Add prototypes for charset-specific _wctomb_r and _mbtowc_r
+	functions.
+	Declare tables and functions from sb_charsets.c.
+	* libc/stdlib/mbtowc_r.c (__mbtowc): Define.  Set to __ascii_mbtowc
+	by default.
+	(_mbtowc_r): Just call __mbtowc from here.
+	(__ascii_mbtowc): New function.
+	(__iso_mbtowc): New function.
+	(__cp_mbtowc): New function.
+	(__utf8_mbtowc): New function.
+	(__sjis_mbtowc): New function.  Disable on Cygwin.
+	(__eucjp_mbtowc): New function.  Disable on Cygwin.
+	(__jis_mbtowc): New function.  Disable on Cygwin.
+	* libc/stdlib/sb_charsets.c: New file, adding singlebyte to UTF
+	conversion tables for all ISO and CP charsets.
+	(__iso_8859_index): New function.
+	(__cp_index): New function.
+	* libc/stdlib/wctomb_r.c (__wctomb): Define.  Set to __ascii_wctomb
+	by default.
+	(_wctomb_r): Just call __wctomb from here.
+	(__ascii_wctomb): New function.
+	(__utf8_wctomb): New function.
+	(__sjis_wctomb): New function.  Disable on Cygwin.
+	(__eucjp_wctomb): New function.  Disable on Cygwin.
+	(__jis_wctomb): New function.  Disable on Cygwin.
+	(__iso_wctomb): New function.
+	(__cp_wctomb): New function.
+
+2009-03-23  Richard Earnshaw  <rearnsha@arm.com>
+
+	* libc/machine/arm/strcmp.c (strcmp): Treat char as unsigned.
+
+2009-03-23  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (loadlocale): Fix typo in language and
+	territory evaluation.
+
+2009-03-20  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/sys/errno.h: Protect various non-standard errnos
+	with either __LINUX_ERRNO_EXTENSIONS__ or __CYGWIN__.
+	* libc/include/sys/config.h[__CYGWIN__]: Define
+	__LINUX_ERRNO_EXTENSIONS__.
+
+2009-03-19  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/mbtowc_r.c (_mbtowc_r): Return EILSEQ in case of an
+	invalid character sequence.
+
+	* libc/stdlib/mbtowc_r.c (_mbtowc_r): Fix compiler warning due to
+	missing declaration of __locale_charset.
+	* libc/stdlib/wctomb_r.c (_wctomb_r): Ditto.
+
+2009-03-18  Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+
+	* libm/common/s_log2.c: New file.
+	* libm/common/sf_log2.c: Ditto.
+	* libm/common/Makefile.am: Add s_log2.c and sf_log2.c.
+	* libm/common/Makefile.in: Regenerated.
+	* libc/include/math.h: Add log2 and log2f function prototypes.
+
+2009-03-17  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/mbstowcs_r.c (_mbstowcs_r): Handle NULL destination
+	string correctly.
+
+2009-03-16  Mark Mitchell  <mark@codesourcery.com>
+
+	* libc/machine/arm/strlen.c (strlen): Fix defect in Thumb-2 mode.
+
+2009-03-16  Richard Earnshaw  <rearnsha@arm.com>
+
+	* libc/machine/arm/strlen.c (strlen): Correctly detect
+	end-of-string.
+	* libc/machine/arm/strcpy.c (strcpy): Likewise.
+	* libc/machine/arm/strcmp.c (strcmp, strcmp_unaligned): Likewise.
+
+2009-03-15  Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+
+	* libc/include/sys/errno.h (ESTRPIPE): Define.
+	* libc/string/strerror.c (strerror): Decode it.
+
+2009-03-15  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/wchar.h (wcsdup, _wcsdup_r): Declare.
+	* libc/string/Makefile.am: Add wcsdup.c.
+	* libc/string/Makefile.in: Regenerate.
+	* libc/string/strings.tex: Add wcsdup documentation reference.
+	* libc/string/wcsdup.c: New file.
+
+2009-03-14  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/stdlib.h (_mkstemp_r, _mktemp_r): Move out of
+	!_REENT_ONLY section.
+
+2009-03-14  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/stdio.h (_mkstemp_r, _mktemp_r): Move declarations
+	to stdlib.h.
+	* libc/include/stdlib.h (mktemp, _mktemp_r): Warn when using.
+	* libc/stdio/mktemp.c: Explain the security risk when using
+	mktemp.
+
+2009-03-12  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/time/time.tex (wcsftime.def):  Include.
+	* libc/time/wcsftime.c:  Clean up documentation a little.
+
+2009-03-12  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/stdio/swscanf.c:  Some documentation corrections.
+
+2009-03-12  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/stdio/swprintf.c (_swprintf_r, swprintf):
+	correct how terminating L'\0' is added;
+	change return to match standard for when output does not fit;
+	some corrections and enhancements to the docs.
+	* libc/stdio/vswprintf.c (_vswprintf_r):  ditto, except for docs.
+	* libc/stdio/vfwprintf.c:  some corrections to the docs and some
+	enhancements to comments.  (No code changes.)
+	* libc/time/strftime.c:  Correct some problems that made wcsftime()
+	not work correctly:  work properly with swprintf returns that are
+	different from snprintf returns, correct test vector lengths for
+	when sizeof(wchar_t) > 1.
+	* libc/stdio/sprintf.c:  Some documentation and comment corrections and
+	enhancements to match those done to swprintf.c.
+
+2009-03-11  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/wchar.h (wcscasecmp, wcsncasecmp): Declare.
+	* libc/string/Makefile.am: Add wcscasecmp.c, wcsncasecmp.c
+	* libc/stdio/Makefile.in: Regenerate.
+	* libc/string/strings.tex: Add new documentation references.
+	* libc/string/wcscasecmp.c: New file.
+	* libc/string/wcsncasecmp.c: New file.
+
+2009-03-11  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/wchar.h (fwscanf, swscanf, vfwscanf, vswscanf, vwscanf,
+	wscanf): Declare.
+	(_fwscanf_r, _swscanf_r, _vfwscanf_r, _vswscanf_r, _vwscanf_r,
+	_wscanf_r): Declare.
+	* libc/stdio/Makefile.am: Add new wscanf files.
+	* libc/stdio/Makefile.in: Regenerate.
+	* libc/stdio/fwscanf.c: New file.
+	* libc/stdio/local.h (__svfwscanf_r, __ssvfwscanf_r, __svfiwscanf_r,
+	__ssvfiwscanf_r): Declare.
+	* libc/stdio/stdio.tex: Add new documentation references.
+	* libc/stdio/swscanf.c: New file.
+	* libc/stdio/vfwscanf.c: New file.
+	* libc/stdio/vswscanf.c: New file.
+	* libc/stdio/vwscanf.c: New file.
+	* libc/stdio/wscanf.c: New file.
+
+	* libc/stdio/vfscanf.c (_sungetc_r): Make externaly available.  Only
+	define if INTEGER_ONLY is defined.  Declare otherwise.
+	(__ssrefill_r): Ditto.
+	(_sfread_r): Ditto.
+
+	Remove static eofread/eofread1 functions and use __seofread
+	function instead, throughout.
+	* libc/stdio/local.h (__seofread): Declare.
+	* libc/stdio/stdio.c (__seofread): Define.
+
+	* libc/stdio/fgetwc.c (__fgetwc): Fix compiler warning.
+	* libc/stdio/fgetws.c (_fgetws_r): Ditto.
+	* libc/stdio/fread.c (_fread_r): Ditto.
+	* libc/stdio/vfprintf.c: Ditto.
+	* libc/stdio/vswprintf.c: Ditto.
+
+2009-03-09  Brooks Moses  <brooks@codesourcery.com>
+
+	* libc/machine/arm/arm_asm.h: Fix typo.
+
+2009-03-09  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/time/strftime.c:  Adapt for dual-purpose use so not only
+	defines strftime(), but can also define wcsftime(); add optional
+	test package; speed up %Y handling.
+	* libc/time/wcsftime.c:  New file, defining wcsftime() (albeit
+	indirectly by including strftime.c) and its documentation.
+	* libc/time/time.tex:  Enhance tm_isdst explanation, change strftime
+	description to match modified description in strftime.c
+	* libc/time/Makefile.am:  Add wcsftime.c and wcsftime.def.  Add a rule
+	so that wcsftime.o gets rebuilt when strftime changes.
+	* libc/time/Makefile.in:  Regenerate.
+	* libc/include/wchar.h (wcsftime): Declare.
+
+2009-03-06  Hans-Erik Floryd <hans-erik.floryd@rt-labs.com>,
+	    Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/reent/reent.c (_reclaim_reent): Make a block from MP-related
+	statements in _REENT_SMALL case.  Check if _atexit is not NULL before
+	dereferencing it.
+	(_wrapup_reent): Check if _atexit is not NULL before dereferencing it.
+
+2009-03-06  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/stdio.h (__VALIST): Guard against multiple definition.
+	* libc/include/wchar.h: Include stdarg.h.
+	(__VALIST): Define conditionally.
+	(fwprintf, swprintf, vfwprintf, vswprintf, vwprintf, wprintf): Declare.
+	(_fwprintf_r, _swprintf_r, _vfwprintf_r, _vswprintf_r, _vwprintf_r,
+	 _wprintf_r): Declare.
+	* libc/stdio/Makefile.am: Add new files.
+	* libc/stdio/Makefile.in: Regenerate.
+	* libc/stdio/fwprintf.c: New file.
+	* libc/stdio/local.h (_svfwprintf_r, _svfiwprintf_r): Declare.
+	(__CH_CLASS, __STATE, __ACTION): Move definition from vfprintf.c here
+	and move to the __ namespace.
+	(__chclass, __state_table, __action_table): Declare.
+	* libc/stdio/stdio.tex: Add new documentation references.
+	* libc/stdio/swprintf.c: New file.
+	* libc/stdio/vfprintf.c (__SPRINT): New macro to call the right
+	__sprint_r function according to compilation unit.  Use throughout.
+	(__ssprint_r): Rename STRING_ONLY variant from __sprint_r.
+	Make externaly available.  Only define if INTEGER_ONLY is defined.
+	(__sprint_r): Make externaly available.  Only define if INTEGER_ONLY
+	is defined.  Handle stream orientation.
+	(__sbprintf): Copy FILE's _flags2 member as well.
+	(__chclass, __state_table, __action_table): Prepend __ to name and
+	make externally available.
+	* libc/stdio/vfwprintf.c: New file.
+	* libc/stdio/vswprintf.c: New file.
+	* libc/stdio/vwprintf.c: New file.
+	* libc/stdio/wprintf.c: New file.
+
+2009-03-03  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/locale/locale.c (_setlocale_r): New implementation based on
+	FreeBSD's setlocale.
+	(currentlocale): New helper function.
+	(loadlocale): Ditto.
+	(__locale_charset): New function.
+	(__locale_msgcharset): Rename from __locale_charset.
+	* libc/ctype/local.h (__lc_ctype): Remove declaration.
+	(__locale_charset): Declare.
+	* libc/ctype/iswalpha.c (iswalpha): Call __locale_charset instead of
+	using __lc_ctype directly.  Only compare against the charset alone.
+	* libc/ctype/iswblank.c (iswblank): Ditto.
+	* libc/ctype/iswcntrl.c (iswcntrl): Ditto.
+	* libc/ctype/iswprint.c (iswprint): Ditto.
+	* libc/ctype/iswpunct.c (iswpunct): Ditto.
+	* libc/ctype/iswspace.c (iswspace): Ditto.
+	* libc/ctype/towlower.c (towlower): Ditto.
+	* libc/ctype/towupper.c (towupper): Ditto.
+	* libc/stdlib/mbtowc_r.c (_mbtowc_r): Ditto.
+	* libc/stdlib/wctomb_r.c (_wctomb_r): Ditto.
+	* libc/sys/linux/intl/loadmsgcat.c (_nl_init_domain_conv): Call
+	__locale_msgcharset instead of __locale_charset.
+
+2009-03-02  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdlib/wctomb_r.c (_wctomb_r): When checking single-byte
+	charset, cast wchar to size_t in case wchar_t is signed.
+	* libc/stdlib/wctomb.c (wctomb): Add similar single-byte check.
+
+2009-03-02  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/wctomb_r.c (_wctomb_r): Return EILSEQ in case of an
+	invalid wchar.  Return -1 if wchar doesn't fit into singlebyte
+	value in case of using a singlebyte charset.
+
+2009-02-26  Brooks Moses  <brooks@codesourcery.com>
+
+	* libc/machine/arm/strcpy.c: Add missing comma.
+
+2009-02-26  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/machine/lm32/configure.in: Let
+	AC_CONFIG_SRCDIR point to setjmp.S instead of setjmp.s
+	* libs/machine/lm32/configure: Regenerate.
+
+2009-02-25  Brooks Moses  <brooks@codesourcery.com>
+
+	* libc/stdlib/Makefile.am (CHEWOUT_FILES): Add
+	  mbsnrtowcs.def, wcsnrtombs.def.
+	* libc/stdlib/Makefile.in: Regenerate.
+	* libc/stdlib/stdlib.tex (@menu): Use correct section
+	  names for mbsrtowcs, wcsrtombs.
+	* libc/stdlib/wcstod.c: Remove stray character in
+	  documentation.
+
+2009-02-25  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/mbtowc_r.c (_mbtowc_r): Remove conversion of 5 and 6
+	byte UTF-8 sequences since they are invalid in the Unicode standard.
+	Handle surrogate pairs in case of wchar_t == UTF-16.
+	* libc/stdlib/wctomb_r.c (_wctomb_r): Don't convert invalid Unicode
+	wchar_t values beyond 0x10ffff into UTF-8 chars.  Handle surrogate
+	pairs in case of wchar_t == UTF-16.
+
+2009-02-24  Kevin Buettner  <kevinb@redhat.com>
+
+	* libc/stdio/open_memstream.c (stdint.h): Include.
+
+2009-02-23  Craig Howland  <howland@LGSInnovations.com>
+
+	* libc/unix/ttyname.c:  Remove ttyname_r() (to a new file to avoid
+	coupling ttyname_r() and ttyname() due to the latter's large buffer).
+	* libc/unix/ttyname_r.c:  New file to hold ttyname_r(), previously in
+	ttyname.c.
+	* libc/unix/ttyname.h:  New file (common size definition for the 2
+	ttyname*c files that are now split).
+	* libc/unix/Makefile.am (ELIX_2_SOURCES):  Add ttyname_r.c.
+	* libc/unix/Makefile.in:  Regenerate.
+
+2009-02-19  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/wchar.h (mbsnrtowcs): Declare.
+	(_mbsnrtowcs_r): Declare.
+	(wcsnrtombs): Declare.
+	(_wcsnrtombs_r): Declare.
+	* libc/stdlib/Makefile.am (ELIX_2_SOURCES): Add mbsnrtowcs.c
+	and wcsnrtombs.c.
+	* libc/stdlib/Makefile.in: Regenerate.
+	* libc/stdlib/mbsnrtowcs.c: New file, implementing _mbsnrtowcs_r
+	and mbsnrtowcs.  Document mbsnrtowcs and mbsrtowcs.
+	* libc/stdlib/mbsrtowcs.c (_mbsrtowcs_r): Just call _mbsnrtowcs_r.
+	(mbsrtowcs): Ditto.
+	* libc/stdlib/wcsnrtombs.c: New file, implementing _wcsnrtombs_r
+	and wcsnrtombs.  Document wcsrtombs and wcsnrtombs.
+	* libc/stdlib/wcsrtombs.c (_wcsrtombs_r): Just call _wcsnrtombs_r.
+	(wcsrtombs): Ditto.
+	* libc/stdlib/stdlib.tex: Accommodate new documentation.
+
+2009-02-18  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdio/open_memstream.c (internal_open_memstream_r): Fix max
+	buffer size to be in wchar_t units if wide == 1 is passed in.  In
+	this case, also initialize the first character of the buffer to be
+	wide char null.
+	(_open_wmemstream_r): Cast buf to be (char **) to avoid warning.
+	* libc/stdlib/mbtowc_r.c (_mbtowc_r): Change all occurences of
+	incrementing the size_t value n to first check that n is not already
+	size_t -1.  Fix some compiler warnings.
+	* libc/stdlib/wcstod.c: Add includes for <wctype.h> and <math.h>.
+
+2009-02-18  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdio/open_memstream.c: Add open_wmemstream to doumentation.
+	(struct memstream): Add wide element.
+	Change saved to a union to take char and wchar_t values.
+	(memwriter): Accommodate wide-oriented oeprations.
+	(memseeker): Ditto.
+	(memseeker64): Ditto.
+	(memcloser): Ditto.
+	(internal_open_memstream_r): New static function.  Take functionality
+	from former _open_memstream_r and handle additional "wide" parameter.
+	(_open_memstream_r): Just call internal_open_memstream_r with wide==-1
+	from here.
+	(_open_wmemstream_r): New function.
+	(open_wmemstream): Ditto.
+	* libc/include/wchar.h (open_wmemstream): Declare.
+	(_open_wmemstream_r): Declare.
+
+2009-02-16  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdio/fputwc.c: Fix typo in man page info.
+
+2009-02-12  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/wchar.h (_wcstod_r): Declare.
+	(_wcstof_r): Declare.
+	(wcstod): Declare.
+	(wcstof): Declare.
+	* libc/stdlib/Makefile.am (GENERAL_SOURCES): Add wcstod.c.
+	(CHEWOUT_FILES): Add wcstod.def.
+	* libc/stdlib/Makefile.in: Regenerate.
+	* libc/stdlib/stdlib.tex: Add wcstod.
+	* libc/stdlib/wcstod.c: New file.
+
+2009-02-05  Neal H. Walfield  <neal@gnu.org>
+
+	* libc/machine/x86_64/memcpy.S (memcpy): Don't use the red zone.
+
+2009-01-28  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdio/vfscanf.c (__SVFSCANF_R): Add additional check for
+	inf and nan processing to not proceed if we have already collected
+	zeroes.
+
+2009-01-26  DJ Delorie  <dj@redhat.com>
+
+	* configure.host (m32c-*-*): Add long long I/O support by default.
+
+2009-01-21  Richard Earnshaw  <rearnsha@arm.com>
+
+	* libc/machine/arm/arm_asm.h: New file.
+	* libc/machine/arm/strlen.c: New file.
+	* libc/machine/arm/strcpy.c: New file.
+	* libc/machine/arm/strcmp.c: New file.
+	* libc/machine/arm/Makefile.am: Add new string routines.
+
+2009-01-19  Neal H. Walfield  <neal@gnu.org>
+
+	* libc/include/stdint.h (INT64_C, UINT64_C, INTMAX_C, UINTMAX_C)
+	[__have_long64 && __have_longlong64]: Use L and UL, not LL and ULL.
+	* libc/include/inttypes.h (__PRI64, __SCN64, __PRIMAX, __SCNMAX,
+	__PRIPTR, __SCNPTR) [__have_long64 && __have_longlong64]: Use l,
+	not ll.
+
+2009-01-12  Nathan Froyd  <froydnj@codesourcery.com>
+
+	* libc/machine/powerpc/vfscanf.c (__sccl): Remove declaration.
+
+2009-01-12  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdio/fwalk.c (__fwalk, __fwalk_reent): Remove locking of
+	each fp.  Let the function being called lock the fp, if necessary.
+
+2009-01-07  Kazu Hirata  <kazu@codesourcery.com>
+
+	* libc/include/sys/stdio.h (_flockfile, _funlockfile): Fix typos.
+
+2009-01-05  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/stdio/fwide.c:  Correct typo in TRAD_SYNOPSIS for _fwide_r.
+
 2008-12-19  Jeff Johnston  <jjohnstn@redhat.com>
 
 	* NEWS: Update with 1.17.0 info.
@@ -46,7 +1866,7 @@
 
 2008-12-12  Ralf Corsepius  <ralf.corsepius@rtems.org>
 
-	* libc/sys/rtems/crt0.c: Add stubs for getdents(), nanosleep(), 
+	* libc/sys/rtems/crt0.c: Add stubs for getdents(), nanosleep(),
 	_execve(), _exit().
 
 2008-12-12  Ralf Corsepius  <ralf.corsepius@rtems.org>
@@ -201,7 +2021,7 @@
 
 2008-11-27  Ralf Corsepius <ralf.corsepius@rtems.org>
 
-	* libc/posix/telldir.c: Use #if !defined() instead of #ifndef 
+	* libc/posix/telldir.c: Use #if !defined() instead of #ifndef
 	to fix GCC warning.
 
 2008-11-27  Ken Werner  <ken.werner@de.ibm.com>
@@ -278,7 +2098,7 @@
 
 2008-11-24  Joel Sherrill <joel.sherrill@oarcorp.com>
 
-	* libc/posix/scandir.c: Fix memory leaks. 
+	* libc/posix/scandir.c: Fix memory leaks.
 
 2008-11-24  Joel Sherrill <joel.sherrill@oarcorp.com>
 
@@ -302,8 +2122,8 @@
 	be in sync with current kernels.
 
 2008-11-20  Ken Werner  <ken.werner@de.ibm.com>
-            Patrick Mansfield  <patmans@us.ibm.com>
-            Joel Schopp   <jschopp@austin.ibm.com>
+	    Patrick Mansfield  <patmans@us.ibm.com>
+	    Joel Schopp   <jschopp@austin.ibm.com>
 
 	* libc/machine/spu/configure.in: Add __ea detection.
 	* libc/machine/spu/Makefile.am: Add new files.
@@ -373,9 +2193,9 @@
 
 2008-11-19  Ralf Corsepius <ralf.corsepius@rtems.org>
 
-	* libc/include/sys/config.h: Don't put 
+	* libc/include/sys/config.h: Don't put
 	__ATTRIBUTE_IMPURE_PTR__ into .sdata section for mips-rtems.
-		  
+
 2008-11-19  Ralf Corsepius  <ralf.corsepius@rtems.org>
 
 	* libc/posix/runetype.h: Add include of stddef.h and remove
@@ -412,7 +2232,7 @@
 
 2008-11-17  Joel Sherrill <joel.sherrill@oarcorp.com>
 
-	* configure.host: RTEMS now uses posix subdirectory. 
+	* configure.host: RTEMS now uses posix subdirectory.
 
 2008-11-17  Joel Sherrill <joel.sherrill@oarcorp.com>
 
@@ -459,7 +2279,7 @@
 	* libc/include/glob.h: Ditto.
 	* libc/include/regex.h: Ditto.
 	* libc/include/wordexp.h: Ditto.
-	* libc/posix/Makefile.am: Add new files moved from 
+	* libc/posix/Makefile.am: Add new files moved from
 	libc/sys/linux/stdlib.
 	* libc/posix/Makefile.in: Regenerated.
 	* libc/posix/COPYRIGHT: New file moved from libc/sys/linux/stdlib.
@@ -526,13 +2346,13 @@
 
 2008-10-16  Joel Sherrill <joel.sherrill@oarcorp.com>
 
-	* libc/include/sys/unistd.h: RTEMS follows standard for sync(). 
+	* libc/include/sys/unistd.h: RTEMS follows standard for sync().
 
 2008-10-16  Joel Sherrill <joel.sherrill@oarcorp.com>
 
 	* libc/include/time.h: Add CLOCK_MONOTONIC.
 	* libc/include/sys/features.h: Define
-	_POSIX_MONOTONIC_CLOCK for RTEMS. 
+	_POSIX_MONOTONIC_CLOCK for RTEMS.
 
 2008-10-15  Jeff Johnston  <jjohnstn@redhat.com>
 
@@ -578,7 +2398,7 @@
 
 2008-10-02  Jeff Johnston  <jjohnstn@redhat.com>
 
-	* libc/include/sys/reent.h[_REENT_SMALL](_REENT_INIT_RAND48): Add 
+	* libc/include/sys/reent.h[_REENT_SMALL](_REENT_INIT_RAND48): Add
 	initialization of _rand_next to 1.
 
 2008-09-29  Peter O'Gorman  <pogma@thewrittenword.com>
@@ -838,7 +2658,7 @@
 	* libc/sys/linux/dl/atomicity.h (exchange_and_add): Fix asm
 	statement to use "m" instead of "0".
 	(atomic_add): Ditto.
-	* libc/sys/linux/linuxthreads/spinlock.c (__pthread_release): Ditto. 
+	* libc/sys/linux/linuxthreads/spinlock.c (__pthread_release): Ditto.
 	* libc/sys/linux/net/getaddrinfo.c: Add limit.h include.
 	* libc/sys/linux/stdlib/glob.c: Ditto.
 
@@ -943,20 +2763,20 @@
 
 	* libm/machine/spu/headers/cbrt.h: cbrt_factors[] declared.
 	* libm/machine/spu/headers/cbrtf.h: Likewise.
-		
+
 2008-09-01  Ken Werner  <ken.werner@de.ibm.com>
 
 	* libc/machine/spu/include/spu_timer.h: spu_timebase function added.
 	* libc/machine/spu/spu_timebase.c: New file.
 	* libc/machine/spu/Makefile.am: Add new file.
 	* libc/machine/spu/Makefile.in: Regenerated.
-			
+
 2008-08-28  Craig Howland  <howland@LGSInnovations.com>
 
 	* libc/time/mktime.c (mktime): Fix tm_isdst value usage (allowing
 	any positive value from user (per std) rather than depending
 	upon 1).
-		
+
 2008-08-28  Corinna Vinschen  <corinna@vinschen.de>
 
 	* libc/stdlib/wcsrtombs.c (_wcsrtombs_r): Optimize condition
@@ -967,12 +2787,12 @@
 	* libc/libc.texinfo: Remove "LOCAL KLUGE" that prevents it
 	from building pdfs.
 	* libm/libm.texinfo: Likewise.
-				
+
 2008-08-27  Corinna Vinschen  <corinna@vinschen.de>
 
 	* libc/stdlib/wcsrtombs.c (_wcsrtombs_r): Fix condition for
 	accepting a converted character and continuing the loop.
-		
+
 2008-07-24  Jeff Johnston  <jjohnstn@redhat.com>
 
 	* libc/include/ctype.h (_ctype_): Restore for C++ backward
@@ -1069,7 +2889,7 @@
 	* libc/machine/spu/sys/dirent.h: Add extern "C" specifier if C++.
 	* libc/machine/spu/sys/sched.h: Likewise.
 	* libc/machine/spu/sys/syscall.h: Likewise.
-	
+
 2008-06-16  Ken Werner  <ken.werner@de.ibm.com>
 
 	* libc/machine/spu/mk_syscalls: Provide .type and .size directives
@@ -1085,7 +2905,7 @@
 	and .size directives.
 	* libc/machine/spu/setjmp.S (setjmp): Likewise.
 	(longjmp): Likewise.
-	
+
 2008-06-11  Jeff Johnston  <jjohnstn@redhat.com>
 
 	* libc/include/machine/_default_types.h: Fix GNUC check to
@@ -1096,7 +2916,7 @@
 	* libc/machine/spu/Makefile.am: Add new files.
 	* libc/machine/spu/Makefile.in: Likewise.
 	* libc/machine/spu/include/spu_timer.h: New file to add timer support
-        using interrupts.
+	using interrupts.
 	* libc/machine/spu/spu_clock_stop.c: Likewise.
 	* libc/machine/spu/spu_clock_svcs.c: Likewise.
 	* libc/machine/spu/spu_timer_flih.S: Likewise.
@@ -1111,7 +2931,7 @@
 
 	* libc/machine/spu/strcat.c: Return value fixed.
 	* libc/machine/spu/strncat.c: Likewise.
-		
+
 2008-05-28  Eric Blake  <ebb9@byu.net>
 
 	Fix bug in previous patch.

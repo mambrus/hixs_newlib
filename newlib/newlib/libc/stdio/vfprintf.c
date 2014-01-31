@@ -159,6 +159,7 @@ static char *rcsid = "$Id: vfprintf.c,v 1.43 2002/08/13 02:40:06 fitzsim Exp $";
 #include <sys/lock.h>
 #include <stdarg.h>
 #include "local.h"
+#include "../stdlib/local.h"
 #include "fvwrite.h"
 #include "vfieeefp.h"
 
@@ -177,8 +178,18 @@ static char *rcsid = "$Id: vfprintf.c,v 1.43 2002/08/13 02:40:06 fitzsim Exp $";
 #endif
 
 #ifdef STRING_ONLY
-static int
-_DEFUN(__sprint_r, (ptr, fp, uio),
+#define __SPRINT __ssprint_r
+#else
+#define __SPRINT __sprint_r
+#endif
+
+/* The __sprint_r/__ssprint_r functions are shared between all versions of
+   vfprintf and vfwprintf.  They must only be defined once, which we do in
+   the INTEGER_ONLY versions here. */
+#ifdef STRING_ONLY
+#ifdef INTEGER_ONLY
+int
+_DEFUN(__ssprint_r, (ptr, fp, uio),
        struct _reent *ptr _AND
        FILE *fp _AND
        register struct __suio *uio)
@@ -268,29 +279,55 @@ err:
   uio->uio_iovcnt = 0;
   return EOF;
 }
+#else /* !INTEGER_ONLY */
+int __ssprint_r (struct _reent *, FILE *, register struct __suio *);
+#endif /* !INTEGER_ONLY */
 
 #else /* !STRING_ONLY */
+#ifdef INTEGER_ONLY
 /*
  * Flush out all the vectors defined by the given uio,
  * then reset it so that it can be reused.
  */
-static int
+int
 _DEFUN(__sprint_r, (ptr, fp, uio),
        struct _reent *ptr _AND
        FILE *fp _AND
        register struct __suio *uio)
 {
-	register int err;
+	register int err = 0;
 
 	if (uio->uio_resid == 0) {
 		uio->uio_iovcnt = 0;
 		return (0);
 	}
-	err = __sfvwrite_r(ptr, fp, uio);
+	if (fp->_flags2 & __SWID) {
+		struct __siov *iov;
+		wchar_t *p;
+		int i, len;
+
+		iov = uio->uio_iov;
+		for (; uio->uio_resid != 0;
+		     uio->uio_resid -= len * sizeof (wchar_t), iov++) {
+			p = (wchar_t *) iov->iov_base;
+			len = iov->iov_len / sizeof (wchar_t);
+			for (i = 0; i < len; i++) {
+				if (_fputwc_r (ptr, p[i], fp) == WEOF) {
+					err = -1;
+					goto out;
+				}
+			}
+		}
+	} else
+		err = __sfvwrite_r(ptr, fp, uio);
+out:
 	uio->uio_resid = 0;
 	uio->uio_iovcnt = 0;
 	return (err);
 }
+#else /* !INTEGER_ONLY */
+int __sprint_r (struct _reent *, FILE *, register struct __suio *);
+#endif /* !INTEGER_ONLY */
 
 /*
  * Helper function for `fprintf to unbuffered unix file': creates a
@@ -310,6 +347,7 @@ _DEFUN(__sbprintf, (rptr, fp, fmt, ap),
 
 	/* copy the important variables */
 	fake._flags = fp->_flags & ~__SNBF;
+	fake._flags2 = fp->_flags2;
 	fake._file = fp->_file;
 	fake._cookie = fp->_cookie;
 	fake._write = fp->_write;
@@ -516,6 +554,7 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 	char sign;		/* sign prefix (' ', '+', '-', or \0) */
 #ifdef FLOATING_POINT
 	char *decimal_point = _localeconv_r (data)->decimal_point;
+	size_t decp_len = strlen (decimal_point);
 	char softsign;		/* temporary negative sign for floats */
 	union { int i; _PRINTF_FLOAT_TYPE fp; } _double_ = {0};
 # define _fpvalue (_double_.fp)
@@ -564,7 +603,7 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 	uio.uio_resid += (len); \
 	iovp++; \
 	if (++uio.uio_iovcnt >= NIOV) { \
-		if (__sprint_r(data, fp, &uio)) \
+		if (__SPRINT(data, fp, &uio)) \
 			goto error; \
 		iovp = iov; \
 	} \
@@ -579,7 +618,7 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 	} \
 }
 #define	FLUSH() { \
-	if (uio.uio_resid && __sprint_r(data, fp, &uio)) \
+	if (uio.uio_resid && __SPRINT(data, fp, &uio)) \
 		goto error; \
 	uio.uio_iovcnt = 0; \
 	iovp = iov; \
@@ -684,7 +723,8 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 	for (;;) {
 	        cp = fmt;
 #ifdef _MB_CAPABLE
-	        while ((n = _mbtowc_r (data, &wc, fmt, MB_CUR_MAX, &state)) > 0) {
+	        while ((n = __mbtowc (data, &wc, fmt, MB_CUR_MAX,
+				      __locale_charset (), &state)) > 0) {
                     if (wc == '%')
                         break;
                     fmt += n;
@@ -1404,13 +1444,13 @@ number:			if ((dprec = prec) >= 0)
 					/* kludge for __dtoa irregularity */
 					PRINT ("0", 1);
 					if (expt < ndig || flags & ALT) {
-						PRINT (decimal_point, 1);
+						PRINT (decimal_point, decp_len);
 						PAD (ndig - 1, zeroes);
 					}
 				} else if (expt <= 0) {
 					PRINT ("0", 1);
 					if (expt || ndig || flags & ALT) {
-						PRINT (decimal_point, 1);
+						PRINT (decimal_point, decp_len);
 						PAD (-expt, zeroes);
 						PRINT (cp, ndig);
 					}
@@ -1418,18 +1458,18 @@ number:			if ((dprec = prec) >= 0)
 					PRINT (cp, ndig);
 					PAD (expt - ndig, zeroes);
 					if (flags & ALT)
-						PRINT (decimal_point, 1);
+						PRINT (decimal_point, decp_len);
 				} else {
 					PRINT (cp, expt);
 					cp += expt;
-					PRINT (decimal_point, 1);
+					PRINT (decimal_point, decp_len);
 					PRINT (cp, ndig - expt);
 				}
 			} else {	/* 'a', 'A', 'e', or 'E' */
 				if (ndig > 1 || flags & ALT) {
 					PRINT (cp, 1);
 					cp++;
-					PRINT (decimal_point, 1);
+					PRINT (decimal_point, decp_len);
 					if (_fpvalue) {
 						PRINT (cp, ndig - 1);
 					} else	/* 0.[0..] */
@@ -1642,48 +1682,12 @@ exponent(char *p0, int exp, int fmtch)
    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-typedef enum {
-  ZERO,   /* '0' */
-  DIGIT,  /* '1-9' */
-  DOLLAR, /* '$' */
-  MODFR,  /* spec modifier */
-  SPEC,   /* format specifier */
-  DOT,    /* '.' */
-  STAR,   /* '*' */
-  FLAG,   /* format flag */
-  OTHER,  /* all other chars */
-  MAX_CH_CLASS /* place-holder */
-} CH_CLASS;
+/* The below constant state tables are shared between all versions of
+   vfprintf and vfwprintf.  They must only be defined once, which we do in
+   the STRING_ONLY/INTEGER_ONLY versions here. */
+#if defined (STRING_ONLY) && defined(INTEGER_ONLY)
 
-typedef enum {
-  START,  /* start */
-  SFLAG,  /* seen a flag */
-  WDIG,   /* seen digits in width area */
-  WIDTH,  /* processed width */
-  SMOD,   /* seen spec modifier */
-  SDOT,   /* seen dot */
-  VARW,   /* have variable width specifier */
-  VARP,   /* have variable precision specifier */
-  PREC,   /* processed precision */
-  VWDIG,  /* have digits in variable width specification */
-  VPDIG,  /* have digits in variable precision specification */
-  DONE,   /* done */
-  MAX_STATE, /* place-holder */
-} STATE;
-
-typedef enum {
-  NOOP,  /* do nothing */
-  NUMBER, /* build a number from digits */
-  SKIPNUM, /* skip over digits */
-  GETMOD,  /* get and process format modifier */
-  GETARG,  /* get and process argument */
-  GETPW,   /* get variable precision or width */
-  GETPWB,  /* get variable precision or width and pushback fmt char */
-  GETPOS,  /* get positional parameter value */
-  PWPOS,   /* get positional parameter value for variable width or precision */
-} ACTION;
-
-_CONST static CH_CLASS chclass[256] = {
+_CONST __CH_CLASS __chclass[256] = {
   /* 00-07 */  OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
   /* 08-0f */  OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
   /* 10-17 */  OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
@@ -1718,7 +1722,7 @@ _CONST static CH_CLASS chclass[256] = {
   /* f8-ff */  OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
 };
 
-_CONST static STATE state_table[MAX_STATE][MAX_CH_CLASS] = {
+_CONST __STATE __state_table[MAX_STATE][MAX_CH_CLASS] = {
   /*             '0'     '1-9'     '$'     MODFR    SPEC    '.'     '*'    FLAG    OTHER */
   /* START */  { SFLAG,   WDIG,    DONE,   SMOD,    DONE,   SDOT,  VARW,   SFLAG,  DONE },
   /* SFLAG */  { SFLAG,   WDIG,    DONE,   SMOD,    DONE,   SDOT,  VARW,   SFLAG,  DONE },
@@ -1733,7 +1737,7 @@ _CONST static STATE state_table[MAX_STATE][MAX_CH_CLASS] = {
   /* VPDIG */  { DONE,    DONE,    PREC,   DONE,    DONE,   DONE,  DONE,   DONE,   DONE },
 };
 
-_CONST static ACTION action_table[MAX_STATE][MAX_CH_CLASS] = {
+_CONST __ACTION __action_table[MAX_STATE][MAX_CH_CLASS] = {
   /*             '0'     '1-9'     '$'     MODFR    SPEC    '.'     '*'    FLAG    OTHER */
   /* START */  { NOOP,    NUMBER,  NOOP,   GETMOD,  GETARG, NOOP,  NOOP,   NOOP,   NOOP },
   /* SFLAG */  { NOOP,    NUMBER,  NOOP,   GETMOD,  GETARG, NOOP,  NOOP,   NOOP,   NOOP },
@@ -1747,6 +1751,8 @@ _CONST static ACTION action_table[MAX_STATE][MAX_CH_CLASS] = {
   /* VWDIG */  { NOOP,    NOOP,    PWPOS,  NOOP,    NOOP,   NOOP,  NOOP,   NOOP,   NOOP },
   /* VPDIG */  { NOOP,    NOOP,    PWPOS,  NOOP,    NOOP,   NOOP,  NOOP,   NOOP,   NOOP },
 };
+
+#endif /* STRING_ONLY && INTEGER_ONLY */
 
 /* function to get positional parameter N where n = N - 1 */
 static union arg_val *
@@ -1764,9 +1770,9 @@ _DEFUN(get_arg, (data, n, fmt, ap, numargs_p, args, arg_type, last_fmt),
   int number, flags;
   int spec_type;
   int numargs = *numargs_p;
-  CH_CLASS chtype;
-  STATE state, next_state;
-  ACTION action;
+  __CH_CLASS chtype;
+  __STATE state, next_state;
+  __ACTION action;
   int pos, last_arg;
   int max_pos_arg = n;
   /* Only need types that can be reached via vararg promotions.  */
@@ -1790,7 +1796,8 @@ _DEFUN(get_arg, (data, n, fmt, ap, numargs_p, args, arg_type, last_fmt),
   while (*fmt && n >= numargs)
     {
 # ifdef _MB_CAPABLE
-      while ((nbytes = _mbtowc_r (data, &wc, fmt, MB_CUR_MAX, &wc_state)) > 0)
+      while ((nbytes = __mbtowc (data, &wc, fmt, MB_CUR_MAX,
+				 __locale_charset (), &wc_state)) > 0)
 	{
 	  fmt += nbytes;
 	  if (wc == '%')
@@ -1818,9 +1825,9 @@ _DEFUN(get_arg, (data, n, fmt, ap, numargs_p, args, arg_type, last_fmt),
       while (state != DONE)
 	{
 	  ch = *fmt++;
-	  chtype = chclass[ch];
-	  next_state = state_table[state][chtype];
-	  action = action_table[state][chtype];
+	  chtype = __chclass[ch];
+	  next_state = __state_table[state][chtype];
+	  action = __action_table[state][chtype];
 	  state = next_state;
 
 	  switch (action)

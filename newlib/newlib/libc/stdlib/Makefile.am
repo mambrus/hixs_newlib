@@ -48,15 +48,23 @@ GENERAL_SOURCES = \
 	rand_r.c	\
 	realloc.c	\
 	reallocf.c	\
+	sb_charsets.c	\
 	strtod.c	\
 	strtol.c	\
 	strtoul.c	\
+	wcstod.c	\
 	wcstol.c	\
 	wcstoul.c	\
 	wcstombs.c	\
 	wcstombs_r.c	\
 	wctomb.c	\
 	wctomb_r.c
+
+if HAVE_LONG_DOUBLE
+GENERAL_SOURCES += \
+	strtold.c \
+	wcstold.c
+endif # HAVE_LONG_DOUBLE
 
 EXTENDED_SOURCES = \
 	cxa_atexit.c	\
@@ -97,10 +105,12 @@ ELIX_2_SOURCES = \
 	mbrlen.c	\
 	mbrtowc.c	\
 	mbsinit.c	\
+	mbsnrtowcs.c	\
 	mbsrtowcs.c	\
 	on_exit.c	\
 	valloc.c	\
 	wcrtomb.c	\
+	wcsnrtombs.c	\
 	wcsrtombs.c	\
 	wctob.c
 
@@ -226,6 +236,7 @@ CHEWOUT_FILES= \
 	malloc.def	\
 	mallocr.def	\
 	mblen.def	\
+	mbsnrtowcs.def	\
 	mbstowcs.def	\
 	mbtowc.def	\
 	mlock.def	\
@@ -238,12 +249,13 @@ CHEWOUT_FILES= \
 	strtoll.def 	\
 	strtoul.def 	\
 	strtoull.def 	\
+	wcsnrtombs.def	\
+	wcstod.def 	\
 	wcstol.def 	\
 	wcstoll.def 	\
 	wcstoul.def 	\
 	wcstoull.def 	\
 	system.def	\
-	wcstol.def 	\
 	wcstombs.def	\
 	wctomb.def	
 

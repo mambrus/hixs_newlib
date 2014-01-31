@@ -56,7 +56,7 @@
 	double x;
 #endif
 {
-	return (double) lroundf((float) x);
+	return lroundf((float) x);
 }
 
 #endif /* defined(_DOUBLE_IS_32BITS) */

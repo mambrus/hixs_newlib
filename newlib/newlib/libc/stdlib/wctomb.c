@@ -48,6 +48,8 @@ effects vary with the locale.
 
 #include <newlib.h>
 #include <stdlib.h>
+#include <errno.h>
+#include "local.h"
 
 int
 _DEFUN (wctomb, (s, wchar),
@@ -57,10 +59,17 @@ _DEFUN (wctomb, (s, wchar),
 #ifdef _MB_CAPABLE
         _REENT_CHECK_MISC(_REENT);
 
-        return _wctomb_r (_REENT, s, wchar, &(_REENT_WCTOMB_STATE(_REENT)));
+        return __wctomb (_REENT, s, wchar, __locale_charset (),
+			 &(_REENT_WCTOMB_STATE(_REENT)));
 #else /* not _MB_CAPABLE */
         if (s == NULL)
                 return 0;
+
+	/* Verify that wchar is a valid single-byte character.  */
+	if ((size_t)wchar >= 0x100) {
+		errno = EILSEQ;
+		return -1;
+	}
 
         *s = (char) wchar;
         return 1;

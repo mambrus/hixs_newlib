@@ -42,6 +42,7 @@ structure.
 * fmemopen::    Open a stream around a fixed-length buffer
 * fopen::       Open a file
 * fopencookie:: Open a stream with custom callbacks
+* fpurge::      Discard all pending I/O on a stream
 * fputc::       Write a character on a stream or file
 * fputs::       Write a character string in a file or stream
 * fputwc::      Write a wide character to a file or stream
@@ -84,12 +85,16 @@ structure.
 * siscanf::     Scan and format input (integer only)
 * sprintf::     Write formatted output
 * sscanf::      Scan and format input
+* swprintf::    Write formatted wide character output
+* swscanf::     Scan and format wide character input
 * tmpfile::     Create a temporary file
 * tmpnam::      Generate name for a temporary file
 * ungetc::      Push data back into a stream
 * ungetwc::     Push wide character data back into a stream
 * vfprintf::    Format variable argument list
 * vfscanf::     Scan variable argument list
+* vfwprintf::   Format variable wide character argument list
+* vfwscanf::    Scan and format argument list from wide character input
 * viprintf::    Format variable argument list (integer only)
 * viscanf::     Scan variable format list (integer only)
 @end menu
@@ -147,6 +152,9 @@ structure.
 
 @page
 @include stdio/fopencookie.def
+
+@page
+@include stdio/fpurge.def
 
 @page
 @include stdio/fputc.def
@@ -275,6 +283,12 @@ structure.
 @include stdio/sscanf.def
 
 @page
+@include stdio/swprintf.def
+
+@page
+@include stdio/swscanf.def
+
+@page
 @include stdio/tmpfile.def
 
 @page
@@ -291,6 +305,12 @@ structure.
 
 @page
 @include stdio/vfscanf.def
+
+@page
+@include stdio/vfwprintf.def
+
+@page
+@include stdio/vfwscanf.def
 
 @page
 @include stdio/viprintf.def

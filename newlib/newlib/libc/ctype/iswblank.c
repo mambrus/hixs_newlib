@@ -65,42 +65,15 @@ No supporting OS subroutines are required.
 int
 _DEFUN(iswblank,(c), wint_t c)
 {
-  int unicode = 0;
-  if (__lc_ctype[0] == 'C' && __lc_ctype[1] == '\0')
-    {
-      unicode = 0;
-      /* fall-through */ 
-    }
 #ifdef _MB_CAPABLE
-  else if (!strcmp (__lc_ctype, "C-JIS"))
-    {
-      c = __jp2uc (c, JP_JIS);
-      unicode = 1;
-    }
-  else if (!strcmp (__lc_ctype, "C-SJIS"))
-    {
-      c = __jp2uc (c, JP_SJIS);
-      unicode = 1;
-    }
-  else if (!strcmp (__lc_ctype, "C-EUCJP"))
-    {
-      c = __jp2uc (c, JP_EUCJP);
-      unicode = 1;
-    }
-  else if (!strcmp (__lc_ctype, "C-UTF-8"))
-    {
-      unicode = 1;
-    }
-
-  if (unicode)
-    {
-      return (c == 0x0009 || c == 0x0020 || c == 0x1680 ||
-              (c >= 0x2000 && c <= 0x2006) ||
-              (c >= 0x2008 && c <= 0x200b) ||
-              c == 0x205f || c == 0x3000);
-    }
-#endif /* _MB_CAPABLE */
-
+  c = _jp2uc (c);
+  return (c == 0x0009 || c == 0x0020 ||
+	  c == 0x00A0 || c == 0x1680 ||
+	  (c >= 0x2000 && c <= 0x2006) ||
+	  (c >= 0x2008 && c <= 0x200b) ||
+	  c == 0x205f || c == 0x3000);
+#else
   return (c < 0x100 ? isblank (c) : 0);
+#endif /* _MB_CAPABLE */
 }
 

@@ -394,18 +394,6 @@ Supporting OS subroutines required: <<close>>, <<fstat>>, <<isatty>>,
 #endif
 #include "local.h"
 
-/* | ARGSUSED */
-/*SUPPRESS 590*/
-static _READ_WRITE_RETURN_TYPE
-_DEFUN(eofread, (ptr, cookie, buf, len),
-       struct _reent *ptr _AND
-       _PTR cookie _AND
-       char *buf   _AND
-       int len)
-{
-  return 0;
-}
-
 #ifndef _REENT_ONLY 
 
 #ifdef _HAVE_STDC
@@ -428,7 +416,7 @@ sscanf(str, fmt, va_alist)
   f._flags = __SRD | __SSTR;
   f._bf._base = f._p = (unsigned char *) str;
   f._bf._size = f._r = strlen (str);
-  f._read = eofread;
+  f._read = __seofread;
   f._ub._base = NULL;
   f._lb._base = NULL;
   f._file = -1;  /* No file. */
@@ -466,7 +454,7 @@ _sscanf_r(ptr, str, fmt, va_alist)
   f._flags = __SRD | __SSTR;
   f._bf._base = f._p = (unsigned char *) str;
   f._bf._size = f._r = strlen (str);
-  f._read = eofread;
+  f._read = __seofread;
   f._ub._base = NULL;
   f._lb._base = NULL;
   f._file = -1;  /* No file. */

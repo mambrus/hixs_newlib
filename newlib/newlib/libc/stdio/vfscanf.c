@@ -122,6 +122,7 @@ Supporting OS subroutines required:
 #include <stdarg.h>
 #include <errno.h>
 #include "local.h"
+#include "../stdlib/local.h"
 
 #ifdef INTEGER_ONLY
 #define VFSCANF vfiscanf
@@ -293,11 +294,11 @@ _DEFUN(_VFSCANF_R, (data, fp, fmt, ap),
 }
 #endif /* !STRING_ONLY */
 
-#ifdef STRING_ONLY
+#if defined (STRING_ONLY) && defined (INTEGER_ONLY)
 /* When dealing with the sscanf family, we don't want to use the
  * regular ungetc which will drag in file I/O items we don't need.
  * So, we create our own trimmed-down version.  */
-static int
+int
 _DEFUN(_sungetc_r, (data, fp, ch),
 	struct _reent *data _AND
 	int c               _AND
@@ -355,7 +356,7 @@ _DEFUN(_sungetc_r, (data, fp, ch),
 }
 
 /* String only version of __srefill_r for sscanf family.  */
-static int
+int
 _DEFUN(__ssrefill_r, (ptr, fp),
        struct _reent * ptr _AND
        register FILE * fp)
@@ -381,7 +382,7 @@ _DEFUN(__ssrefill_r, (ptr, fp),
   return EOF;
 }
 
-static size_t
+size_t
 _DEFUN(_sfread_r, (ptr, buf, size, count, fp),
        struct _reent * ptr _AND
        _PTR buf _AND
@@ -418,7 +419,11 @@ _DEFUN(_sfread_r, (ptr, buf, size, count, fp),
   fp->_p += resid;
   return count;
 }
-#endif /* STRING_ONLY */
+#else /* !STRING_ONLY || !INTEGER_ONLY */
+int _EXFUN (_sungetc_r, (struct _reent *, int, register FILE *));
+int _EXFUN (__ssrefill_r, (struct _reent *, register FILE *));
+size_t _EXFUN (_sfread_r, (struct _reent *, _PTR buf, size_t, size_t, FILE *));
+#endif /* !STRING_ONLY || !INTEGER_ONLY */
 
 int
 _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
@@ -489,6 +494,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
 # define GET_ARG(n, ap, type) (va_arg (ap, type))
 #endif
 
+  __sfp_lock_acquire ();
   _flockfile (fp);
 
   ORIENT (fp, -1);
@@ -501,7 +507,8 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
       wc = *fmt;
 #else
       memset (&state, '\0', sizeof (state));
-      nbytes = _mbtowc_r (rptr, &wc, fmt, MB_CUR_MAX, &state);
+      nbytes = __mbtowc (rptr, &wc, fmt, MB_CUR_MAX, __locale_charset (),
+			 &state);
 #endif
       fmt += nbytes;
       if (wc == 0)
@@ -716,7 +723,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
 	  break;
 
 	case '[':
-	  fmt = __sccl (ccltab, fmt);
+	  fmt = (u_char *) __sccl (ccltab, (unsigned char *) fmt);
 	  flags |= NOSKIP;
 	  c = CT_CCL;
 	  break;
@@ -779,6 +786,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
 	   */
 	case '\0':		/* compat */
 	  _funlockfile (fp);
+	  __sfp_lock_release ();
 	  return EOF;
 
 	default:		/* compat */
@@ -1329,7 +1337,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
 		  break;
 		case 'n':
 		case 'N':
-		  if (nancount == 0
+		  if (nancount == 0 && zeroes == 0
 		      && (flags & (NDIGITS | DPTOK | EXPOK)) ==
 				  (NDIGITS | DPTOK | EXPOK))
 		    {
@@ -1358,7 +1366,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
 		  break;
 		case 'i':
 		case 'I':
-		  if (infcount == 0
+		  if (infcount == 0 && zeroes == 0
 		      && (flags & (NDIGITS | DPTOK | EXPOK)) ==
 				  (NDIGITS | DPTOK | EXPOK))
 		    {
@@ -1577,11 +1585,13 @@ input_failure:
      invalid format string), return EOF if no matches yet, else number
      of matches made prior to failure.  */
   _funlockfile (fp);
+  __sfp_lock_release ();
   return nassigned && !(fp->_flags & __SERR) ? nassigned : EOF;
 match_failure:
 all_done:
   /* Return number of matches, which can be 0 on match failure.  */
   _funlockfile (fp);
+  __sfp_lock_release ();
   return nassigned;
 }
 

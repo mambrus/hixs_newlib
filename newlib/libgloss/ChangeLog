@@ -1,3 +1,262 @@
+2009-12-17  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* mn10300/Makefile.in: Add mkdir call to make installation
+	directory when installing.
+
+2009-12-16  Conny Marco Menebrocker <c-m-m@gmx.de>
+
+	* xc16x/Makefile.in: Remove extraneous stuff
+	brought in by copy.
+	* xc16x/configure.in: Ditto.
+	* xc16x/configure: Regenerated.
+
+2009-12-10  Conny Marco Menebrocker <c-m-m@gmx.de>
+
+	* configure.in: Add xc16x support.
+	* configure: Regenerated.
+	* xc16x/Makefile.in: New file for xc16x port.
+	* xc16x/aclocal.m4: Ditto.
+	* xc16x/close.S: Ditto.
+	* xc16x/configure: Ditto.
+	* xc16x/configure.in: Ditto.
+	* xc16x/create.c: Ditto.
+	* xc16x/crt0.S: Ditto.
+	* xc16x/fstat.S: Ditto.
+	* xc16x/getchar1.c: Ditto.
+	* xc16x/isatty.c: Ditto.
+	* xc16x/lseek.c: Ditto.
+	* xc16x/mem-layout.c: Ditto.
+	* xc16x/misc.c: Ditto.
+	* xc16x/open.c: Ditto.
+	* xc16x/read.c: Ditto.
+	* xc16x/sbrk.c: Ditto.
+	* xc16x/syscalls.c: Ditto.
+	* xc16x/trap_handle.c: Ditto.
+	* xc16x/write.c: Ditto.
+	* xc16x/sys/syscall.h: Ditto.
+
+2009-11-25  DJ Delorie  <dj@redhat.com>
+
+	* rx/rx.ld: Place .sbss properly.
+	* rx/rx-sim.ld: Likewise.
+
+2009-10-26  DJ Delorie  <dj@redhat.com>
+
+	* configure.in: Add support for RX sub-directory.
+	* configure: Regenerate.
+	* rx: New directory.
+	* rx/*: New files to support RX architecture.
+
+2009-10-26  Nick Clifton  <nickc@redhat.com>
+
+	* arm/linux-syscalls0.S (SYSCALL0, SYSCALL3, SYSCALL6, SYSCALL4):
+	Delete Thumb definitions - the ARM versions work correctly in
+	Thumb mode.
+
+2009-10-08  Jie Zhang  <jie.zhang@analog.com>
+
+	* bfin/Makefile.in (basiccrt.o, basiccrts.o): Use
+	-mcpu=bf532-any for the default multilib.
+
+2009-09-28  Michael Eager <eager@eagercon.com>
+
+	* configure.in: Add microblaze-*-*.
+	* configure: Add microblaze-*-* (not regenerated.)
+	* microblaze: NEW microblaze target directory.
+	* microblaze/configure.in: NEW.
+	* microblaze/configure: Generate.
+	* microblaze/Makefile.in: NEW.
+	* microblaze/{crt0.S, crt1.S, crt2.S, crt3.S, crt4.S, crtinit.S}: NEW.
+	* microblaze/{pgcrtinit.S, _program_clean.S, _program_init.S,
+	sbrk.c, sim-crtinit.S, sim-pgcrtinit.S, timer.c, _exception_handler.S,
+	_hw_exception_handler.S, _interrupt_handler.S, xil_malloc.c,
+	nnxil_printf.c, xil_sbrk.c: NEW.
+	* microblaze/xilinx.ld: NEW.
+
+2009-09-21  Ken Werner  <ken.werner@de.ibm.com>
+
+        * spu/getpagesize.c: Align getpagesize implementation to POSIX
+
+2009-09-16  Mike Frysinger  <michael.frysinger@analog.com>
+
+	* bfin/include/cdefBF512.h, bfin/include/cdefBF514.h,
+	bfin/include/cdefBF516.h, bfin/include/cdefBF518.h,
+	bfin/include/cdefBF51x_base.h, bfin/include/cdefBF523.h,
+	bfin/include/cdefBF524.h, bfin/include/cdefBF526.h,
+	bfin/include/cdefBF542M.h, bfin/include/cdefBF544M.h,
+	bfin/include/cdefBF547M.h, bfin/include/cdefBF548M.h,
+	bfin/include/cdefBF549M.h, bfin/include/defBF512.h,
+	bfin/include/defBF514.h, bfin/include/defBF516.h,
+	bfin/include/defBF518.h, bfin/include/defBF51x_base.h,
+	bfin/include/defBF523.h, bfin/include/defBF524.h,
+	bfin/include/defBF526.h, bfin/include/defBF542M.h,
+	bfin/include/defBF544M.h, bfin/include/defBF547M.h,
+	bfin/include/defBF548M.h, bfin/include/defBF549M.h:
+	New file.
+	* bfin/include/ccblkfn.h, bfin/include/cdefBF525.h,
+	bfin/include/cdefBF527.h, bfin/include/cdefBF52x_base.h,
+	bfin/include/cdefBF532.h, bfin/include/cdefBF534.h,
+	bfin/include/cdefBF535.h, bfin/include/cdefBF538.h,
+	bfin/include/cdefBF539.h, bfin/include/cdefBF542.h,
+	bfin/include/cdefBF544.h, bfin/include/cdefBF547.h,
+	bfin/include/cdefBF548.h, bfin/include/cdefBF549.h,
+	bfin/include/cdefBF54x_base.h, bfin/include/cdefBF561.h,
+	bfin/include/cdefblackfin.h, bfin/include/cdef_LPBlackfin.h,
+	bfin/include/cplb.h, bfin/include/defBF527.h,
+	bfin/include/defBF52x_base.h, bfin/include/defBF532.h,
+	bfin/include/defBF534.h, bfin/include/defBF535.h,
+	bfin/include/defBF537.h, bfin/include/defBF538.h,
+	bfin/include/defBF539.h, bfin/include/defBF542.h,
+	bfin/include/defBF544.h, bfin/include/defBF547.h,
+	bfin/include/defBF548.h, bfin/include/defBF549.h,
+	bfin/include/defBF54x_base.h, bfin/include/defBF561.h,
+	bfin/include/defblackfin.h, bfin/include/def_LPBlackfin.h,
+	bfin/include/sys/_adi_platform.h,
+	bfin/include/sys/anomaly_macros_rtl.h,
+	bfin/include/sys/exception.h, bfin/include/sysreg.h:
+	Update to Visual DSP 5.0 Update 6.
+
+2009-09-16  Mike Frysinger  <michael.frysinger@analog.com>
+
+	* bfin/Makefile.in (BOARD_SCRIPTS): Add bf512.ld, bf514.ld,
+	and bf516.ld, bf518.ld.
+	* bfin/bf512.ld: New file.
+	* bfin/bf514.ld: Likewise.
+	* bfin/bf516.ld: Likewise.
+	* bfin/bf518.ld: Likewise
+
+2009-09-16  Jie Zhang  <jie.zhang@analog.com>
+
+	* bfin/*.ld: Fix typos in comments.
+
+2009-09-08  Bernd Schmidt  <bernd.schmidt@analog.com>
+
+	* bfin/include/ccblkfn.h: New file.
+
+2009-09-08  Mike Frysinger  <michael.frysinger@analog.com>
+
+	* bfin/include/sys/_adi_platform.h: Convert __ASSEMBLY__ to
+	__ASSEMBLER__.
+	* bfin/include/sys/pll.h: Likewise
+
+2009-09-08  Jie Zhang  <jie.zhang@analog.com>
+
+	* bfin/Makefile.in (basiccrt.o, basiccrts.o): Don't use
+	-mcpu=bf532-any for the default multilib.
+
+2009-07-28  DJ Delorie  <dj@redhat.com>
+
+	* mep/gmap_default.ld: Add linkonce sections for .vtext.
+	* mep/default.ld: Likewise.
+	* mep/fmax.ld: Likewise.
+	* mep/simple.ld: Likewise.
+
+2009-07-14  DJ Delorie  <dj@redhat.com>
+
+	* mep/syscalls.S (sysret): Maintain 16-byte stack alignment.
+
+2009-07-08  DJ Delorie  <dj@redhat.com>
+
+	* m32c/sbrk.c (sbrk): Change to take ptrdiff_t, not int.
+
+2009-07-01  Anthony Green  <green@moxielogic.com>
+
+	* moxie/crt0.S (_start): Clear BSS at startup.  Register _fini()
+	with atexit().
+	* moxie/sim-open.S: Fix comment.
+
+2009-06-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile.in (html, pdf): New.
+	* doc/Makefile.in (html, pdf, porting.pdf, porting.html): New.
+	* doc/porting.texi: Fix section structure.
+
+2009-06-17  Michael Eager <eager@eagercon.com>
+
+	* rs6000/Makefile.in: Add xilinx support.
+	* rs6000/xil-crt0.s: New crt0 file for powerpc-xilinx-eabi.
+	* rs6000/xilinx.ld: New file.
+	* rs6000/xilinx440.ld: Ditto.
+
+2009-05-13  Ken Werner  <ken.werner@de.ibm.com>
+
+	* configure.in: Introduce config_libnosys flag which defaults to true.
+	* configure: Regenerate.
+
+2009-05-13  Ulrich Weigand  <uweigand@de.ibm.com>
+
+	* spu/crtn.S: Add dummy to ensure nothing gets linked at address 0.
+	* spu/crti.S: Remove nop.
+
+2009-05-08  Nick Clifton  <nickc@redhat.com>
+
+	* mn10300/sim.ld: Add missing section names such as .bss.*
+	.text.*, etc.  General tidy up.
+
+2009-05-07  Ken Werner  <ken.werner@de.ibm.com>
+
+	* spu/configure.in: Fix multilib support.
+	* spu/configure: Regenerate.
+	* spu/Makefile.in: Add CFLAGS_FOR_TARGET.
+
+2009-04-29  Anthony Green  <green@moxielogic.com>
+
+	* moxie/moxie-elf-common.ld: Move default stack out to accommodate
+	large GCC tests.
+
+2009-04-22  Anthony Green  <green@moxielogic.com>
+
+	* configure.in: Add moxie support.
+	* configure: Regenerate.
+	* moxie/aclocal.m4, moxie/configure, moxie/configure.in,
+	moxie/crt0.S, moxie/fstat.c, moxie/getpid.c, isatty.c,
+	moxie/kill.c, moxie/Makefile.in, moxie/moxie-elf-common.ld,
+	moxie/print.c, moxie/putnum.c, moxie/qemu.ld, moxie/qemu-time.c,
+	moxie/qemu-write.c, moxie/sbrk.c, moxie/sim-close.S, 
+	moxie/sim-exit.S,
+	moxie/sim-inbyte.c, moxie/sim.ld, moxie/sim-lseek.c,
+	moxie/sim-lseek.S, moxie/sim-open.S, moxie/sim-read.S, moxie/sim-time.c,
+	moxie/sim-unlink.S, moxie/sim-write.S, moxie/stat.c: New files.
+
+2009-04-22  DJ Delorie  <dj@redhat.com>
+
+	* mep/sim-crt0.S (_start): Fix typo.
+
+2009-04-21  DJ Delorie  <dj@redhat.com>
+
+	* mep/Makefile.in (SCRIPTS): Update to new config.
+	* mep/default.ld: New.
+	* mep/gmap_default.ld: Change default endian to little.
+	* mep/sim-crt0.S: Maintain 8-byte stack alignment.
+	* mep/sim-crtn.S: Likewise.
+
+2009-04-03  Ken Werner  <ken.werner@de.ibm.com>
+
+	* spu/Makefile.in: Add new files.
+	* spu/times.c: New File.
+	* spu/getitimer.c: Likewise.
+	* spu/setitimer.c: Likewise.
+
+2009-04-03  Ken Werner  <ken.werner@de.ibm.com>
+
+	* spu/Makefile.in: Add linux_getpid.o and linux_gettid.o.
+	* spu/linux_getpid.c: New file.
+	* spu/linux_gettid.c: New file.
+
+2009-04-03  Ken Werner  <ken.werner@de.ibm.com>
+
+	* spu/crt0.S (_start): Place spu_id in the first agument register.
+
+2009-03-16  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* m32r/m32r-stub.c: Replace with one from newer version of gdb.
+
+2009-01-07  Ben Elliston  <bje@au.ibm.com>
+
+	* Makefile.in (all): Add `+' to the command line so that the
+	command is always treated as $(MAKE).
+	* doc/Makefile.in (datarootdir): Define.
+
 2008-12-17  Jon Beniston <jon@beniston.com>
 
 	* README: Add description of lm32 directory.
@@ -15,7 +274,7 @@
 	* lm32/scall.S: New file.
 	* lm32/sim.ld: New file.
 
-2008-12-11  Ken Werner  <ken.werner@de.ibm.com
+2008-12-11  Ken Werner  <ken.werner@de.ibm.com>
 
 	* spu/crt0.S: Call __monstartup if profiling is enabled.
 	* spu/Makefile.in: Add gcrt1.o gcrt2.o.
@@ -1982,12 +2241,12 @@
 	* mips/cfe_prestart.S (hardware_hazard_hook): To here,
 	and translate into assembly.
 
-2003-01-08  Richard Sandiford  <rsandifo@redhat.com
+2003-01-08  Richard Sandiford  <rsandifo@redhat.com>
 
 	* mips/crt0.S (_start): Allocate 64 bytes of stack instead of 32.
 	Pass an empty argv and envp to main().
 
-2003-01-08  Richard Sandiford  <rsandifo@redhat.com
+2003-01-08  Richard Sandiford  <rsandifo@redhat.com>
 
 	* mips/configure.in (mips64vr-elf, mips64vrel-elf): New config.
 	* mips/configure: Regenerate.

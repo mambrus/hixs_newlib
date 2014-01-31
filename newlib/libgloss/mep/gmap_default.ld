@@ -24,8 +24,8 @@ begin-header
 end-header
 *******************************************************************************/
 
-OUTPUT_FORMAT("elf32-mep", "elf32-mep",
-	      "elf32-mep")
+OUTPUT_FORMAT("elf32-mep-little", "elf32-mep",
+	      "elf32-mep-little")
 OUTPUT_ARCH(mep)
 ENTRY(_reset)
 
@@ -174,7 +174,7 @@ SECTIONS
   } >RAM /* CODE-section */ =0
   .vtext ALIGN(8)    :
   {
-    *(.vtext)
+    *(.vtext) *(.vtext.*) *(.gnu.linkonce.v.*)
   } >RAM /* CODE-section */
   .fini      :
   {

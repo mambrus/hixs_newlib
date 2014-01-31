@@ -10,6 +10,44 @@
  * is preserved.
  * ====================================================
  */
+/*
+FUNCTION
+<<lrint>>, <<lrintf>>, <<llrint>>, <<llrintf>>--round to integer
+INDEX
+	lrint
+INDEX
+	lrintf
+INDEX
+	llrint
+INDEX
+	llrintf
+
+ANSI_SYNOPSIS
+	#include <math.h>
+	long int lrint(double <[x]>);
+	long int lrintf(float <[x]>);
+	long long int llrint(double <[x]>);
+	long long int llrintf(float <[x]>);
+
+DESCRIPTION
+The <<lrint>> and <<llrint>> functions round their argument to the nearest
+integer value, using the current rounding direction.  If the rounded value is
+outside the range of the return type, the numeric result is unspecified.  A
+range error may occur if the magnitude of <[x]> is too large.
+The "inexact" floating-point exception is raised in implementations that
+support it when the result differs in value from the argument (i.e., when
+a fraction actually has been truncated).
+
+RETURNS
+<[x]> rounded to an integral value, using the current rounding direction.
+
+SEEALSO
+<<lround>>
+
+PORTABILITY
+ANSI C, POSIX
+
+*/
 
 /*
  * lrint(x)
@@ -72,7 +110,7 @@ TWO52[2]={
           GET_HIGH_WORD(i0, t);
           /* Detect the all-zeros representation of plus and
              minus zero, which fails the calculation below. */
-          if ((i0 & ~(1 << 31)) == 0)
+          if ((i0 & ~(1L << 31)) == 0)
               return 0;
           j0 = ((i0 & 0x7ff00000) >> 20) - 1023;
           i0 &= 0x000fffff;

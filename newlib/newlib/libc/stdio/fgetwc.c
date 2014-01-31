@@ -129,7 +129,7 @@ _DEFUN(__fgetwc, (ptr, fp),
     }
   do
     {
-      nconv = _mbrtowc_r (ptr, &wc, fp->_p, fp->_r, &fp->_mbstate);
+      nconv = _mbrtowc_r (ptr, &wc, (char *) fp->_p, fp->_r, &fp->_mbstate);
       if (nconv == (size_t)-1)
 	break;
       else if (nconv == (size_t)-2)
@@ -164,10 +164,12 @@ _DEFUN(_fgetwc_r, (ptr, fp),
 {
   wint_t r;
 
+  __sfp_lock_acquire ();
   _flockfile (fp);
   ORIENT(fp, 1);
   r = __fgetwc (ptr, fp);
   _funlockfile (fp);
+  __sfp_lock_release ();
   return r;
 }
 

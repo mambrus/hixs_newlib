@@ -44,12 +44,15 @@ if test -n "${machine_dir}"; then
 	m68k) AC_CONFIG_SUBDIRS(m68k) ;;
 	m88k) AC_CONFIG_SUBDIRS(m88k) ;;
 	mep ) AC_CONFIG_SUBDIRS(mep) ;;
+	microblaze ) AC_CONFIG_SUBDIRS(microblaze) ;;
 	mips) AC_CONFIG_SUBDIRS(mips) ;;
 	mn10200) AC_CONFIG_SUBDIRS(mn10200) ;;
 	mn10300) AC_CONFIG_SUBDIRS(mn10300) ;;
+	moxie) AC_CONFIG_SUBDIRS(moxie) ;;
 	mt) AC_CONFIG_SUBDIRS(mt) ;;
 	necv70) AC_CONFIG_SUBDIRS(necv70) ;;
 	powerpc) AC_CONFIG_SUBDIRS(powerpc) ;;
+	rx) AC_CONFIG_SUBDIRS(rx) ;;
 	sh) AC_CONFIG_SUBDIRS(sh) ;;
 	sparc) AC_CONFIG_SUBDIRS(sparc) ;;
 	spu) AC_CONFIG_SUBDIRS(spu) ;;
@@ -58,6 +61,7 @@ if test -n "${machine_dir}"; then
 	v850) AC_CONFIG_SUBDIRS(v850) ;;
 	w65) AC_CONFIG_SUBDIRS(w65) ;;
 	x86_64) AC_CONFIG_SUBDIRS(x86_64) ;;
+	xc16x) AC_CONFIG_SUBDIRS(xc16x) ;;
 	xscale) AC_CONFIG_SUBDIRS(xscale) ;;
 	xstormy16) AC_CONFIG_SUBDIRS(xstormy16) ;;
 	z8k) AC_CONFIG_SUBDIRS(z8k) ;;

@@ -378,8 +378,8 @@ int __start (void) { return 0; }
 int foo (void) { return 1; }
 int (*fp) (void) __attribute__ ((section (".init_array"))) = foo;
 EOF
-if AC_TRY_COMMAND([${CC} $CFLAGS $CPPFLAGS $LDFLAGS -o conftest conftest.c
-		   -static -nostartfiles -nostdlib 1>&AS_MESSAGE_LOG_FD])
+if AC_TRY_COMMAND([${CC} $CFLAGS $CPPFLAGS -c -o conftest conftest.c
+							1>&AS_MESSAGE_LOG_FD])
 then
   if ${READELF} -S conftest | grep -e INIT_ARRAY > /dev/null; then
     libc_cv_initfinit_array=yes
@@ -395,24 +395,64 @@ if test $libc_cv_initfinit_array = yes; then
   AC_DEFINE_UNQUOTED(HAVE_INITFINI_ARRAY)
 fi
 
-AC_CACHE_CHECK(for array aliasing support,
-	       libc_cv_array_aliasing, [dnl
+dnl Autoconf 2.59 doesn't support the AC_TYPE_LONG_DOUBLE macro. Instead of:
+dnl   AC_TYPE_LONG_DOUBLE
+dnl   AM_CONDITIONAL(HAVE_LONG_DOUBLE, test x"$ac_cv_type_long_double" = x"yes")
+dnl we specify our own long double test.
+dnl Additionally, ac_cv_objext is broken so that AC_COMPILE_IFELSE cannot be
+dnl used, so use AC_TRY_COMMAND instead.
+AC_CACHE_CHECK(whether long double type exists,
+	       acnewlib_cv_type_long_double, [dnl
 cat > conftest.c <<EOF
-char x[3] = { 'a', 'b', 'c' };
-extern char y[2] __attribute__((alias ("x+1")));
+/* Check two ways:  float.h defines and direct type declaration.  */
+#include <float.h>
+#if defined(LDBL_MANT_DIG)
+  #define _HAVE_LONG_DOUBLE
+ #else
+  #error "LDBL != DBL"
+#endif
+long double test() {
+long double ld = 0.0L;
+return ld;
+}
 EOF
-if AC_TRY_COMMAND([${CC} $CFLAGS $CPPFLAGS -c conftest.c
-		   1>&AS_MESSAGE_LOG_FD])
+if AC_TRY_COMMAND([${CC} $CFLAGS $CPPFLAGS -c -o conftest.o conftest.c
+							1>&AS_MESSAGE_LOG_FD])
 then
-  libc_cv_array_aliasing=yes
+  acnewlib_cv_type_long_double=yes;
 else
-  libc_cv_array_aliasing=no
+  acnewlib_cv_type_long_double=no;
 fi
 rm -f conftest*])
-AC_SUBST(libc_cv_array_aliasing)
-if test $libc_cv_array_aliasing = yes; then
-  AC_DEFINE_UNQUOTED(_HAVE_ARRAY_ALIASING)
+if test $acnewlib_cv_type_long_double = yes; then
+  AC_DEFINE_UNQUOTED(_HAVE_LONG_DOUBLE)
 fi
+AM_CONDITIONAL(HAVE_LONG_DOUBLE, test x"$acnewlib_cv_type_long_double" = x"yes")
+
+AC_CACHE_CHECK(whether long double equals double,
+	       newlib_cv_ldbl_eq_dbl, [dnl
+cat > conftest.c <<EOF
+#include <float.h>
+#if DBL_MANT_DIG == LDBL_MANT_DIG  &&  LDBL_MIN_EXP == DBL_MIN_EXP  && \
+    LDBL_MAX_EXP == DBL_MAX_EXP
+  #define _LDBL_EQ_DBL
+ #else
+  #error "LDBL != DBL"
+#endif
+EOF
+if AC_TRY_COMMAND([${CC} $CFLAGS $CPPFLAGS -c -o conftest.o conftest.c
+							1>&AS_MESSAGE_LOG_FD])
+then
+  newlib_cv_ldbl_eq_dbl=yes;
+else
+  newlib_cv_ldbl_eq_dbl=no;
+fi
+rm -f conftest*])
+if test $newlib_cv_ldbl_eq_dbl = yes; then
+  AC_DEFINE_UNQUOTED(_LDBL_EQ_DBL)
+fi
+
+AC_SUBST(CFLAGS)
 
 AC_CONFIG_FILES([Makefile],
 [if test -n "$CONFIG_FILES"; then

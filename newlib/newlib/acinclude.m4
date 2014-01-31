@@ -2,7 +2,7 @@ dnl This provides configure definitions used by all the newlib
 dnl configure.in files.
 
 AC_DEFUN([DEF_NEWLIB_VERSION],
-m4_define([NEWLIB_VERSION],[1.17.0]))
+m4_define([NEWLIB_VERSION],[1.18.0]))
 
 dnl Basic newlib configury.  This calls basic introductory stuff,
 dnl including AM_INIT_AUTOMAKE and AC_CANONICAL_HOST.  It also runs
@@ -157,7 +157,6 @@ dnl plays around with CFLAGS (such as to build both debugging and
 dnl normal versions of a library), tasteless as that idea is.
   ac_test_CFLAGS="${CFLAGS+set}"
   ac_save_CFLAGS="$CFLAGS"
-  CFLAGS=
   _AC_PROG_CC_G
   if test "$ac_test_CFLAGS" = set; then
     CFLAGS="$ac_save_CFLAGS"

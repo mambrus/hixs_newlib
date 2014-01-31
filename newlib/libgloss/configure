@@ -701,7 +701,6 @@ target_alias
 CCAS
 CCASFLAGS'
 ac_subdirs_all='doc
-libnosys
 i386
 m32r
 m68hc11
@@ -723,12 +722,17 @@ frv
 lm32
 mcore
 mep
+moxie
+microblaze
 mt
+xc16x
 xstormy16
 m32c
+rx
 arm
 spu
-iq2000'
+iq2000
+libnosys'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -2425,44 +2429,38 @@ subdirs="$subdirs doc"
 
 fi
 
-subdirs="$subdirs libnosys"
+config_testsuite=true
 
+config_libnosys=true
 
 case "${target}" in
   i[3456]86-*-elf* | i[3456]86-*-coff*)
 	subdirs="$subdirs i386"
 
-	config_testsuite=true
 	;;
   m32r-*-*)
 	subdirs="$subdirs m32r"
 
-	config_testsuite=true
 	;;
   m68hc11-*-* | m6811-*-* | m68hc12-*-* | m6812-*-*)
 	subdirs="$subdirs m68hc11"
 
-	config_testsuite=true
 	;;
   fido-*-* | m68*-*-*)
 	subdirs="$subdirs m68k"
 
-	config_testsuite=true
 	;;
   hppa*-*-pro*)
 	subdirs="$subdirs pa"
 
-	config_testsuite=true
 	;;
   i960-*-coff)
 	subdirs="$subdirs i960"
 
-	config_testsuite=true
 	;;
   sparclet-*-aout* | sparc-*-elf* | sparc64-*-elf* | sparc86x-*-* | sparclite-*-*)
 	subdirs="$subdirs sparc"
 
-	config_testsuite=true
 	;;
   sh*-*-pe | mips*-*-pe | *arm-wince-pe)
 	subdirs="$subdirs wince"
@@ -2471,32 +2469,26 @@ case "${target}" in
   mips*-*-*)
 	subdirs="$subdirs mips"
 
-	config_testsuite=true
 	;;
   powerpc-*-*|powerpcle-*-*)
 	subdirs="$subdirs rs6000"
 
-	config_testsuite=true
 	;;
   mn10200-*-*)
 	subdirs="$subdirs mn10200"
 
-	config_testsuite=true
 	;;
   mn10300-*-*)
 	subdirs="$subdirs mn10300"
 
-	config_testsuite=true
 	;;
   bfin-*-*)
 	subdirs="$subdirs bfin"
 
-	config_testsuite=true
 	;;
   cris-*-* | crisv32-*-*)
 	subdirs="$subdirs cris"
 
-	config_testsuite=true
 	;;
   crx-*-*)
 	subdirs="$subdirs crx"
@@ -2505,69 +2497,76 @@ case "${target}" in
   d30v-*-*)
 	subdirs="$subdirs d30v"
 
-	config_testsuite=true
 	;;
   fr30-*-*)
 	subdirs="$subdirs fr30"
 
-	config_testsuite=true
 	;;
   frv*-*-*)
 	subdirs="$subdirs frv"
 
-	config_testsuite=true
 	;;
   lm32*-*-*)
 	subdirs="$subdirs lm32"
 
-	config_testsuite=true
 	;;
   mcore-*-*)
 	subdirs="$subdirs mcore"
 
-	config_testsuite=true
 	;;
   mep-*-*)
 	subdirs="$subdirs mep"
 
-	config_testsuite = true;
+	;;
+  moxie-*-*)
+	subdirs="$subdirs moxie"
+
+	;;
+  microblaze-*-*)
+	subdirs="$subdirs microblaze"
+
 	;;
   mt-*-*)
         subdirs="$subdirs mt"
 
-	config_testsuite=true
+	;;
+  xc16x-*-*)
+	subdirs="$subdirs xc16x"
+
 	;;
   xstormy16-*-*)
 	subdirs="$subdirs xstormy16"
 
-	config_testsuite=true
 	;;
   m32c-*-*)
 	subdirs="$subdirs m32c"
 
-	config_testsuite=true
+	;;
+  rx*-*-elf)
+	subdirs="$subdirs rx"
+
 	;;
   strongarm-*-elf | strongarm-*-coff | arm*-*-elf | arm*-*-coff | ep9312-*-elf | ep9312-*-coff | xscale-*-elf | xscale-*-coff | *arm-*-*)
 	subdirs="$subdirs arm"
 
-	config_testsuite=true
 	;;
   spu-*-elf)
 	subdirs="$subdirs spu"
 
 	config_testsuite=false
+	config_libnosys=false
 	;;
   iq2000-*-*)
 	subdirs="$subdirs iq2000"
 
-	config_testsuite=true
 	;;
 esac
 
-# For now, don't bother configuring testsuite
-#
-# if test ${config_testsuite); then AC_CONFIG_SUBDIRS(testsuite); fi
-#
+
+if test "${config_libnosys}" = "true"; then
+  subdirs="$subdirs libnosys"
+
+fi
 
 DEPDIR="${am__leading_dot}deps"
 
