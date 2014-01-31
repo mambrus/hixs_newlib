@@ -161,6 +161,9 @@ case "${host_cpu}" in
   iq2000)
 	machine_dir=iq2000
 	;;
+  lm32)
+	machine_dir=lm32
+	;;
   m32c)
 	machine_dir=m32c
 	newlib_cflags="${newlib_cflags} -DPREFER_SIZE_OVER_SPEED -DABORT_PROVIDED -DSMALL_MEMORY"
@@ -268,7 +271,10 @@ case "${host_cpu}" in
 	stdio_dir=
 	libm_machine_dir=spu
 	machine_dir=spu
-	newlib_cflags="${newlib_cflags} -D_POSIX_MODE -ffunction-sections -fdata-sections "
+	newlib_cflags="${newlib_cflags} -D_POSIX_MODE"
+	newlib_cflags="${newlib_cflags} -DREENTRANT_SYSCALLS_PROVIDED"
+	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
+	newlib_cflags="${newlib_cflags} -ffunction-sections -fdata-sections "
 	;;
   *)
 	echo '***' "Newlib does not support CPU ${host_cpu}" 1>&2
@@ -337,7 +343,8 @@ case "${host}" in
 	;;
   *-*-rtems*)			# generic RTEMS support
 	sys_dir=rtems
-        # RTEMS POSIX support is all inside RTEMS
+	posix_dir=posix
+	unix_dir=unix
 	;;
   a29k-*-*)
 	sys_dir=a29khif
@@ -414,6 +421,7 @@ case "${host}" in
 	newlib_cflags="${newlib_cflags} -Wall"
 	newlib_cflags="${newlib_cflags} -D_I386MACH_ALLOW_HW_INTERRUPTS"
 	newlib_cflags="${newlib_cflags} -DHAVE_FCNTL"
+	newlib_cflags="${newlib_cflags} -DHAVE_GETOPT"
 	# --- Required when building a shared library ------------------------
 	newlib_cflags="${newlib_cflags} -fPIC -D_I386MACH_NEED_SOTYPE_FUNCTION"
 	# --- The three lines below are optional ------------------------------
@@ -528,7 +536,10 @@ case "${host}" in
 #  NOTE: When newlib malloc uses a semaphore, RTEMS will switch to that.
   *-*-rtems*)
 	default_newlib_io_long_long="yes"
-	newlib_cflags="${newlib_cflags} -DMALLOC_PROVIDED -DEXIT_PROVIDED -DMISSING_SYSCALL_NAMES -DSIGNAL_PROVIDED -DREENTRANT_SYSCALLS_PROVIDED -DHAVE_OPENDIR -DNO_EXEC -DHAVE_FCNTL"
+	default_newlib_io_c99_formats="yes"
+	newlib_cflags="${newlib_cflags} -DMALLOC_PROVIDED -DEXIT_PROVIDED -DMISSING_SYSCALL_NAMES -DSIGNAL_PROVIDED -DREENTRANT_SYSCALLS_PROVIDED -DHAVE_NANOSLEEP -DHAVE_FCNTL"
+        # turn off unsupported items in posix directory 
+	newlib_cflags="${newlib_cflags} -D_NO_GETLOGIN -D_NO_GETPWENT -D_NO_GETUT -D_NO_GETPASS -D_NO_SIGSET"
 	;;
 # VxWorks supplies its own version of malloc, and the newlib one
 # doesn't work because VxWorks does not have sbrk.
@@ -625,6 +636,9 @@ case "${host}" in
   iq2000*)
 	syscall_dir=syscalls
 	default_newlib_io_long_long="yes"
+	;;
+  lm32-*-*)
+	syscall_dir=syscalls
 	;;
   m32r-*-*)
 	# Pass -msdata=sdata so _impure_ptr goes in .sdata.

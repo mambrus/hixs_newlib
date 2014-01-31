@@ -45,7 +45,9 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/../../libtool.m4 \
 	$(top_srcdir)/../../ltoptions.m4 \
 	$(top_srcdir)/../../ltsugar.m4 \
-	$(top_srcdir)/../../ltversion.m4 $(top_srcdir)/../acinclude.m4 \
+	$(top_srcdir)/../../ltversion.m4 \
+	$(top_srcdir)/../../lt~obsolete.m4 \
+	$(top_srcdir)/../acinclude.m4 $(top_srcdir)/../confsubdir.m4 \
 	$(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -85,11 +87,11 @@ am__objects_1 = lib_a-__adjust.$(OBJEXT) lib_a-__atexit.$(OBJEXT) \
 	lib_a-mlock.$(OBJEXT) lib_a-mprec.$(OBJEXT) \
 	lib_a-mstats.$(OBJEXT) lib_a-rand.$(OBJEXT) \
 	lib_a-rand_r.$(OBJEXT) lib_a-realloc.$(OBJEXT) \
-	lib_a-strtod.$(OBJEXT) lib_a-strtol.$(OBJEXT) \
-	lib_a-strtoul.$(OBJEXT) lib_a-wcstol.$(OBJEXT) \
-	lib_a-wcstoul.$(OBJEXT) lib_a-wcstombs.$(OBJEXT) \
-	lib_a-wcstombs_r.$(OBJEXT) lib_a-wctomb.$(OBJEXT) \
-	lib_a-wctomb_r.$(OBJEXT)
+	lib_a-reallocf.$(OBJEXT) lib_a-strtod.$(OBJEXT) \
+	lib_a-strtol.$(OBJEXT) lib_a-strtoul.$(OBJEXT) \
+	lib_a-wcstol.$(OBJEXT) lib_a-wcstoul.$(OBJEXT) \
+	lib_a-wcstombs.$(OBJEXT) lib_a-wcstombs_r.$(OBJEXT) \
+	lib_a-wctomb.$(OBJEXT) lib_a-wctomb_r.$(OBJEXT)
 am__objects_2 = lib_a-cxa_atexit.$(OBJEXT) \
 	lib_a-cxa_finalize.$(OBJEXT) lib_a-drand48.$(OBJEXT) \
 	lib_a-ecvtbuf.$(OBJEXT) lib_a-efgcvt.$(OBJEXT) \
@@ -133,9 +135,9 @@ am__objects_7 = __adjust.lo __atexit.lo __call_atexit.lo __exp10.lo \
 	gdtoa-gethex.lo gdtoa-hexnan.lo getenv.lo getenv_r.lo labs.lo \
 	ldiv.lo ldtoa.lo malloc.lo mblen.lo mblen_r.lo mbstowcs.lo \
 	mbstowcs_r.lo mbtowc.lo mbtowc_r.lo mlock.lo mprec.lo \
-	mstats.lo rand.lo rand_r.lo realloc.lo strtod.lo strtol.lo \
-	strtoul.lo wcstol.lo wcstoul.lo wcstombs.lo wcstombs_r.lo \
-	wctomb.lo wctomb_r.lo
+	mstats.lo rand.lo rand_r.lo realloc.lo reallocf.lo strtod.lo \
+	strtol.lo strtoul.lo wcstol.lo wcstoul.lo wcstombs.lo \
+	wcstombs_r.lo wctomb.lo wctomb_r.lo
 am__objects_8 = cxa_atexit.lo cxa_finalize.lo drand48.lo ecvtbuf.lo \
 	efgcvt.lo erand48.lo jrand48.lo lcong48.lo lrand48.lo \
 	mrand48.lo msize.lo mtrim.lo nrand48.lo rand48.lo seed48.lo \
@@ -195,6 +197,7 @@ CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -249,6 +252,7 @@ LIBC_UNIX_LIB = @LIBC_UNIX_LIB@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
+LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
@@ -259,8 +263,11 @@ MAY_SUPPLY_SYSCALLS_FALSE = @MAY_SUPPLY_SYSCALLS_FALSE@
 MAY_SUPPLY_SYSCALLS_TRUE = @MAY_SUPPLY_SYSCALLS_TRUE@
 NEWLIB_CFLAGS = @NEWLIB_CFLAGS@
 NM = @NM@
+NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OTOOL = @OTOOL@
+OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -277,8 +284,20 @@ STRIP = @STRIP@
 USE_LIBTOOL_FALSE = @USE_LIBTOOL_FALSE@
 USE_LIBTOOL_TRUE = @USE_LIBTOOL_TRUE@
 VERSION = @VERSION@
+ac_ct_AR = @ac_ct_AR@
+ac_ct_AS = @ac_ct_AS@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_DLLTOOL = @ac_ct_DLLTOOL@
+ac_ct_DSYMUTIL = @ac_ct_DSYMUTIL@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+ac_ct_LIPO = @ac_ct_LIPO@
+ac_ct_NMEDIT = @ac_ct_NMEDIT@
+ac_ct_OBJDUMP = @ac_ct_OBJDUMP@
+ac_ct_OTOOL = @ac_ct_OTOOL@
+ac_ct_OTOOL64 = @ac_ct_OTOOL64@
+ac_ct_RANLIB = @ac_ct_RANLIB@
+ac_ct_READELF = @ac_ct_READELF@
+ac_ct_STRIP = @ac_ct_STRIP@
 aext = @aext@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
@@ -294,9 +313,6 @@ build_cpu = @build_cpu@
 build_os = @build_os@
 build_vendor = @build_vendor@
 datadir = @datadir@
-datarootdir = @datarootdir@
-docdir = @docdir@
-dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 extra_dir = @extra_dir@
 host = @host@
@@ -304,14 +320,12 @@ host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
-htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
 libm_machine_dir = @libm_machine_dir@
-localedir = @localedir@
 localstatedir = @localstatedir@
 lpfx = @lpfx@
 lt_ECHO = @lt_ECHO@
@@ -321,10 +335,8 @@ mkdir_p = @mkdir_p@
 newlib_basedir = @newlib_basedir@
 oext = @oext@
 oldincludedir = @oldincludedir@
-pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
-psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 subdirs = @subdirs@
@@ -376,6 +388,7 @@ GENERAL_SOURCES = \
 	rand.c		\
 	rand_r.c	\
 	realloc.c	\
+	reallocf.c	\
 	strtod.c	\
 	strtol.c	\
 	strtoul.c	\
@@ -844,6 +857,12 @@ lib_a-realloc.o: realloc.c
 
 lib_a-realloc.obj: realloc.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-realloc.obj `if test -f 'realloc.c'; then $(CYGPATH_W) 'realloc.c'; else $(CYGPATH_W) '$(srcdir)/realloc.c'; fi`
+
+lib_a-reallocf.o: reallocf.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-reallocf.o `test -f 'reallocf.c' || echo '$(srcdir)/'`reallocf.c
+
+lib_a-reallocf.obj: reallocf.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-reallocf.obj `if test -f 'reallocf.c'; then $(CYGPATH_W) 'reallocf.c'; else $(CYGPATH_W) '$(srcdir)/reallocf.c'; fi`
 
 lib_a-strtod.o: strtod.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-strtod.o `test -f 'strtod.c' || echo '$(srcdir)/'`strtod.c

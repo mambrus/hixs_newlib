@@ -719,8 +719,7 @@ return(0);
 
 /* Return nonzero if internal format number is infinite. */
 static int 
-eiisinf (x)
-     unsigned short x[];
+eiisinf (unsigned short x[])
 {
 
 #ifdef NANS
@@ -3153,7 +3152,7 @@ if( digit > 4 )
 		emovo( y, t, ldp );
 		if( ecmp(t,ezero) != 0 )
 			goto roun;	/* round to nearest */
-		if( (*(s-1) & 1) == 0 )
+		if( ndigs < 0 || (*(s-1-(*(s-1)=='.')) & 1) == 0 )
 			goto doexp;	/* round to even */
 		}
 /* Round up and propagate carry-outs */

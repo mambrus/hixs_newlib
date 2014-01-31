@@ -1481,6 +1481,8 @@ case "${target}" in
 	;;
   strongarm-*-*)
 	;;
+  bfin-*-*)
+	;;
   cris-*-* | crisv32-*-*)
 	;;
   d10v*)
@@ -1490,6 +1492,8 @@ case "${target}" in
   h8500-*-*)
 	;;
   i345686-*-sco*)
+	;;
+  lm32-*-*)
 	;;
   m32r-*-*)
 	;;

@@ -10,7 +10,11 @@ FUNCTION
 INDEX
 	dprintf
 INDEX
+	_dprintf_r
+INDEX
 	vdprintf
+INDEX
+	_vdprintf_r
 
 ANSI_SYNOPSIS
 	#include <stdio.h>
@@ -45,6 +49,7 @@ Supporting OS subroutines required: <<sbrk>>, <<write>>.
 #include <stdio.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include "local.h"
 
 int
 _DEFUN(_dprintf_r, (ptr, fd, format),

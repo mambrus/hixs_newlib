@@ -101,6 +101,7 @@ Supporting OS subroutines required: <<close>>, <<fstat>>, <<isatty>>,
 #include <_ansi.h>
 #include <reent.h>
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -304,12 +305,10 @@ _DEFUN(_fseek_r, (ptr, fp, offset, whence),
   /*
    * If the target offset is within the current buffer,
    * simply adjust the pointers, clear EOF, undo ungetc(),
-   * and return.  (If the buffer was modified, we have to
-   * skip this; see fgetline.c.)
+   * and return.
    */
 
-  if ((fp->_flags & __SMOD) == 0 &&
-      target >= curoff && target < curoff + n)
+  if (target >= curoff && target < curoff + n)
     {
       register int o = target - curoff;
 
@@ -318,6 +317,7 @@ _DEFUN(_fseek_r, (ptr, fp, offset, whence),
       if (HASUB (fp))
 	FREEUB (ptr, fp);
       fp->_flags &= ~__SEOF;
+      memset (&fp->_mbstate, 0, sizeof (_mbstate_t));
       _funlockfile (fp);
       return 0;
     }
@@ -347,6 +347,7 @@ _DEFUN(_fseek_r, (ptr, fp, offset, whence),
       fp->_p += n;
       fp->_r -= n;
     }
+  memset (&fp->_mbstate, 0, sizeof (_mbstate_t));
   _funlockfile (fp);
   return 0;
 
@@ -376,6 +377,7 @@ dumb:
      optimization is then allowed if no subsequent flush
      is performed.  */
   fp->_flags &= ~__SNPT;
+  memset (&fp->_mbstate, 0, sizeof (_mbstate_t));
   _funlockfile (fp);
   return 0;
 }

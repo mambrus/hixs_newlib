@@ -45,7 +45,9 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/../../libtool.m4 \
 	$(top_srcdir)/../../ltoptions.m4 \
 	$(top_srcdir)/../../ltsugar.m4 \
-	$(top_srcdir)/../../ltversion.m4 $(top_srcdir)/../acinclude.m4 \
+	$(top_srcdir)/../../ltversion.m4 \
+	$(top_srcdir)/../../lt~obsolete.m4 \
+	$(top_srcdir)/../acinclude.m4 $(top_srcdir)/../confsubdir.m4 \
 	$(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -58,15 +60,16 @@ lib_a_LIBADD =
 am__objects_1 = lib_a-closer.$(OBJEXT) lib_a-reent.$(OBJEXT) \
 	lib_a-impure.$(OBJEXT) lib_a-fcntlr.$(OBJEXT) \
 	lib_a-fstatr.$(OBJEXT) lib_a-getreent.$(OBJEXT) \
-	lib_a-gettimeofdayr.$(OBJEXT) lib_a-linkr.$(OBJEXT) \
-	lib_a-lseekr.$(OBJEXT) lib_a-openr.$(OBJEXT) \
-	lib_a-readr.$(OBJEXT) lib_a-renamer.$(OBJEXT) \
-	lib_a-signalr.$(OBJEXT) lib_a-signgam.$(OBJEXT) \
-	lib_a-sbrkr.$(OBJEXT) lib_a-statr.$(OBJEXT) \
-	lib_a-timesr.$(OBJEXT) lib_a-unlinkr.$(OBJEXT) \
-	lib_a-writer.$(OBJEXT)
+	lib_a-gettimeofdayr.$(OBJEXT) lib_a-isattyr.$(OBJEXT) \
+	lib_a-linkr.$(OBJEXT) lib_a-lseekr.$(OBJEXT) \
+	lib_a-openr.$(OBJEXT) lib_a-readr.$(OBJEXT) \
+	lib_a-renamer.$(OBJEXT) lib_a-signalr.$(OBJEXT) \
+	lib_a-signgam.$(OBJEXT) lib_a-sbrkr.$(OBJEXT) \
+	lib_a-statr.$(OBJEXT) lib_a-timesr.$(OBJEXT) \
+	lib_a-unlinkr.$(OBJEXT) lib_a-writer.$(OBJEXT)
 @HAVE_STDIO64_DIR_TRUE@am__objects_2 = lib_a-fstat64r.$(OBJEXT) \
 @HAVE_STDIO64_DIR_TRUE@	lib_a-lseek64r.$(OBJEXT) \
+@HAVE_STDIO64_DIR_TRUE@	lib_a-stat64r.$(OBJEXT) \
 @HAVE_STDIO64_DIR_TRUE@	lib_a-open64r.$(OBJEXT)
 am__objects_3 = $(am__objects_2)
 am__objects_4 = lib_a-execr.$(OBJEXT)
@@ -81,11 +84,11 @@ lib_a_OBJECTS = $(am_lib_a_OBJECTS)
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libreent_la_LIBADD =
 am__objects_6 = closer.lo reent.lo impure.lo fcntlr.lo fstatr.lo \
-	getreent.lo gettimeofdayr.lo linkr.lo lseekr.lo openr.lo \
-	readr.lo renamer.lo signalr.lo signgam.lo sbrkr.lo statr.lo \
-	timesr.lo unlinkr.lo writer.lo
+	getreent.lo gettimeofdayr.lo isattyr.lo linkr.lo lseekr.lo \
+	openr.lo readr.lo renamer.lo signalr.lo signgam.lo sbrkr.lo \
+	statr.lo timesr.lo unlinkr.lo writer.lo
 @HAVE_STDIO64_DIR_TRUE@am__objects_7 = fstat64r.lo lseek64r.lo \
-@HAVE_STDIO64_DIR_TRUE@	open64r.lo
+@HAVE_STDIO64_DIR_TRUE@	stat64r.lo open64r.lo
 am__objects_8 = $(am__objects_7)
 am__objects_9 = execr.lo
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@am__objects_10 =  \
@@ -134,6 +137,7 @@ CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -188,6 +192,7 @@ LIBC_UNIX_LIB = @LIBC_UNIX_LIB@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
+LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
@@ -198,8 +203,11 @@ MAY_SUPPLY_SYSCALLS_FALSE = @MAY_SUPPLY_SYSCALLS_FALSE@
 MAY_SUPPLY_SYSCALLS_TRUE = @MAY_SUPPLY_SYSCALLS_TRUE@
 NEWLIB_CFLAGS = @NEWLIB_CFLAGS@
 NM = @NM@
+NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OTOOL = @OTOOL@
+OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -216,8 +224,20 @@ STRIP = @STRIP@
 USE_LIBTOOL_FALSE = @USE_LIBTOOL_FALSE@
 USE_LIBTOOL_TRUE = @USE_LIBTOOL_TRUE@
 VERSION = @VERSION@
+ac_ct_AR = @ac_ct_AR@
+ac_ct_AS = @ac_ct_AS@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_DLLTOOL = @ac_ct_DLLTOOL@
+ac_ct_DSYMUTIL = @ac_ct_DSYMUTIL@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+ac_ct_LIPO = @ac_ct_LIPO@
+ac_ct_NMEDIT = @ac_ct_NMEDIT@
+ac_ct_OBJDUMP = @ac_ct_OBJDUMP@
+ac_ct_OTOOL = @ac_ct_OTOOL@
+ac_ct_OTOOL64 = @ac_ct_OTOOL64@
+ac_ct_RANLIB = @ac_ct_RANLIB@
+ac_ct_READELF = @ac_ct_READELF@
+ac_ct_STRIP = @ac_ct_STRIP@
 aext = @aext@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
@@ -233,9 +253,6 @@ build_cpu = @build_cpu@
 build_os = @build_os@
 build_vendor = @build_vendor@
 datadir = @datadir@
-datarootdir = @datarootdir@
-docdir = @docdir@
-dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 extra_dir = @extra_dir@
 host = @host@
@@ -243,14 +260,12 @@ host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
-htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
 libm_machine_dir = @libm_machine_dir@
-localedir = @localedir@
 localstatedir = @localstatedir@
 lpfx = @lpfx@
 lt_ECHO = @lt_ECHO@
@@ -260,10 +275,8 @@ mkdir_p = @mkdir_p@
 newlib_basedir = @newlib_basedir@
 oext = @oext@
 oldincludedir = @oldincludedir@
-pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
-psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 subdirs = @subdirs@
@@ -275,11 +288,13 @@ INCLUDES = $(NEWLIB_CFLAGS) $(CROSS_CFLAGS) $(TARGET_CFLAGS)
 @HAVE_STDIO64_DIR_TRUE@STDIO64_SOURCES = \
 @HAVE_STDIO64_DIR_TRUE@	fstat64r.c \
 @HAVE_STDIO64_DIR_TRUE@	lseek64r.c \
+@HAVE_STDIO64_DIR_TRUE@	stat64r.c \
 @HAVE_STDIO64_DIR_TRUE@	open64r.c
 
 @HAVE_STDIO64_DIR_TRUE@STDIO64_DEFS = \
 @HAVE_STDIO64_DIR_TRUE@	fstat64r.def \
 @HAVE_STDIO64_DIR_TRUE@	lseek64r.def \
+@HAVE_STDIO64_DIR_TRUE@	stat64r.def \
 @HAVE_STDIO64_DIR_TRUE@	open64r.def
 
 ELIX_2_SOURCES = $(STDIO64_SOURCES)
@@ -295,6 +310,7 @@ GENERAL_SOURCES = \
 	fstatr.c \
 	getreent.c \
 	gettimeofdayr.c \
+	isattyr.c \
 	linkr.c \
 	lseekr.c \
 	openr.c \
@@ -449,6 +465,12 @@ lib_a-gettimeofdayr.o: gettimeofdayr.c
 lib_a-gettimeofdayr.obj: gettimeofdayr.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-gettimeofdayr.obj `if test -f 'gettimeofdayr.c'; then $(CYGPATH_W) 'gettimeofdayr.c'; else $(CYGPATH_W) '$(srcdir)/gettimeofdayr.c'; fi`
 
+lib_a-isattyr.o: isattyr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-isattyr.o `test -f 'isattyr.c' || echo '$(srcdir)/'`isattyr.c
+
+lib_a-isattyr.obj: isattyr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-isattyr.obj `if test -f 'isattyr.c'; then $(CYGPATH_W) 'isattyr.c'; else $(CYGPATH_W) '$(srcdir)/isattyr.c'; fi`
+
 lib_a-linkr.o: linkr.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-linkr.o `test -f 'linkr.c' || echo '$(srcdir)/'`linkr.c
 
@@ -532,6 +554,12 @@ lib_a-lseek64r.o: lseek64r.c
 
 lib_a-lseek64r.obj: lseek64r.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-lseek64r.obj `if test -f 'lseek64r.c'; then $(CYGPATH_W) 'lseek64r.c'; else $(CYGPATH_W) '$(srcdir)/lseek64r.c'; fi`
+
+lib_a-stat64r.o: stat64r.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-stat64r.o `test -f 'stat64r.c' || echo '$(srcdir)/'`stat64r.c
+
+lib_a-stat64r.obj: stat64r.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-stat64r.obj `if test -f 'stat64r.c'; then $(CYGPATH_W) 'stat64r.c'; else $(CYGPATH_W) '$(srcdir)/stat64r.c'; fi`
 
 lib_a-open64r.o: open64r.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-open64r.o `test -f 'open64r.c' || echo '$(srcdir)/'`open64r.c

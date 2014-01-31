@@ -5,15 +5,12 @@
 #ifndef NO_FORK
 
 #include <reent.h>
+#include <unistd.h>
 
 int
 _DEFUN_VOID (fork)
 {
-#ifdef REENTRANT_SYSCALLS_PROVIDED
   return _fork_r (_REENT);
-#else
-  return _fork ();
-#endif
 }
 
 #endif

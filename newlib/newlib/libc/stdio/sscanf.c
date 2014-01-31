@@ -22,24 +22,28 @@ FUNCTION
 INDEX
 	scanf
 INDEX
+	_scanf_r
+INDEX
 	fscanf
 INDEX
+	_fscanf_r
+INDEX
 	sscanf
+INDEX
+	_sscanf_r
 
 ANSI_SYNOPSIS
         #include <stdio.h>
 
-        int scanf(const char *<[format]> [, <[arg]>, ...]);
-        int fscanf(FILE *<[fd]>, const char *<[format]> [, <[arg]>, ...]);
-        int sscanf(const char *<[str]>, const char *<[format]> 
-                   [, <[arg]>, ...]);
+        int scanf(const char *<[format]>, ...);
+        int fscanf(FILE *<[fd]>, const char *<[format]>, ...);
+        int sscanf(const char *<[str]>, const char *<[format]>, ...);
 
-        int _scanf_r(struct _reent *<[ptr]>, const char *<[format]>
-                     [, <[arg]>, ...]);
-        int _fscanf_r(struct _reent *<[ptr]>, FILE *<[fd]>, const char *<[format]>
-                      [, <[arg]>, ...]);
+        int _scanf_r(struct _reent *<[ptr]>, const char *<[format]>, ...);
+        int _fscanf_r(struct _reent *<[ptr]>, FILE *<[fd]>, 
+                      const char *<[format]>, ...);
         int _sscanf_r(struct _reent *<[ptr]>, const char *<[str]>,
-                      const char *<[format]> [, <[arg]>, ...]);
+                      const char *<[format]>, ...);
 
 
 TRAD_SYNOPSIS
@@ -433,7 +437,7 @@ sscanf(str, fmt, va_alist)
 #else
   va_start (ap);
 #endif
-  ret = __svfscanf_r (_REENT, &f, fmt, ap);
+  ret = __ssvfscanf_r (_REENT, &f, fmt, ap);
   va_end (ap);
   return ret;
 }
@@ -471,7 +475,7 @@ _sscanf_r(ptr, str, fmt, va_alist)
 #else
   va_start (ap);
 #endif
-  ret = __svfscanf_r (ptr, &f, fmt, ap);
+  ret = __ssvfscanf_r (ptr, &f, fmt, ap);
   va_end (ap);
   return ret;
 }

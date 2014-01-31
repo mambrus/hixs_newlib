@@ -31,8 +31,7 @@ ANSI_SYNOPSIS
 
 	#include <stdio.h>
 	size_t _fread_r(struct _reent *<[ptr]>, void *<[buf]>,
-	                size_t <[size]>, size_t <[count]>,
-		        FILE *<[fp]>);
+	                size_t <[size]>, size_t <[count]>, FILE *<[fp]>);
 
 TRAD_SYNOPSIS
 	#include <stdio.h>
@@ -88,7 +87,7 @@ _DEFUN(crlf_r, (ptr, fp, buf, count, eof),
        size_t count _AND
        int eof)
 {
-  int newcount = 0, r;
+  int r;
   char *s, *d, *e;
 
   if (count == 0)
@@ -148,6 +147,7 @@ _DEFUN(_fread_r, (ptr, buf, size, count, fp),
   CHECK_INIT(ptr, fp);
 
   _flockfile (fp);
+  ORIENT (fp, -1);
   if (fp->_r < 0)
     fp->_r = 0;
   total = resid;

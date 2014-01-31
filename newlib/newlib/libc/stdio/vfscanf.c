@@ -22,9 +22,15 @@ FUNCTION
 INDEX
 	vfscanf
 INDEX
+	_vfscanf_r
+INDEX
 	vscanf
 INDEX
+	_vscanf_r
+INDEX
 	vsscanf
+INDEX
+	_vsscanf_r
 
 ANSI_SYNOPSIS
 	#include <stdio.h>
@@ -33,9 +39,9 @@ ANSI_SYNOPSIS
 	int vfscanf(FILE *<[fp]>, const char *<[fmt]>, va_list <[list]>);
 	int vsscanf(const char *<[str]>, const char *<[fmt]>, va_list <[list]>);
 
-	int _vscanf_r(struct _reent *<[reent]>, const char *<[fmt]>, 
+	int _vscanf_r(struct _reent *<[reent]>, const char *<[fmt]>,
                        va_list <[list]>);
-	int _vfscanf_r(struct _reent *<[reent]>, FILE *<[fp]>, const char *<[fmt]>, 
+	int _vfscanf_r(struct _reent *<[reent]>, FILE *<[fp]>, const char *<[fmt]>,
                        va_list <[list]>);
 	int _vsscanf_r(struct _reent *<[reent]>, const char *<[str]>,
                        const char *<[fmt]>, va_list <[list]>);
@@ -51,7 +57,7 @@ TRAD_SYNOPSIS
 	FILE *<[fp]>;
 	char *<[fmt]>;
 	va_list <[list]>;
-	
+
 	int vsscanf( <[str]>, <[fmt]>, <[list]>)
 	char *<[str]>;
 	char *<[fmt]>;
@@ -67,7 +73,7 @@ TRAD_SYNOPSIS
 	FILE *<[fp]>;
 	char *<[fmt]>;
 	va_list <[list]>;
-	
+
 	int _vsscanf_r( <[reent]>, <[str]>, <[fmt]>, <[list]>)
 	struct _reent *<[reent]>;
 	char *<[str]>;
@@ -76,18 +82,18 @@ TRAD_SYNOPSIS
 
 DESCRIPTION
 <<vscanf>>, <<vfscanf>>, and <<vsscanf>> are (respectively) variants
-of <<scanf>>, <<fscanf>>, and <<sscanf>>.  They differ only in 
-allowing their caller to pass the variable argument list as a 
-<<va_list>> object (initialized by <<va_start>>) rather than 
+of <<scanf>>, <<fscanf>>, and <<sscanf>>.  They differ only in
+allowing their caller to pass the variable argument list as a
+<<va_list>> object (initialized by <<va_start>>) rather than
 directly accepting a variable number of arguments.
 
 RETURNS
 The return values are consistent with the corresponding functions:
 <<vscanf>> returns the number of input fields successfully scanned,
 converted, and stored; the return value does not include scanned
-fields which were not stored.  
+fields which were not stored.
 
-If <<vscanf>> attempts to read at end-of-file, the return value 
+If <<vscanf>> attempts to read at end-of-file, the return value
 is <<EOF>>.
 
 If no fields were stored, the return value is <<0>>.
@@ -121,15 +127,33 @@ Supporting OS subroutines required:
 #define VFSCANF vfiscanf
 #define _VFSCANF_R _vfiscanf_r
 #define __SVFSCANF __svfiscanf
-#define __SVFSCANF_R __svfiscanf_r
+#ifdef STRING_ONLY
+#  define __SVFSCANF_R __ssvfiscanf_r
+#else
+#  define __SVFSCANF_R __svfiscanf_r
+#endif
 #else
 #define VFSCANF vfscanf
 #define _VFSCANF_R _vfscanf_r
 #define __SVFSCANF __svfscanf
-#define __SVFSCANF_R __svfscanf_r
+#ifdef STRING_ONLY
+#  define __SVFSCANF_R __ssvfscanf_r
+#else
+#  define __SVFSCANF_R __svfscanf_r
+#endif
 #ifndef NO_FLOATING_POINT
 #define FLOATING_POINT
 #endif
+#endif
+
+#ifdef STRING_ONLY
+#undef _flockfile
+#undef _funlockfile
+#define _flockfile(x) {}
+#define _funlockfile(x) {}
+#define _ungetc_r _sungetc_r
+#define __srefill_r __ssrefill_r
+#define _fread_r _sfread_r
 #endif
 
 #ifdef FLOATING_POINT
@@ -226,20 +250,20 @@ static void * get_arg (int, va_list *, int *, void **);
 typedef unsigned long long u_long_long;
 #endif
 
-/*static*/ u_char *__sccl ();
-
 /*
  * vfscanf
  */
 
 #define BufferEmpty (fp->_r <= 0 && __srefill_r(rptr, fp))
 
+#ifndef STRING_ONLY
+
 #ifndef _REENT_ONLY
 
 int
-_DEFUN(VFSCANF, (fp, fmt, ap), 
-       register FILE *fp _AND 
-       _CONST char *fmt _AND 
+_DEFUN(VFSCANF, (fp, fmt, ap),
+       register FILE *fp _AND
+       _CONST char *fmt _AND
        va_list ap)
 {
   CHECK_INIT(_REENT, fp);
@@ -259,15 +283,142 @@ _DEFUN(__SVFSCANF, (fp, fmt0, ap),
 
 int
 _DEFUN(_VFSCANF_R, (data, fp, fmt, ap),
-       struct _reent *data _AND 
-       register FILE *fp   _AND 
-       _CONST char *fmt    _AND 
+       struct _reent *data _AND
+       register FILE *fp   _AND
+       _CONST char *fmt    _AND
        va_list ap)
 {
   CHECK_INIT(data, fp);
   return __SVFSCANF_R (data, fp, fmt, ap);
 }
+#endif /* !STRING_ONLY */
 
+#ifdef STRING_ONLY
+/* When dealing with the sscanf family, we don't want to use the
+ * regular ungetc which will drag in file I/O items we don't need.
+ * So, we create our own trimmed-down version.  */
+static int
+_DEFUN(_sungetc_r, (data, fp, ch),
+	struct _reent *data _AND
+	int c               _AND
+	register FILE *fp)
+{
+  if (c == EOF)
+    return (EOF);
+
+  /* After ungetc, we won't be at eof anymore */
+  fp->_flags &= ~__SEOF;
+  c = (unsigned char) c;
+
+  /*
+   * If we are in the middle of ungetc'ing, just continue.
+   * This may require expanding the current ungetc buffer.
+   */
+
+  if (HASUB (fp))
+    {
+      if (fp->_r >= fp->_ub._size && __submore (data, fp))
+        {
+          return EOF;
+        }
+      *--fp->_p = c;
+      fp->_r++;
+      return c;
+    }
+
+  /*
+   * If we can handle this by simply backing up, do so,
+   * but never replace the original character.
+   * (This makes sscanf() work when scanning `const' data.)
+   */
+
+  if (fp->_bf._base != NULL && fp->_p > fp->_bf._base && fp->_p[-1] == c)
+    {
+      fp->_p--;
+      fp->_r++;
+      return c;
+    }
+
+  /*
+   * Create an ungetc buffer.
+   * Initially, we will use the `reserve' buffer.
+   */
+
+  fp->_ur = fp->_r;
+  fp->_up = fp->_p;
+  fp->_ub._base = fp->_ubuf;
+  fp->_ub._size = sizeof (fp->_ubuf);
+  fp->_ubuf[sizeof (fp->_ubuf) - 1] = c;
+  fp->_p = &fp->_ubuf[sizeof (fp->_ubuf) - 1];
+  fp->_r = 1;
+  return c;
+}
+
+/* String only version of __srefill_r for sscanf family.  */
+static int
+_DEFUN(__ssrefill_r, (ptr, fp),
+       struct _reent * ptr _AND
+       register FILE * fp)
+{
+  /*
+   * Our only hope of further input is the ungetc buffer.
+   * If there is anything in that buffer to read, return.
+   */
+  if (HASUB (fp))
+    {
+      FREEUB (ptr, fp);
+      if ((fp->_r = fp->_ur) != 0)
+        {
+          fp->_p = fp->_up;
+	  return 0;
+        }
+    }
+
+  /* Otherwise we are out of character input.  */
+  fp->_p = fp->_bf._base;
+  fp->_r = 0;
+  fp->_flags |= __SEOF;
+  return EOF;
+}
+
+static size_t
+_DEFUN(_sfread_r, (ptr, buf, size, count, fp),
+       struct _reent * ptr _AND
+       _PTR buf _AND
+       size_t size _AND
+       size_t count _AND
+       FILE * fp)
+{
+  register size_t resid;
+  register char *p;
+  register int r;
+  size_t total;
+
+  if ((resid = count * size) == 0)
+    return 0;
+
+  total = resid;
+  p = buf;
+
+  while (resid > (r = fp->_r))
+    {
+      _CAST_VOID memcpy ((_PTR) p, (_PTR) fp->_p, (size_t) r);
+      fp->_p += r;
+      fp->_r = 0;
+      p += r;
+      resid -= r;
+      if (__ssrefill_r (ptr, fp))
+        {
+          /* no more input: return partial result */
+          return (total - resid) / size;
+        }
+    }
+  _CAST_VOID memcpy ((_PTR) p, (_PTR) fp->_p, resid);
+  fp->_r -= resid;
+  fp->_p += resid;
+  return count;
+}
+#endif /* STRING_ONLY */
 
 int
 _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
@@ -299,7 +450,8 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
   size_t mbslen;                /* length of converted multibyte sequence */
   mbstate_t state;              /* value to keep track of multibyte state */
 
-  u_long (*ccfn) () = 0;	/* conversion function (strtol/strtoul) */
+  #define CCFN_PARAMS	_PARAMS((struct _reent *, const char *, char **, int))
+  u_long (*ccfn)CCFN_PARAMS=0;	/* conversion function (strtol/strtoul) */
   char ccltab[256];		/* character class table for %[...] */
   char buf[BUF];		/* buffer for numeric conversions */
   char *lptr;                   /* literal pointer */
@@ -338,7 +490,9 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
 #endif
 
   _flockfile (fp);
- 
+
+  ORIENT (fp, -1);
+
   nassigned = 0;
   nread = 0;
   for (;;)
@@ -503,13 +657,13 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
 	  /* FALLTHROUGH */
 	case 'd':
 	  c = CT_INT;
-	  ccfn = (u_long (*)())_strtol_r;
+	  ccfn = (u_long (*)CCFN_PARAMS)_strtol_r;
 	  base = 10;
 	  break;
 
 	case 'i':
 	  c = CT_INT;
-	  ccfn = (u_long (*)())_strtol_r;
+	  ccfn = (u_long (*)CCFN_PARAMS)_strtol_r;
 	  base = 0;
 	  break;
 
@@ -631,7 +785,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
 	  if (isupper (c))
 	    flags |= LONG;
 	  c = CT_INT;
-	  ccfn = (u_long (*)())_strtol_r;
+	  ccfn = (u_long (*)CCFN_PARAMS)_strtol_r;
 	  base = 10;
 	  break;
 	}
@@ -674,14 +828,15 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
 	  /* scan arbitrary characters (sets NOSKIP) */
 	  if (width == 0)
 	    width = 1;
-          if (flags & LONG) 
+#if !defined(_ELIX_LEVEL) || _ELIX_LEVEL >= 2
+          if (flags & LONG)
             {
               if ((flags & SUPPRESS) == 0)
                 wcp = GET_ARG (N, ap, wchar_t *);
               else
                 wcp = NULL;
               n = 0;
-              while (width != 0) 
+              while (width != 0)
                 {
                   if (n == MB_CUR_MAX)
                     goto input_failure;
@@ -689,7 +844,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
                   fp->_r -= 1;
                   fp->_p += 1;
                   memset ((_PTR)&state, '\0', sizeof (mbstate_t));
-                  if ((mbslen = _mbrtowc_r (rptr, wcp, buf, n, &state)) 
+                  if ((mbslen = _mbrtowc_r (rptr, wcp, buf, n, &state))
                                                          == (size_t)-1)
                     goto input_failure; /* Invalid sequence */
                   if (mbslen == 0 && !(flags & SUPPRESS))
@@ -702,17 +857,19 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
                         wcp += 1;
                       n = 0;
                     }
-                  if (BufferEmpty) 
+                  if (BufferEmpty)
 	            {
-                      if (n != 0) 
+                      if (n != 0)
                         goto input_failure;
                       break;
                     }
                 }
               if (!(flags & SUPPRESS))
                 nassigned++;
-            } 
-          else if (flags & SUPPRESS) 
+            }
+          else
+#endif
+        	  if (flags & SUPPRESS)
 	    {
 	      size_t sum = 0;
 	      for (;;)
@@ -741,7 +898,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
 	    }
 	  else
 	    {
-	      size_t r = fread ((_PTR) GET_ARG (N, ap, char *), 1, width, fp);
+	      size_t r = _fread_r (rptr, (_PTR) GET_ARG (N, ap, char *), 1, width, fp);
 
 	      if (r == 0)
 		goto input_failure;
@@ -802,7 +959,8 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
 	  /* like CCL, but zero-length string OK, & no NOSKIP */
 	  if (width == 0)
             width = (size_t)~0;
-          if (flags & LONG) 
+#if !defined(_ELIX_LEVEL) || _ELIX_LEVEL >= 2
+          if (flags & LONG)
             {
               /* Process %S and %ls placeholders */
               if ((flags & SUPPRESS) == 0)
@@ -810,7 +968,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
               else
                 wcp = &wc;
               n = 0;
-              while (!isspace (*fp->_p) && width != 0) 
+              while (!isspace (*fp->_p) && width != 0)
                 {
                   if (n == MB_CUR_MAX)
                     goto input_failure;
@@ -818,7 +976,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
                   fp->_r -= 1;
                   fp->_p += 1;
                   memset ((_PTR)&state, '\0', sizeof (mbstate_t));
-                  if ((mbslen = _mbrtowc_r (rptr, wcp, buf, n, &state)) 
+                  if ((mbslen = _mbrtowc_r (rptr, wcp, buf, n, &state))
                                                         == (size_t)-1)
                     goto input_failure;
                   if (mbslen == 0)
@@ -837,20 +995,22 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
                         wcp += 1;
                       n = 0;
                     }
-                  if (BufferEmpty) 
+                  if (BufferEmpty)
                     {
                       if (n != 0)
                         goto input_failure;
                       break;
                     }
                 }
-              if (!(flags & SUPPRESS)) 
+              if (!(flags & SUPPRESS))
                 {
                   *wcp = L'\0';
                   nassigned++;
                 }
             }
-          else if (flags & SUPPRESS) 
+          else
+#endif
+        	  if (flags & SUPPRESS)
 	    {
 	      n = 0;
 	      while (!isspace (*fp->_p))
@@ -1376,7 +1536,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
                  sprintf (exp_start, "e%ld", new_exp);
 		}
 
-	      /* Current _strtold routine is markedly slower than 
+	      /* Current _strtold routine is markedly slower than
 	         _strtod_r.  Only use it if we have a long double
 	         result.  */
 #ifndef _NO_LONGDBL /* !_NO_LONGDBL */

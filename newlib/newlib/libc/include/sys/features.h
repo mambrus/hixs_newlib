@@ -15,7 +15,7 @@
  *  OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY OF THIS
  *  SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
  *
- *  $Id: features.h,v 1.13 2007/12/19 18:51:19 jjohnstn Exp $
+ *  $Id: features.h,v 1.16 2008/12/12 17:16:03 jjohnstn Exp $
  */
 
 #ifndef _SYS_FEATURES_H
@@ -38,11 +38,12 @@ extern "C" {
 #define _POSIX_MEMLOCK_RANGE		1
 #define _POSIX_MEMORY_PROTECTION	1
 #define _POSIX_MESSAGE_PASSING		1
+#define _POSIX_MONOTONIC_CLOCK		200112L
 #define _POSIX_PRIORITIZED_IO		1
 #define _POSIX_PRIORITY_SCHEDULING	1
 #define _POSIX_REALTIME_SIGNALS		1
 #define _POSIX_SEMAPHORES		1
-#define _POSIX_SHARED_MEMORY_OBJECTS	1
+/* #define _POSIX_SHARED_MEMORY_OBJECTS	1 */
 #define _POSIX_SYNCHRONIZED_IO		1
 #define _POSIX_TIMERS			1
 #define _POSIX_BARRIERS                 200112L
@@ -149,13 +150,13 @@ extern "C" {
 /* #define _POSIX2_PBS_TRACK			    -1 */
 #define _POSIX2_SW_DEV				200112L
 #define _POSIX2_UPE				200112L
-/* #define _POSIX_V6_ILP32_OFF32		    -1 */
+#define _POSIX_V6_ILP32_OFF32			    -1
 #define _XBS5_ILP32_OFF32			_POSIX_V6_ILP32_OFF32
 #define _POSIX_V6_ILP32_OFFBIG			     1
 #define _XBS5_ILP32_OFFBIG			_POSIX_V6_ILP32_OFFBIG
-/* #define _POSIX_V6_LP64_OFF64			    -1 */
+#define _POSIX_V6_LP64_OFF64			    -1
 #define _XBS5_LP64_OFF64			_POSIX_V6_LP64_OFF64
-/* #define _POSIX_V6_LPBIG_OFFBIG		    -1 */
+#define _POSIX_V6_LPBIG_OFFBIG			    -1
 #define _XBS5_LPBIG_OFFBIG			_POSIX_V6_LPBIG_OFFBIG
 #define _XOPEN_CRYPT				     1
 #define _XOPEN_ENH_I18N				     1

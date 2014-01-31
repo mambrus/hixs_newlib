@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------  */
-/* (C)Copyright 2006,2007,                                         */
+/* (C)Copyright 2006,2008,                                         */
 /* International Business Machines Corporation                     */
 /* All Rights Reserved.                                            */
 /*                                                                 */
@@ -19,18 +19,6 @@
 /*   contributors may be used to endorse or promote products       */
 /*   derived from this software without specific prior written     */
 /*   permission.                                                   */
-/* Redistributions of source code must retain the above copyright  */
-/* notice, this list of conditions and the following disclaimer.   */
-/*                                                                 */
-/* Redistributions in binary form must reproduce the above         */
-/* copyright notice, this list of conditions and the following     */
-/* disclaimer in the documentation and/or other materials          */
-/* provided with the distribution.                                 */
-/*                                                                 */
-/* Neither the name of IBM Corporation nor the names of its        */
-/* contributors may be used to endorse or promote products         */
-/* derived from this software without specific prior written       */
-/* permission.                                                     */
 /*                                                                 */
 /* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND          */
 /* CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,     */
@@ -57,19 +45,18 @@
 
 /*
  * FUNCTION
- *	vector float _scalbnf4(vector float x, vector signed int exp)
+ *	vector float _logbf4(vector float x)
  *
  * DESCRIPTION
- *      The _scalbnf4 function returns a vector containing each element of x 
- *      multiplied by 2^n computed efficiently.  This function is computed 
- *      without the assistance of any floating point operations and as such 
- *      does not set any floating point exceptions.
+ *  The _logbf4 function returns a vector float that contains the exponent
+ *  of the corresponding elements of the input vector x. The exponent is
+ *  defined by:
+ *    x = frac * FLT_RADIX^exp, with frac in [1, FLT_RADIX).
  *
- *      Special Cases:
- *	  - if the exponent is 0, then x is either 0 or a subnormal, and the 
- *          result will be returned as 0.
- *        - if the result if underflows, it will be returned as 0.
- *        - if the result overflows, it will be returned as FLT_MAX.
+ *  Special Cases:
+ *    x = 0,  result is undefined.
+ *    x = NaN, result is NaN.
+ *    x = infinity, +infinity is returned.
  *
  */
 static __inline vector float _logbf4(vector float x)

@@ -1,19 +1,1777 @@
+2008-12-19  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* NEWS: Update with 1.17.0 info.
+	* README: Ditto.
+	* acinclude.m4: Change version number to 1.17.0.
+	* aclocal.m4: Regenerated.
+	* configure: Ditto.
+	* doc/aclocal.m4: Ditto.
+	* doc/configure: Ditto.
+	* libc/*/aclocal.m4: Ditto.
+	* libc/*/configure: Ditto.
+	* libc/libc.texinfo: Ditto.
+	* libm/*/aclocal.m4: Ditto.
+	* libm/*/configure: Ditto.
+	* libm/libm.texinfo: Ditto.
+	* libc/sys/linux/shared.ld: Add VERS_1.17
+
+2008-12-17  Jon Beniston <jon@beniston.com>
+
+	* configure.host: Set syscall_dir for lm32 target.
+
+2008-12-15  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdio/stdio.tex: Remove putwc and getwc references as they
+	are included as part of fputwc and fgetwc, respectively.
+
+2008-12-12  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/include/wchar.h:  Added wcstok() declaration.
+	* libc/string/wcstok.c: New file, implementing wcstok.
+	* libc/string/Makefile.am: Add wcstok support.
+	* libc/string/wcstrings.tex: Ditto.
+	* libc/string/Makefile.in: Regenerated.
+
+2008-12-12  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/stdio/fputws.c: Fix documentation.
+	* libc/stdio/getwchar.c: Ditto.
+	* libc/stdio/putwchar.c: Ditto.
+
+2008-12-12  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/include/sys/features.h: Set RTEMS's _POSIX_MONOTONIC_CLOCK to
+	200112L (SUSv3 compliance).
+	Comment out RTEMS's _POSIX_SHARED_MEMORY_OBJECTS (Unsupported).
+
+2008-12-12  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/sys/rtems/crt0.c: Add stubs for getdents(), nanosleep(), 
+	_execve(), _exit().
+
+2008-12-12  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* configure.host: Let *rtems* default to c99-formats.
+
+2008-12-12  Craig Howland  <howland@LGSInnovations.com>
+
+	* libc/stdio/freopen.c:  Add <string.h> for memset prototype.
+	* libc/stdio/fseek.c:  Ditto.
+	* libc/stdio/fwide.c:  Add <wchar.h> for fwide prototype.
+
+2008-12-11 Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/sys/time.h (gettimeofday): Change prototype so
+	2nd parameter is void *, matching SUSV2.
+	* libc/syscalls/sysgettod.c (gettimeofday): Ditto.
+
+2008-12-11 Jukka Pietarinen <jukka.pietarinen@mrf.fi>
+
+	* configure.host: Add lm32
+	* libc/include/machine/ieeefp.h: Add __lm32__
+	* libc/include/machine/setjmp.h: Add __lm32__
+	* libc/machine/configure.in: Add lm32
+	* libc/machine/configure: Regenerated.
+	* libc/machine/lm32/aclocal.m4: New file.
+	* libc/machine/lm32/configure.in: Ditto.
+	* libc/machine/lm32/configure: Ditto.
+	* libc/machine/lm32/Makefile.am: Ditto.
+	* libc/machine/lm32/Makefile.in: Ditto.
+	* libc/machine/lm32/setjmp.s: Ditto.
+
+2008-12-11  Craig Howland  <howland@LGSInnovations.com>
+
+	* libc/include/sys/lock.h:  Add void cast to avoid "statement has no
+	effect" warnings from gcc.
+	* libc/include/sys/stdio.h:  Ditto.
+	* libc/include/sys/time.h:  Correct gettimeofday() prototype.
+	* libc/stdlib/__exp10.c:  Add #include "std.h" for function prototype.
+	* libc/stdlib/__ten_mu.c:  Ditto.
+	* libc/stdlib/std.h:  Correct __exp10's ANSI prototype.
+	* libc/stdlib/ldtoa.c:  Change eiisinf definition to ANSI form.  (Are
+	already others in file without _ansi method, so did not bother.)
+	* libc/stdlib/system.c:  Use _ansi forms for function prototypes and
+	definitions.
+	* libc/time/mktime.c:  Ditto.
+	* libc/misc/__dprintf.c:  Ditto.
+	* libc/include/stdio.h:  Add function prototypes for _fgetc_r,
+	_fgetpos_r, _fsetpos_r, _freopen_r, _rewind_r, freopen64, _freopen64_r,
+	_funopen_r, and _fopencookie_r.
+	* libc/include/reent.h:  Add function prototype for _stat64_r, align
+	_execve_r prototype with POSIX definition for execve.
+	* libc/reent/execr.c:  Align function prototype with POSIX definition.
+	* libc/stdio/asniprintf.c:  Add #include "local.h".
+	* libc/stdio/vasniprintf.c:  Ditto.
+	* libc/stdio/fread.c:  Remove unused variable newcount.
+	* libc/stdio/local.h:  Add function prototype for __sccl.
+	* libc/stdio/open_memstream.c:  Remove unused variable flags.
+	* libc/stdio/vfscanf.c:  Proper prototyping for ccfn, remove prototype
+	for __sccl since now in local.h.
+	* libc/string/memcpy.c:  Add #include <string.h> (for real and for
+	traditional synopsis), remove extraneous stddef.h and limits.h.
+	* libc/syscalls/sysclose.c:  Add #include <unistd.h>.
+	* libc/syscalls/sysfork.c:  Ditto.
+	* libc/syscalls/sysgetpid.c:  Ditto.
+	* libc/syscalls/sysexecve.c:  Add #include <unistd.h>, align function
+	prototype with POSIX definition.
+	* libc/syscalls/sysfstat.c:  Add #include <sys/stat.h>.
+	* libc/syscalls/sysgettod.c:  Correct sys/times.h to sys/time.h.
+	* libc/syscalls/syskill.c:  Add #include <signal.h>.
+	* libc/syscalls/syslink.c:  Add #include <unistd.h>, fix prototype.
+	* libc/syscalls/sysunlink.c:  Ditto.
+	* libc/syscalls/sysstat.c:  Add #include <sys/stat.h>, fix prototype.
+	* libc/syscalls/syswait.c:  Add #include <sys/wait.h>, fix prototype.
+
+2008-12-10  Corinna Vinschen  <corinna@vinschen.de>
+
+	Implement basic wide char stdio functionality, based on FreeBSD.
+	* libc/include/stdio.h (__SORD): Define.
+	(__SWID): Define.
+	* libc/include/wchar.h: Add declarations for new wide char functions.
+	(getwc): Define as macro.
+	(getwchar): Ditto.
+	(putwc): Ditto.
+	(putwchar): Ditto.
+	* libc/include/sys/reent.h (struct __sFILE): Add _mbstate member.
+	(struct __sFILE64): Ditto.
+	* libc/stdio/Makefile.am (ELIX_4_SOURCES): Add fgetwc.c, fgetws.c,
+	fputwc.c, fputws.c, fwide.c, getwc.c, getwchar.c, putwc.c, putwchar.c
+	and ungetwc.c.
+	(CHEWOUT_FILES): Add fgetwc.def, fgetws.def, fputwc.def, fputws.def,
+	fwide.def, getwc.def, getwchar.def, putwc.def, putwchar.def and
+	ungetwc.def.
+	Add header dependency rules for the new files.
+	* libc/stdio/Makefile.in: Regenerate.
+	* libc/stdio/fgetwc.c: New file, implementing fgetwc and _fgetwc_r.
+	* libc/stdio/fgetws.c: New file, implementing fgetws and _fgetws_r.
+	* libc/stdio/findfp.c (std): Initialize FILE's _mbstate member.
+	(__sfmoreglue): Ditto.
+	* libc/stdio/fputs.c (_fputs_r): Set stream orientation.
+	* libc/stdio/fputwc.c: New file, implementing fputwc and _fputwc_r.
+	* libc/stdio/fputws.c: New file, implementing fputws and _fputws_r.
+	* libc/stdio/fread.c (_fread_r): Set stream orientation.
+	* libc/stdio/freopen.c (_freopen_r): Reset stream orientation.  Reset
+	_mbstate.
+	* libc/stdio/fseek.c (_fseek_r): Reset _mbstate.
+	* libc/stdio/fwide.c: New file, implementing fwide and _fwide_r.
+	* libc/stdio/fwrite.c (_fwrite_r): Set stream orientation.
+	* libc/stdio/getwc.c: New file, implementing getwc and _getwc_r.
+	* libc/stdio/getwchar.c: New file, implementing getwchar and
+	_getwchar_r.
+	* libc/stdio/local.h (ORIENT): New macro.
+	* libc/stdio/puts.c (_puts_r): Set stream orientation.
+	* libc/stdio/putwc.c: New file, implementing putwc and _putwc_r.
+	* libc/stdio/putwchar.c: New file, implementing putwchar and
+	_putwchar_r.
+	* libc/stdio/refill.c (__srefill_r): Set stream orientation.
+	* libc/stdio/stdio.tex: Add documentation for new functions.
+	* libc/stdio/ungetc.c (_ungetc_r): Set stream orientation.
+	* libc/stdio/ungetwc.c: New file, implementing ungetwc and _ungetwc_r.
+	* libc/stdio/vfscanf.c (__SVFSCANF_R): Set stream orientation.
+	* libc/stdio/wbuf.c (__swbuf_r): Ditto.
+
+2008-12-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* libc/include/stdint.h (INT32_MIN, INT32_MAX, UINT32_MAX,
+	INT_LEAST32_MIN, INT_LEAST32_MAX, UINT_LEAST32_MAX): Define to
+	constants with "long" types where appropriate.
+	(INT_FAST8_MIN, INT_FAST8_MAX, UINT_FAST8_MAX, INT_FAST16_MIN,
+	INT_FAST16_MAX, UINT_FAST16_MAX, INT_FAST32_MIN, INT_FAST32_MAX,
+	UINT_FAST32_MAX, INT_FAST64_MIN, INT_FAST64_MAX, UINT_FAST64_MAX):
+	Correct to match logic for defining corresponding types.
+	(INTMAX_MAX, INTMAX_MIN, UINTMAX_MAX): Define.
+	(SIZE_MAX): Define using __SIZE_MAX__ if available.
+	(PTRDIFF_MAX): Define using __PTRDIFF_MAX__ if available.
+	(PTRDIFF_MIN): Define in terms of PTRDIFF_MAX.
+	(WCHAR_MAX, WCHAR_MIN, WINT_MAX, WINT_MIN): Define.
+	(UINT8_C, UINT16_C): Define to give signed values if corresponding
+	types would promote to int.
+
+2008-12-04  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/sys/features.h (_POSIX_V6_ILP32_OFF32): Always define.
+	(_POSIX_V6_LP64_OFF64): Ditto.
+	(_POSIX_V6_LPBIG_OFFBIG): Ditto.
+
+2008-11-28  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/sys/linux/inode.c: Include <dirent.h> instead of
+	<linux/dirent.h>.
+	* libc/sys/linux/io64.c: Add weak alias for _stat64.
+
+2008-11-27  Ralf Corsepius <ralf.corsepius@rtems.org>
+
+	* libc/posix/telldir.c: Use #if !defined() instead of #ifndef 
+	to fix GCC warning.
+
+2008-11-27  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/Makefile.am: Add spu-mcount.S spu-gmon.c.
+	* libc/machine/spu/Makefile.in: Regenerated.
+	* libc/machine/spu/spu-gmon.c: New file.
+	* libc/machine/spu/spu-mcount.S: New file.
+
+2008-11-27  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* configure.host (*-rtems*): Turn on using portion of unix subdirectory.
+
+2008-11-27  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/argz/argz_add.c:  Added #include <argz.h> to get function
+	prototypes.
+	* libc/argz/argz_append.c: Ditto.
+	* libc/argz/argz_count.c: Ditto.
+	* libc/argz/argz_create.c: Ditto.
+	* libc/argz/argz_create_sep.c: Ditto.
+	* libc/argz/argz_delete.c: Ditto.
+	* libc/argz/argz_next.c: Ditto.
+	* libc/argz/argz_stringify.c: Ditto
+	* libc/stdlib/strtod.c: Added #include <stdlib.h> to get function
+	prototypes.
+	* libc/stdlib/wcstoul.c: Added #include <wchar.h> to get function
+	prototypes, corrected traditional usage comment.
+	* libc/include/wchar.h: Added _mbsrtowcs_r() prototype.
+
+2008-11-26 Ken Werner <ken.werner@de.ibm.com>
+
+	* libm/machine/spu/headers/acosd2.h: Rebase against current simdmath.
+	* libm/machine/spu/headers/asind2.h: Likewise.
+	* libm/machine/spu/headers/asinhf4.h: Likewise.
+	* libm/machine/spu/headers/divd2.h: Likewise.
+	* libm/machine/spu/headers/erf_utils.h: Likewise.
+	* libm/machine/spu/headers/erfcd2.h: Likewise.
+	* libm/machine/spu/headers/erfcf4.h: Likewise.
+	* libm/machine/spu/headers/erfd2.h: Likewise.
+	* libm/machine/spu/headers/recipd2.h: Likewise.
+
+2008-11-25  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdio/gets.c (_gets_r): Lock stdin here and call
+	__sgetc_r instead of _getchar_r.
+
+2008-11-24  Craig Howland  <howland@LGSInnovations.com>
+
+	* libc/stdlib/wcstoull_r.c:  Add EINVAL return for bad base value,
+	include wchar.h for prototype, remove extraneous includes, use
+	C99/POSIX ULLONG_MAX (but allow for poor limits.h).
+	* libc/stdlib/wcstoull.c:  Fix usage comments (mistakes and to add
+	base value check noted above), remove extraneous includes.
+	* libc/stdio/asnprintf.c:  Add #include "local.h" to get function
+	prototype for _svfprintf_r().
+	* libc/stdio/vasnprintf.c:  Ditto.
+	* libc/stdio/local.h:  Add function prototype for __submore().
+	* libc/include/stdio.h:  Add function prototypes for _fseeko_r and
+	_ftello_r.
+	* libc/posix/namespace.h:  Commented out define for write to
+	eliminate write() prototype being missing for collate.c (which is
+	the only file that presently includes namespace.h).
+	* libc/include/reent.h:  Added _rename_r.
+	* libc/reent/renamer.c:  Corrected function prototypes in synopses.
+	* libc/locale/ldpart.c:  Use struct stat64 when calling fstat64.
+
+2008-11-24  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/search/hash_func.c: Comment out unused static hash functions.
+	* libc/reent/stat64r.c: New file.
+	* libc/reent/Makefile.am: Add stat64r.c support.
+	* libc/reent/Makefile.in: Regenerated.
+
+2008-11-24  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* libc/posix/scandir.c: Fix memory leaks. 
+
+2008-11-24  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* libc/posix/Makefile.am: Compile readdir_r.c not readdir.c twice.
+	* libc/posix/Makefile.in: Regenerated.
+
+2008-11-24  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/stdio.h (__SMOD): Remove definition of unused flag.
+	* libc/include/sys/reent.h (struct __sFILE): Add _flags2 member.
+	* libc/stdio/findfp.c (std): Initialize _flags2.
+	(__sfp): Ditto.
+	* libc/stdio/refill.c (__srefill_r): Drop resetting __SMOD flag.
+	* libc/stdio/vfscanf.c (__ssrefill_r): Ditto.
+	* libc/stdio/fseek.c (_fseek_r): Drop checking __SMOD flag.
+	* libc/stdio64/fseeko64.c (_fseeko64_r): Ditto.
+
+2008-11-20  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/sys/linux_syscalls.h: Additional syscall defines to
+	be in sync with current kernels.
+
+2008-11-20  Ken Werner  <ken.werner@de.ibm.com>
+            Patrick Mansfield  <patmans@us.ibm.com>
+            Joel Schopp   <jschopp@austin.ibm.com>
+
+	* libc/machine/spu/configure.in: Add __ea detection.
+	* libc/machine/spu/Makefile.am: Add new files.
+	* libc/machine/spu/include/ea.h: New file.
+	* libc/machine/spu/ea_internal.h: Likewise.
+	* libc/machine/spu/sys/mman.h: Likewise.
+	* libc/machine/spu/mmap_ea.c: Likewise.
+	* libc/machine/spu/munmap_ea.c: Likewise.
+	* libc/machine/spu/mremap_ea.c: Likewise.
+	* libc/machine/spu/msync_ea.c: Likewise.
+	* libc/machine/spu/memchr_ea.c: Likewise.
+	* libc/machine/spu/memcmp_ea.c: Likewise.
+	* libc/machine/spu/memcpy_ea.c: Likewise.
+	* libc/machine/spu/memmove_ea.c: Likewise.
+	* libc/machine/spu/memset_ea.c: Likewise.
+	* libc/machine/spu/malloc_ea.c: Likewise.
+	* libc/machine/spu/realloc_ea.c: Likewise.
+	* libc/machine/spu/calloc_ea.c: Likewise.
+	* libc/machine/spu/free_ea.c: Likewise.
+	* libc/machine/spu/posix_memalign_ea.c: Likewise.
+	* libc/machine/spu/strcat_ea.c: Likewise.
+	* libc/machine/spu/strchr_ea.c: Likewise.
+	* libc/machine/spu/strcmp_ea.c: Likewise.
+	* libc/machine/spu/strcpy_ea.c: Likewise.
+	* libc/machine/spu/strcspn_ea.c: Likewise.
+	* libc/machine/spu/strlen_ea.c: Likewise.
+	* libc/machine/spu/strncat_ea.c: Likewise.
+	* libc/machine/spu/strncmp_ea.c: Likewise.
+	* libc/machine/spu/strncpy_ea.c: Likewise.
+	* libc/machine/spu/strpbrk_ea.c: Likewise.
+	* libc/machine/spu/strrchr_ea.c: Likewise.
+	* libc/machine/spu/strspn_ea.c: Likewise.
+	* libc/machine/spu/strstr_ea.c: Likewise.
+	* libc/machine/spu/read_ea.c: Likewise.
+	* libc/machine/spu/pread_ea.c: Likewise.
+	* libc/machine/spu/readv_ea.c: Likewise.
+	* libc/machine/spu/write_ea.c: Likewise.
+	* libc/machine/spu/pwrite_ea.c: Likewise.
+	* libc/machine/spu/writev_ea.c: Likewise.
+
+2008-11-19  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* libc/include/sys/config.h[__mips__]: Don't bother
+	setting __ATTRIBUTE_IMPURE_PTR__ here.
+	[__rtems__][__mips__]: No need to undef the __ATTRIBUTE_IMPURE_PTR__
+	macro anymore.
+
+2008-11-19  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/sys/linux/bits/dirent.h: New header file.
+	* libc/sys/linux/sys/dirent.h: Include <bits/dirent.h> instead of
+	<linux/dirent.h>.
+	* libc/posix/Makefile.am: Remove reallocf.
+	* libc/posix/Makefile.in: Regenerated.
+	* libc/posix/reallocf.c: Moved to...
+	* libc/stdlib/reallocf.c: Here
+	* libc/stdlib/malloc.c: Add reallocf documentation.
+	* libc/include/stdlib.h: Add reallocf and _reallocf_r prototypes.
+	* libc/stdlib/Makefile.am: Add reallocf.
+	* libc/stdlib/Makefile.in: Regenerated.
+	* libc/posix/_isatty.c: Set errno.
+
+2008-11-19  Craig Howland  <howland@LGSInnovations.com>
+
+	* libc/unix/collate.c (__collate_err): simplify to remove unnecessary
+	strdup() and strlen() calls, also getting rid of a compiler warning.
+
+2008-11-19  Ralf Corsepius <ralf.corsepius@rtems.org>
+
+	* libc/include/sys/config.h: Don't put 
+	__ATTRIBUTE_IMPURE_PTR__ into .sdata section for mips-rtems.
+		  
+2008-11-19  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/posix/runetype.h: Add include of stddef.h and remove
+	defining standard types: size_t and wchar_t.
+
+2008-11-19  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/include/pthread.h: Remove prototypes for
+	pthread_attr_getcputime and pthread_attr_setcputime which
+	were proposed but never approved by the POSIX standard.
+
+2008-11-18  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* libc/unix/ttyname.c: Use isatty() instead of tcgetattr().
+
+2008-11-18  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/unix/basename.c: Add !_NO_BASENAME flag check so code can be
+	ignored if desired by a platform.
+	* libc/unix/dirname.c: Ditto except replace BASENAME with file name.
+	* libc/unix/getcwd.c: Ditto.
+	* libc/unix/getlogin.c: Ditto.
+	* libc/unix/getpass.c: Ditto.
+	* libc/unix/getpwent.c: Ditto.
+	* libc/unix/getut.c: Ditto.
+	* libc/unix/pread.c: Ditto.
+	* libc/unix/pwrite.c: Ditto.
+	* libc/unix/sigset.c: Ditto.
+
+2008-11-18  Craig Howland  <howland@LGSInnovations.com>
+
+	* libc/unix/ttyname.c: Add ttyname_r and change ttyname to use
+	ttyname_r.
+
+2008-11-17  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* configure.host: RTEMS now uses posix subdirectory. 
+
+2008-11-17  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* sys/rtems/include/limits.h: Add _POSIX2_RE_DUP_MAX.
+	* sys/rtems/sys/param.h: sys/rtprio.h not needed.
+
+2008-10-31  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdio/diprintf.c: Modify documentation so eclipse newlib
+	libhover docs generate properly.
+	* libc/stdio/dprintf.c: Ditto.
+	* libc/stdio/fflush.c: Ditto.
+	* libc/stdio/fopencookie.c: Ditto.
+	* libc/stdio/fread.c: Ditto.
+	* libc/stdio/fsetpos.c: Ditto.
+	* libc/stdio/getc_u.c: Ditto.
+	* libc/stdio/getchar_u.c: Ditto.
+	* libc/stdio/putc_u.c: Ditto.
+	* libc/stdio/putchar_u.c: Ditto.
+	* libc/stdio/remove.c: Ditto.
+	* libc/stdio/siprintf.c: Ditto.
+	* libc/stdio/siscanf.c: Ditto.
+	* libc/stdio/sprintf.c: Ditto.
+	* libc/stdio/sscanf.c: Ditto.
+	* libc/stdio/vfprintf.c: Ditto.
+	* libc/stdio/vfscanf.c: Ditto.
+	* libc/stdio/viprintf.c: Ditto.
+	* libc/stdio/viscanf.c: Ditto.
+	* libc/stdlib/calloc.c: Ditto.
+	* libc/stdlib/efgcvt.c: Ditto.
+	* libc/stdlib/envlock.c: Ditto.
+	* libc/time/asctime.c: Ditto.
+	* libc/time/ctime.c: Ditto.
+	* libc/time/gmtime.c: Ditto.
+	* libc/time/lcltime.c: Ditto.
+	* libc/time/tzset.c: Ditto.
+	* libc/stdlib/envlock.h: Moved to libc/include.
+
+2008-10-31  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/limits.h: Add ARG_MAX, PATH_MAX, and _POSIX2_RE_DUP_MAX.
+	* libc/include/envlock.h: New file.
+	* libc/include/fnmatch.h: Ditto.
+	* libc/include/glob.h: Ditto.
+	* libc/include/regex.h: Ditto.
+	* libc/include/wordexp.h: Ditto.
+	* libc/posix/Makefile.am: Add new files moved from 
+	libc/sys/linux/stdlib.
+	* libc/posix/Makefile.in: Regenerated.
+	* libc/posix/COPYRIGHT: New file moved from libc/sys/linux/stdlib.
+	* libc/posix/cclass.h: Ditto.
+	* libc/posix/cname.h: Ditto.
+	* libc/posix/collate.c: Ditto.
+	* libc/posix/collate.h: Ditto.
+	* libc/posix/collcmp.c: Ditto.
+	* libc/posix/engine.c: Ditto.
+	* libc/posix/fnmatch.3: Ditto.
+	* libc/posix/glob.3: Ditto.
+	* libc/posix/fnmatch.c: Ditto.
+	* libc/posix/glob.c: Ditto.
+	* libc/posix/namespace.h: Ditto.
+	* libc/posix/reallocf.c: Ditto.
+	* libc/posix/regcomp.c: Ditto.
+	* libc/posix/regerror.c: Ditto.
+	* libc/posix/regex.3: Ditto.
+	* libc/posix/regex2.h: Ditto.
+	* libc/posix/regexec.c: Ditto.
+	* libc/posix/regfree.c: Ditto.
+	* libc/posix/rune.h: Ditto.
+	* libc/posix/runetype.h: Ditto.
+	* libc/posix/scandir.c: Remove advertising clause which is not in
+	effect.
+	* libc/posix/sysexits.h: Ditto.
+	* libc/posix/un-namespace.h: Ditto.
+	* libc/posix/utils.h: Ditto.
+	* libc/posix/wordexp.c: Ditto.
+	* libc/posix/wordfree.c: Ditto.
+	* libc/posix/execl.c: Add !_NO_EXECVE flag check.
+	* libc/posix/execle.c: Ditto.
+	* libc/posix/execlp.c: Ditto.
+	* libc/posix/execv.c: Ditto.
+	* libc/posix/execve.c: Ditto.
+	* libc/posix/execvp.c: Ditto.
+	* libc/posix/popen.c: Add !_NO_POPEN flag check.
+	* libc/sys/linux/configure: Regenerated.
+	* libc/sys/linux/configure.in: Remove stdlib.
+	* libc/sys/linux/include/limits.h: Add include of linux/limits.h.
+	* libc/sys/linux/stdlib/Makefile.am: Removed.
+	* libc/sys/linux/stdlib/Makefile.in: Ditto.
+	* libc/sys/linux/stdlib/COPYRIGHT: Moved to libc/posix.
+	* libc/sys/linux/stdlib/cclass.h: Ditto.
+	* libc/sys/linux/stdlib/cname.h: Ditto.
+	* libc/sys/linux/stdlib/collate.c: Ditto.
+	* libc/sys/linux/stdlib/collate.h: Ditto.
+	* libc/sys/linux/stdlib/collcmp.c: Ditto.
+	* libc/sys/linux/stdlib/engine.c: Ditto.
+	* libc/sys/linux/stdlib/fnmatch.3: Ditto.
+	* libc/sys/linux/stdlib/fnmatch.c: Ditto.
+	* libc/sys/linux/stdlib/glob.3: Ditto.
+	* libc/sys/linux/stdlib/glob.c: Ditto.
+	* libc/sys/linux/stdlib/reallocf.c: Ditto.
+	* libc/sys/linux/stdlib/regcomp.c: Ditto.
+	* libc/sys/linux/stdlib/regerror.c: Ditto.
+	* libc/sys/linux/stdlib/regex.3: Ditto.
+	* libc/sys/linux/stdlib/regex2.h: Ditto.
+	* libc/sys/linux/stdlib/regexec.c: Ditto.
+	* libc/sys/linux/stdlib/regfree.c: Ditto.
+	* libc/sys/linux/stdlib/utils.h: Ditto.
+	* libc/sys/linux/stdlib/wordexp.c: Ditto.
+	* libc/sys/linux/stdlib/wordfree.c: Ditto.
+
+2008-10-16  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* libc/include/sys/unistd.h: RTEMS follows standard for sync(). 
+
+2008-10-16  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* libc/include/time.h: Add CLOCK_MONOTONIC.
+	* libc/include/sys/features.h: Define
+	_POSIX_MONOTONIC_CLOCK for RTEMS. 
+
+2008-10-15  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* newlib.hin: Restore to previous 1.14 version which has no
+	PACKAGE_ macros.
+
+2008-10-15  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* libc/include/sys/unistd.h: Enable ttyname_r() for RTEMS.
+
+2008-10-15  Craig Howland  <howland@LGSInnovations.com>
+
+	* libc/include/ctype.h (isblank):  isblank is C99.
+	* libc/ctype/isblank.c (isblank comments):  ditto.  isblank does not
+	have a macro version (as was claimed in the description).
+
+2008-10-15  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdio/vfscanf.c (__ssvfiscanf_r): Do not support %lc, %C, %ls or
+	%S conversions when the EL/IX level is 1.
+
+2008-10-06  Eric Blake  <ebb9@byu.net>
+
+	* libc/stdlib/ldtoa.c (etoasc): Fix rounding to even when fraction
+	is 0.5 or 0.75.
+
+2008-10-06  Craig Howland  <howland@LGSInnovations.com>
+
+	* libc/time/tzset_r.c (_tzset_r):  Change US default start/end dates to
+	2007 law revision of start in 2nd Sunday in March, end 1st Sun in Nov.
+
+2008-10-02  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/string/str-two-way.h (critical_factorization): Cast the index
+	operation to ensure unsigned rollover occurs when adding to SIZE_MAX.
+
+2008-10-02  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/sys/linux/include/stdint.h (SIZE_MAX): Fix value which should
+	be size of size_t, not int.
+	(SIZE_MIN): Remove.
+	* libc/sys/linux/sys/stdint.h: Ditto.
+
+2008-10-02  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/sys/reent.h[_REENT_SMALL](_REENT_INIT_RAND48): Add 
+	initialization of _rand_next to 1.
+
+2008-09-29  Peter O'Gorman  <pogma@thewrittenword.com>
+	    Steve Ellcey  <sje@cup.hp.com>
+
+	* configure: Regenerate for new libtool.
+	* aclocal.m4: Ditto.
+	* Makefile.in: Ditto.
+	* newlib.hin: Ditto.
+	* doc/Makefile.in: Ditto.
+	* doc/configure: Ditto.
+	* iconvdata/Makefile.in: Ditto.
+	* iconvdata/aclocal.m4: Ditto.
+	* iconvdata/configure: Ditto.
+	* libc/Makefile.in: Ditto.
+	* libc/aclocal.m4: Ditto.
+	* libc/configure: Ditto.
+	* libc/argz/Makefile.in: Ditto.
+	* libc/ctype/Makefile.in: Ditto.
+	* libc/errno/Makefile.in: Ditto.
+	* libc/iconv/Makefile.in: Ditto.
+	* libc/iconv/ccs/Makefile.in: Ditto.
+	* libc/iconv/ccs/binary/Makefile.in: Ditto.
+	* libc/iconv/ces/Makefile.in: Ditto.
+	* libc/iconv/lib/Makefile.in: Ditto.
+	* libc/locale/Makefile.in: Ditto.
+	* libc/machine/Makefile.in: Ditto.
+	* libc/machine/aclocal.m4: Ditto.
+	* libc/machine/configure: Ditto.
+	* libc/machine/a29k/Makefile.in: Ditto.
+	* libc/machine/a29k/configure: Ditto.
+	* libc/machine/arm/Makefile.in: Ditto.
+	* libc/machine/arm/configure: Ditto.
+	* libc/machine/bfin/Makefile.in: Ditto.
+	* libc/machine/bfin/configure: Ditto.
+	* libc/machine/cris/Makefile.in: Ditto.
+	* libc/machine/cris/configure: Ditto.
+	* libc/machine/crx/Makefile.in: Ditto.
+	* libc/machine/crx/configure: Ditto.
+	* libc/machine/d10v/Makefile.in: Ditto.
+	* libc/machine/d10v/configure: Ditto.
+	* libc/machine/d30v/Makefile.in: Ditto.
+	* libc/machine/d30v/configure: Ditto.
+	* libc/machine/fr30/Makefile.in: Ditto.
+	* libc/machine/fr30/configure: Ditto.
+	* libc/machine/frv/Makefile.in: Ditto.
+	* libc/machine/frv/configure: Ditto.
+	* libc/machine/h8300/Makefile.in: Ditto.
+	* libc/machine/h8300/configure: Ditto.
+	* libc/machine/h8500/Makefile.in: Ditto.
+	* libc/machine/h8500/configure: Ditto.
+	* libc/machine/hppa/Makefile.in: Ditto.
+	* libc/machine/hppa/configure: Ditto.
+	* libc/machine/i386/Makefile.in: Ditto.
+	* libc/machine/i386/aclocal.m4: Ditto.
+	* libc/machine/i386/configure: Ditto.
+	* libc/machine/i960/Makefile.in: Ditto.
+	* libc/machine/i960/configure: Ditto.
+	* libc/machine/iq2000/Makefile.in: Ditto.
+	* libc/machine/iq2000/configure: Ditto.
+	* libc/machine/m32c/Makefile.in: Ditto.
+	* libc/machine/m32c/configure: Ditto.
+	* libc/machine/m32r/Makefile.in: Ditto.
+	* libc/machine/m32r/configure: Ditto.
+	* libc/machine/m68hc11/Makefile.in: Ditto.
+	* libc/machine/m68hc11/configure: Ditto.
+	* libc/machine/m68k/Makefile.in: Ditto.
+	* libc/machine/m68k/configure: Ditto.
+	* libc/machine/m88k/Makefile.in: Ditto.
+	* libc/machine/m88k/configure: Ditto.
+	* libc/machine/mep/Makefile.in: Ditto.
+	* libc/machine/mep/configure: Ditto.
+	* libc/machine/mips/Makefile.in: Ditto.
+	* libc/machine/mips/configure: Ditto.
+	* libc/machine/mn10200/Makefile.in: Ditto.
+	* libc/machine/mn10200/configure: Ditto.
+	* libc/machine/mn10300/Makefile.in: Ditto.
+	* libc/machine/mn10300/configure: Ditto.
+	* libc/machine/mt/Makefile.in: Ditto.
+	* libc/machine/mt/configure: Ditto.
+	* libc/machine/necv70/Makefile.in: Ditto.
+	* libc/machine/necv70/configure: Ditto.
+	* libc/machine/powerpc/Makefile.in: Ditto.
+	* libc/machine/powerpc/configure: Ditto.
+	* libc/machine/sh/Makefile.in: Ditto.
+	* libc/machine/sh/configure: Ditto.
+	* libc/machine/sparc/Makefile.in: Ditto.
+	* libc/machine/sparc/configure: Ditto.
+	* libc/machine/spu/Makefile.in: Ditto.
+	* libc/machine/spu/configure: Ditto.
+	* libc/machine/tic4x/Makefile.in: Ditto.
+	* libc/machine/tic4x/configure: Ditto.
+	* libc/machine/tic80/Makefile.in: Ditto.
+	* libc/machine/tic80/configure: Ditto.
+	* libc/machine/v850/Makefile.in: Ditto.
+	* libc/machine/v850/configure: Ditto.
+	* libc/machine/w65/Makefile.in: Ditto.
+	* libc/machine/w65/configure: Ditto.
+	* libc/machine/x86_64/Makefile.in: Ditto.
+	* libc/machine/x86_64/configure: Ditto.
+	* libc/machine/xscale/Makefile.in: Ditto.
+	* libc/machine/xscale/configure: Ditto.
+	* libc/machine/xstormy16/Makefile.in: Ditto.
+	* libc/machine/xstormy16/configure: Ditto.
+	* libc/machine/z8k/Makefile.in: Ditto.
+	* libc/machine/z8k/configure: Ditto.
+	* libc/misc/Makefile.in: Ditto.
+	* libc/posix/Makefile.in: Ditto.
+	* libc/reent/Makefile.in: Ditto.
+	* libc/search/Makefile.in: Ditto.
+	* libc/signal/Makefile.in: Ditto.
+	* libc/stdio/Makefile.in: Ditto.
+	* libc/stdio64/Makefile.in: Ditto.
+	* libc/stdlib/Makefile.in: Ditto.
+	* libc/string/Makefile.in: Ditto.
+	* libc/sys/Makefile.in: Ditto.
+	* libc/sys/aclocal.m4: Ditto.
+	* libc/sys/configure: Ditto.
+	* libc/sys/a29khif/Makefile.in: Ditto.
+	* libc/sys/a29khif/configure: Ditto.
+	* libc/sys/arc/Makefile.in: Ditto.
+	* libc/sys/arc/configure: Ditto.
+	* libc/sys/arm/Makefile.in: Ditto.
+	* libc/sys/arm/configure: Ditto.
+	* libc/sys/d10v/Makefile.in: Ditto.
+	* libc/sys/d10v/configure: Ditto.
+	* libc/sys/decstation/Makefile.in: Ditto.
+	* libc/sys/decstation/configure: Ditto.
+	* libc/sys/h8300hms/Makefile.in: Ditto.
+	* libc/sys/h8300hms/configure: Ditto.
+	* libc/sys/h8500hms/Makefile.in: Ditto.
+	* libc/sys/h8500hms/configure: Ditto.
+	* libc/sys/linux/Makefile.in: Ditto.
+	* libc/sys/linux/aclocal.m4: Ditto.
+	* libc/sys/linux/configure: Ditto.
+	* libc/sys/linux/argp/Makefile.in: Ditto.
+	* libc/sys/linux/cmath/Makefile.in: Ditto.
+	* libc/sys/linux/dl/Makefile.in: Ditto.
+	* libc/sys/linux/iconv/Makefile.in: Ditto.
+	* libc/sys/linux/intl/Makefile.in: Ditto.
+	* libc/sys/linux/linuxthreads/Makefile.in: Ditto.
+	* libc/sys/linux/linuxthreads/aclocal.m4: Ditto.
+	* libc/sys/linux/linuxthreads/configure: Ditto.
+	* libc/sys/linux/linuxthreads/machine/Makefile.in: Ditto.
+	* libc/sys/linux/linuxthreads/machine/aclocal.m4: Ditto.
+	* libc/sys/linux/linuxthreads/machine/configure: Ditto.
+	* libc/sys/linux/linuxthreads/machine/i386/Makefile.in: Ditto.
+	* libc/sys/linux/linuxthreads/machine/i386/aclocal.m4: Ditto.
+	* libc/sys/linux/linuxthreads/machine/i386/configure: Ditto.
+	* libc/sys/linux/machine/Makefile.in: Ditto.
+	* libc/sys/linux/machine/aclocal.m4: Ditto.
+	* libc/sys/linux/machine/configure: Ditto.
+	* libc/sys/linux/machine/i386/Makefile.in: Ditto.
+	* libc/sys/linux/machine/i386/aclocal.m4: Ditto.
+	* libc/sys/linux/machine/i386/configure: Ditto.
+	* libc/sys/linux/net/Makefile.in: Ditto.
+	* libc/sys/linux/stdlib/Makefile.in: Ditto.
+	* libc/sys/m88kbug/Makefile.in: Ditto.
+	* libc/sys/m88kbug/configure: Ditto.
+	* libc/sys/mmixware/Makefile.in: Ditto.
+	* libc/sys/mmixware/configure: Ditto.
+	* libc/sys/netware/Makefile.in: Ditto.
+	* libc/sys/netware/configure: Ditto.
+	* libc/sys/rdos/Makefile.in: Ditto.
+	* libc/sys/rdos/configure: Ditto.
+	* libc/sys/rtems/Makefile.in: Ditto.
+	* libc/sys/rtems/configure: Ditto.
+	* libc/sys/sh/Makefile.in: Ditto.
+	* libc/sys/sh/configure: Ditto.
+	* libc/sys/sparc64/Makefile.in: Ditto.
+	* libc/sys/sparc64/configure: Ditto.
+	* libc/sys/sun4/Makefile.in: Ditto.
+	* libc/sys/sun4/configure: Ditto.
+	* libc/sys/sysmec/Makefile.in: Ditto.
+	* libc/sys/sysmec/configure: Ditto.
+	* libc/sys/sysnec810/Makefile.in: Ditto.
+	* libc/sys/sysnec810/configure: Ditto.
+	* libc/sys/sysnecv850/Makefile.in: Ditto.
+	* libc/sys/sysnecv850/configure: Ditto.
+	* libc/sys/sysvi386/Makefile.in: Ditto.
+	* libc/sys/sysvi386/configure: Ditto.
+	* libc/sys/sysvnecv70/Makefile.in: Ditto.
+	* libc/sys/sysvnecv70/configure: Ditto.
+	* libc/sys/tic80/Makefile.in: Ditto.
+	* libc/sys/tic80/configure: Ditto.
+	* libc/sys/w65/Makefile.in: Ditto.
+	* libc/sys/w65/configure: Ditto.
+	* libc/sys/z8ksim/Makefile.in: Ditto.
+	* libc/sys/z8ksim/configure: Ditto.
+	* libc/syscalls/Makefile.in: Ditto.
+	* libc/time/Makefile.in: Ditto.
+	* libc/unix/Makefile.in: Ditto.
+	* libm/Makefile.in: Ditto.
+	* libm/aclocal.m4: Ditto.
+	* libm/configure: Ditto.
+	* libm/common/Makefile.in: Ditto.
+	* libm/machine/Makefile.in: Ditto.
+	* libm/machine/aclocal.m4: Ditto.
+	* libm/machine/configure: Ditto.
+	* libm/machine/i386/Makefile.in: Ditto.
+	* libm/machine/i386/aclocal.m4: Ditto.
+	* libm/machine/i386/configure: Ditto.
+	* libm/machine/spu/Makefile.in: Ditto.
+	* libm/machine/spu/configure: Ditto.
+	* libm/math/Makefile.in: Ditto.
+	* libm/mathfp/Makefile.in: Ditto.
+
+2008-09-26  Craig Howland  <howland@LGSInnovations.com>
+
+	* libc/stdlib/getenv_r.c (_getenv_r): Modify to not match if name
+	contains an equal sign.
+
+2008-09-25  Raphael Derossa Pereira  <raphaelpereira@gmail.com>
+
+	* libc/include/pthread.h[_UNIX98_THREAD_MUTEX_ATTRIBUTES]: Add
+	new pthread_mutexattr_gettype and pthread_mutexattr_settype
+	prototypes.
+	* libc/include/sys/types.h[_UNIX98_THREAD_MUTEX_ATTRIBUTES]: Add
+	new mutex type values.
+	(pthread_mutexattr_t)[_UNIX98_THREAD_MUTEX_ATTRIBUTES]: Add type
+	field.
+
+2008-09-24  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdlib/setenv_r.c (_unsetenv_r): Modify to return -1 only if
+	name is NULL, empty, or contains equal sign.
+
+2008-09-24  Pawel Veselov  <pawel.veselov@gmail.com>
+
+	Fix setenv/getenv/unsetenv to be OpenGroup compliant:
+	* libc/include/stdlib.h (unsetenv, _unsetenv_r): Redefine with integer
+	return types.
+	* libc/stdlib/getenv_r.c (_findenv_r): Do no special processing with
+	names that contain equal chars.
+	* libc/stdlib/setenv.c: Redefine _unsetenv_r as returning int.
+	* libc/stdlib/setenv_r.c (_setenv_r): Return -1 and set errno to
+	EINVAL if name contains an equal sign.  Do not remove any equal signs
+	from the value.
+	(_unsetenv_r): Modified to return int.  Return -1 and set EINVAL
+	if name contains equal sign.  Return -1 if no variable(s) were found
+	and return 0 otherwise.
+
+2008-09-19  Eric Blake  <ebb9@byu.net>
+
+	Supply missing POSIX errno values.
+	* libc/include/sys/errno.h (ENOTRECOVERABLE, EOWNERDEAD): Define.
+	* libc/string/strerror.c (strerror): Decode them, and ECANCELED.
+
+2008-09-10  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/strcpy.h: Add missing header.
+	* libc/machine/spu/spu_timer_slih.c: Remove unused Variable.
+	* libm/machine/spu/headers/lgammaf4.h: Add type cast.
+
+2008-09-08  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/sys/linux/dl/atomicity.h (exchange_and_add): Fix asm
+	statement to use "m" instead of "0".
+	(atomic_add): Ditto.
+	* libc/sys/linux/linuxthreads/spinlock.c (__pthread_release): Ditto. 
+	* libc/sys/linux/net/getaddrinfo.c: Add limit.h include.
+	* libc/sys/linux/stdlib/glob.c: Ditto.
+
+2008-09-04  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libm/machine/spu/headers/acosd2.h: Duplicated preamble text removed.
+	* libm/machine/spu/headers/acosf4.h: Likewise.
+	* libm/machine/spu/headers/acoshd2.h: Likewise.
+	* libm/machine/spu/headers/acoshf4.h: Likewise.
+	* libm/machine/spu/headers/asind2.h: Likewise.
+	* libm/machine/spu/headers/asinf4.h: Likewise.
+	* libm/machine/spu/headers/asinhd2.h: Likewise.
+	* libm/machine/spu/headers/asinhf4.h: Likewise.
+	* libm/machine/spu/headers/atan2d2.h: Likewise.
+	* libm/machine/spu/headers/atan2f4.h: Likewise.
+	* libm/machine/spu/headers/atand2.h: Likewise.
+	* libm/machine/spu/headers/atanf4.h: Likewise.
+	* libm/machine/spu/headers/atanhd2.h: Likewise.
+	* libm/machine/spu/headers/atanhf4.h: Likewise.
+	* libm/machine/spu/headers/cos_sin.h: Likewise.
+	* libm/machine/spu/headers/cosd2.h: Likewise.
+	* libm/machine/spu/headers/cosf4.h: Likewise.
+	* libm/machine/spu/headers/coshd2.h: Likewise.
+	* libm/machine/spu/headers/coshf4.h: Likewise.
+	* libm/machine/spu/headers/divd2.h: Likewise.
+	* libm/machine/spu/headers/divf4.h: Likewise.
+	* libm/machine/spu/headers/erf_utils.h: Likewise.
+	* libm/machine/spu/headers/erfcd2.h: Likewise.
+	* libm/machine/spu/headers/erfcf4.h: Likewise.
+	* libm/machine/spu/headers/erfd2.h: Likewise.
+	* libm/machine/spu/headers/erff4.h: Likewise.
+	* libm/machine/spu/headers/exp2d2.h: Likewise.
+	* libm/machine/spu/headers/exp2f4.h: Likewise.
+	* libm/machine/spu/headers/expd2.h: Likewise.
+	* libm/machine/spu/headers/expf4.h: Likewise.
+	* libm/machine/spu/headers/expm1d2.h: Likewise.
+	* libm/machine/spu/headers/expm1f4.h: Likewise.
+	* libm/machine/spu/headers/floord2.h: Likewise.
+	* libm/machine/spu/headers/floorf4.h: Likewise.
+	* libm/machine/spu/headers/hypotd2.h: Likewise.
+	* libm/machine/spu/headers/hypotf4.h: Likewise.
+	* libm/machine/spu/headers/isnand2.h: Likewise.
+	* libm/machine/spu/headers/isnanf4.h: Likewise.
+	* libm/machine/spu/headers/ldexpd2.h: Likewise.
+	* libm/machine/spu/headers/ldexpf4.h: Likewise.
+	* libm/machine/spu/headers/lgammad2.h: Likewise.
+	* libm/machine/spu/headers/lgammaf4.h: Likewise.
+	* libm/machine/spu/headers/log10d2.h: Likewise.
+	* libm/machine/spu/headers/log1pd2.h: Likewise.
+	* libm/machine/spu/headers/log1pf4.h: Likewise.
+	* libm/machine/spu/headers/log2d2.h: Likewise.
+	* libm/machine/spu/headers/log2f4.h: Likewise.
+	* libm/machine/spu/headers/logbf4.h: Likewise.
+	* libm/machine/spu/headers/logd2.h: Likewise.
+	* libm/machine/spu/headers/logf4.h: Likewise.
+	* libm/machine/spu/headers/nearbyintf4.h: Likewise.
+	* libm/machine/spu/headers/nextafterd2.h: Likewise.
+	* libm/machine/spu/headers/nextafterf4.h: Likewise.
+	* libm/machine/spu/headers/powd2.h: Likewise.
+	* libm/machine/spu/headers/powf4.h: Likewise.
+	* libm/machine/spu/headers/recipd2.h: Likewise.
+	* libm/machine/spu/headers/recipf4.h: Likewise.
+	* libm/machine/spu/headers/rintf4.h: Likewise.
+	* libm/machine/spu/headers/scalbnf4.h: Likewise.
+	* libm/machine/spu/headers/signbitd2.h: Likewise.
+	* libm/machine/spu/headers/sincosd2.h: Likewise.
+	* libm/machine/spu/headers/sincosf4.h: Likewise.
+	* libm/machine/spu/headers/sind2.h: Likewise.
+	* libm/machine/spu/headers/sinf4.h: Likewise.
+	* libm/machine/spu/headers/sinhd2.h: Likewise.
+	* libm/machine/spu/headers/sinhf4.h: Likewise.
+	* libm/machine/spu/headers/sqrtd2.h: Likewise.
+	* libm/machine/spu/headers/sqrtf4.h: Likewise.
+	* libm/machine/spu/headers/tand2.h: Likewise.
+	* libm/machine/spu/headers/tanf4.h: Likewise.
+	* libm/machine/spu/headers/tanhd2.h: Likewise.
+	* libm/machine/spu/headers/tanhf4.h: Likewise.
+	* libm/machine/spu/headers/tgammad2.h: Likewise.
+	* libm/machine/spu/headers/tgammaf4.h: Likewise.
+	* libm/machine/spu/headers/truncd2.h: Likewise.
+	* libm/machine/spu/headers/truncf4.h: Likewise.
+	* libm/machine/spu/headers/simdmath.h: Likewise.
+
+2008-09-04  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libm/machine/spu/headers/acoshf4.h: Rebase against current simdmath.
+	* libm/machine/spu/headers/asinhd2.h: Likewise.
+	* libm/machine/spu/headers/atanhd2.h: Likewise.
+	* libm/machine/spu/headers/atanhf4.h: Likewise.
+	* libm/machine/spu/headers/erff4.h: Likewise.
+	* libm/machine/spu/headers/expd2.h: Likewise.
+	* libm/machine/spu/headers/ldexpd2.h: Likewise.
+	* libm/machine/spu/headers/lgammaf4.h: Likewise.
+	* libm/machine/spu/headers/logbf4.h: Likewise.
+	* libm/machine/spu/headers/nextafterd2.h: Likewise.
+	* libm/machine/spu/headers/nextafterf4.h: Likewise.
+	* libm/machine/spu/headers/recipd2.h: Likewise.
+	* libm/machine/spu/headers/simdmath.h: Likewise.
+	* libm/machine/spu/headers/acoshd2.: Likewise.
+
+2008-09-04  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libm/machine/spu/headers/cbrt.h: cbrt_factors[] declared.
+	* libm/machine/spu/headers/cbrtf.h: Likewise.
+		
+2008-09-01  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/include/spu_timer.h: spu_timebase function added.
+	* libc/machine/spu/spu_timebase.c: New file.
+	* libc/machine/spu/Makefile.am: Add new file.
+	* libc/machine/spu/Makefile.in: Regenerated.
+			
+2008-08-28  Craig Howland  <howland@LGSInnovations.com>
+
+	* libc/time/mktime.c (mktime): Fix tm_isdst value usage (allowing
+	any positive value from user (per std) rather than depending
+	upon 1).
+		
+2008-08-28  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/wcsrtombs.c (_wcsrtombs_r): Optimize condition
+	for accepting a converted character.
+
+2008-08-27  Sandra Loosemore  <sandra@codesourcery.com>
+
+	* libc/libc.texinfo: Remove "LOCAL KLUGE" that prevents it
+	from building pdfs.
+	* libm/libm.texinfo: Likewise.
+				
+2008-08-27  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/stdlib/wcsrtombs.c (_wcsrtombs_r): Fix condition for
+	accepting a converted character and continuing the loop.
+		
+2008-07-24  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/ctype.h (_ctype_): Restore for C++ backward
+	compatability only.
+
+2008-07-21  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/ctype/ctype_.c: Add new pointer __ctype_ptr__ which is one
+	less than the old __ctype_ptr.
+	* libc/ctype/isalnum.c: Use __ctype_ptr__.
+	* libc/ctype/isalpha.c: Ditto.
+	* libc/ctype/iscntrl.c: Ditto.
+	* libc/ctype/isdigit.c: Ditto.
+	* libc/ctype/islower.c: Ditto.
+	* libc/ctype/isprint.c: Ditto.
+	* libc/ctype/ispunct.c: Ditto.
+	* libc/ctype/isspace.c: Ditto.
+	* libc/ctype/isupper.c: Ditto.
+	* libc/ctype/isxdigit.c: Ditto.
+	* libc/include/ctype.h: Change ctype macros to use new __ctype_ptr__
+	and add declaration of __ctype_ptr__.  Remove older ctype table pointers
+	from here even though they can still work.
+
+2008-07-18  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/strcpy.h: Fix error in previous patch.
+
+2008-07-17  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/assert.h (__ASSERT_FUNC): Define to __FUNCTION__ when
+	__STDC_VERSION__ < 199901L and __GNUC__ >= 2.
+
+2008-07-17  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/strcpy.h: Pad null bytes if necessary.
+
+2008-07-08  Kenji Tanaka  <tanaka.ken2@jp.panasonic.com>
+
+	* libc/machine/mn10300/memset.S: Fix bug where return value is
+	incorrectly set if number of bytes set is a multiple of 4.
+
+2008-07-07  Hans-Peter Nilsson  <hp@axis.com>
+
+	* libc/machine/mips/strncpy.c: Include stdint.h to get uintptr_t.
+	(strncpy): Cast src to uintptr_t before checking alignment with "&".
+
+2008-07-02  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/argz/argz_count.c: Include stddef.h to get size_t.
+	* libc/argz/argz_extract.c: Ditto.
+	* libc/argz/argz_stringify.c: Ditto.
+	* libc/search/hash.h: Ditto.
+	* libc/sys/linux/include/sched.h: Ditto.
+	* libc/sys/linux/sys/types.h: Ditto.
+
+2008-07-02  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/machine/mips/strncpy.c (strncpy): Fix logic so unaligned
+	source data is taken care of before loop unrolling.
+
+2008-06-25  Hans-Peter Nilsson  <hp@axis.com>
+
+	Fix strict-aliasing issues with _strtod_r and Storeinc.
+	* libc/stdlib/strtod.c (_strtod_r): Change local variables aadj,
+	rv, rv0 from double to type U.  Use accessor macros dval, dword0
+	and dword1 for all accesses except for the ULtod call, where rv.i
+	replaces the pointer cast.
+	* libc/stdlib/mprec.h (U): Rename member L to i for easier re-use
+	of access macros.  Tweak comment.
+	Remove #ifdef'd YES_ALIAS code.
+	(dword0, dword1, dval): Define in terms of uncast union member
+	access.  Ditto for _DOUBLE_IS_32BITS variants.
+	(Storeinc): Replace aliasing-flawed microoptimized definition with
+	alternative suggested in comment.  Remove now stale comment.
+
+2008-06-21  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/machine/setjmp.h (_longjmp): Define as function on
+	Cygwin.
+	(_setjmp): Ditto.
+
+2008-06-18  Eric Blake  <ebb9@byu.net>
+
+	Per Posix, strsignal returns non-const char*.
+	* libc/include/string.h (strsignal): Fix return type.
+
+2008-06-17  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/sys/linux_syscalls.h: New file to add Linux syscall
+	support.
+
+2008-06-16  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/sys/dirent.h: Add extern "C" specifier if C++.
+	* libc/machine/spu/sys/sched.h: Likewise.
+	* libc/machine/spu/sys/syscall.h: Likewise.
+	
+2008-06-16  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/mk_syscalls: Provide .type and .size directives
+	in generated assembler files.
+	* libc/machine/spu/fprintf.S: Regenerate.
+	* libc/machine/spu/fscanf.S: Regenerate.
+	* libc/machine/spu/printf.S: Regenerate.
+	* libc/machine/spu/scanf.S: Regenerate.
+	* libc/machine/spu/snprintf.S: Regenerate.
+	* libc/machine/spu/sprintf.S: Regenerate.
+	* libc/machine/spu/sscanf.S: Regenerate.
+	* libc/machine/spu/stack_reg_va.S (__stack_reg_va): Provide .type
+	and .size directives.
+	* libc/machine/spu/setjmp.S (setjmp): Likewise.
+	(longjmp): Likewise.
+	
+2008-06-11  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/machine/_default_types.h: Fix GNUC check to
+	handle 4.0 and greater.
+
+2008-06-09  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/Makefile.am: Add new files.
+	* libc/machine/spu/Makefile.in: Likewise.
+	* libc/machine/spu/include/spu_timer.h: New file to add timer support
+        using interrupts.
+	* libc/machine/spu/spu_clock_stop.c: Likewise.
+	* libc/machine/spu/spu_clock_svcs.c: Likewise.
+	* libc/machine/spu/spu_timer_flih.S: Likewise.
+	* libc/machine/spu/spu_timer_free.c: Likewise.
+	* libc/machine/spu/spu_timer_internal.h: Likewise.
+	* libc/machine/spu/spu_timer_slih.c: Likewise.
+	* libc/machine/spu/spu_timer_slih_reg.c: Likewise.
+	* libc/machine/spu/spu_timer_stop.c: Likewise.
+	* libc/machine/spu/spu_timer_svcs.c: Likewise.
+
+2008-06-09  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/machine/spu/strcat.c: Return value fixed.
+	* libc/machine/spu/strncat.c: Likewise.
+		
+2008-05-28  Eric Blake  <ebb9@byu.net>
+
+	Fix bug in previous patch.
+	* libc/machine/i386/memset.S (memset): Mask second arg correctly.
+
+2008-05-27  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/string/memset.c: Fix documented prototype to remove
+	erroneous const attribute on first parameter.
+
+2008-05-26  Eric Blake  <ebb9@byu.net>
+
+	Optimize the generic and x86 memchr.
+	* libc/string/memchr.c (memchr) [!__OPTIMIZE_SIZE__]:
+	Pre-align pointer so unaligned searches aren't penalized.
+	* libc/machine/i386/memchr.S (memchr) [!__OPTIMIZE_SIZE__]: Word
+	operations are faster than repnz byte searches.
+
+2008-05-26  Eric Blake  <ebb9@byu.net>
+
+	Optimize the generic and x86 memset.
+	* libc/string/memset.c (memset) [!__OPTIMIZE_SIZE__]:
+	Pre-align pointer so unaligned stores aren't penalized.
+	* libc/machine/i386/memset.S (memset) [!__OPTIMIZE_SIZE__]:
+	Pre-align pointer so unaligned stores aren't penalized.  Prefer
+	8-byte over 4-byte alignment.  Reduce register pressure.
+
+2008-05-26  Eric Blake  <ebb9@byu.net>
+
+	Optimize the generic and x86 strlen.
+	* libc/string/strlen.c (strlen) [!__OPTIMIZE_SIZE__]: Pre-align
+	data so unaligned searches aren't penalized.
+	* libc/machine/i386/strlen.S (strlen) [!__OPTIMIZE_SIZE__]:
+	Word operations are faster than repnz byte searches.
+
+2008-05-23  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/sys/_default_fcntl.h: Include <sys/time.h> on Cygwin.
+
+2008-05-22  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/sys/reent.h: Add _h_errno field.
+	* libc/sys/linux/libc-symbols.h: Add default stubs for new libc macros
+	now used in net directory.
+	* libc/sys/linux/bits/libc-lock.h: Always define _IO_MTSAFE_IO.
+	* libc/sys/linux/include/hesiod.h: Add needed macros for new code
+	in net directory.
+	* libc/sys/linux/include/netdb.h: Ditto.
+	* libc/sys/linux/include/resolv.h: Ditto.
+	* libc/sys/linux/include/stdint.h: Ditto.
+	* libc/sys/linux/include/arpa/nameser.h: Ditto.
+	* libc/sys/linux/include/net/ethernet.h: Ditto.
+	* libc/sys/linux/include/net/if_ppp.h: Ditto.
+	* libc/sys/linux/include/netinet/if_ether.h: Ditto.
+	* libc/sys/linux/machine/i386/get_clockfreq.c: Remove static memmem.
+	* libc/sys/linux/machine/i386/include/endian.h: Protect macros with
+	flags to avoid duplicate definition.
+	* libc/sys/linux/machine/i386/include/param.h: Ditto.
+	* libc/sys/linux/net/Makefile.am: Modified to account for removed and
+	added files.
+	* libc/sys/linux/net/Makefile.in: Regenerated.
+	* libc/sys/linux/net/base64.c: Replaced with glibc version of code.
+	* libc/sys/linux/net/getaddrinfo.c: Ditto.
+	* libc/sys/linux/net/getnameinfo.c: Ditto.
+	* libc/sys/linux/net/getproto.c: Ditto.
+	* libc/sys/linux/net/getservent.c: Ditto.
+	* libc/sys/linux/net/inet_netof.c: Ditto.
+	* libc/sys/linux/net/inet_lnaof.c: Ditto.
+	* libc/sys/linux/net/ns_name.c: Ditto.
+	* libc/sys/linux/net/ns_netint.c: Ditto.
+	* libc/sys/linux/net/inet_ntoa.c: Ditto.
+	* libc/sys/linux/net/ns_parse.c: Ditto.
+	* libc/sys/linux/net/ns_print.c: Ditto.
+	* libc/sys/linux/net/ns_ttl.c: Ditto.
+	* libc/sys/linux/net/nsap_addr.c: Ditto.
+	* libc/sys/linux/net/rcmd.c: Ditto.
+	* libc/sys/linux/net/res_comp.c: Ditto.
+	* libc/sys/linux/net/res_data.c: Ditto.
+	* libc/sys/linux/net/res_debug.c: Ditto.
+	* libc/sys/linux/net/res_init.c: Ditto.
+	* libc/sys/linux/net/res_mkquery.c: Ditto.
+	* libc/sys/linux/net/res_query.c: Ditto.
+	* libc/sys/linux/net/res_send.c: Ditto.
+	* libc/sys/linux/net/send.c: Ditto.
+	* libc/sys/linux/stdlib/collate.c: Ditto.
+	* libc/sys/linux/sys/ioctl.h: Ditto.
+	* libc/sys/linux/sys/socket.h: Ditto.
+	* libc/sys/linux/sys/unistd.h: Ditto.
+	* libc/sys/linux/iconv/iconvconfig.c: Removed either because no longer
+	used or because licensing includes advertising clause that cannot be
+	ignored.
+	* libc/sys/linux/iconv/strtab.c: Ditto.
+	* libc/sys/linux/include/libc_private.h: Ditto.
+	* libc/sys/linux/include/nsswitch.h: Ditto.
+	* libc/sys/linux/include/net/if_atm.h: Ditto.
+	* libc/sys/linux/include/net/if_media.h: Ditto.
+	* libc/sys/linux/include/net/if_pppvar.h: Ditto.
+	* libc/sys/linux/include/netinet/if_atm.h: Ditto.
+	* libc/sys/linux/include/netinet/ip_flow.h: Ditto.
+	* libc/sys/linux/intl/locale.alias: Ditto.
+	* libc/sys/linux/net/addr2ascii.3: Ditto.
+	* libc/sys/linux/net/bindresvport.c: Ditto.
+	* libc/sys/linux/net/byteorder.3: Ditto.
+	* libc/sys/linux/net/res_config.h: Ditto.
+	* libc/sys/linux/net/ether_addr.c: Ditto.
+	* libc/sys/linux/net/ethers.3: Ditto.
+	* libc/sys/linux/net/getaddrinfo.3: Ditto.
+	* libc/sys/linux/net/gethostbydns.c: Ditto.
+	* libc/sys/linux/net/gethostbyht.c: Ditto.
+	* libc/sys/linux/net/gethostbyname.3: Ditto.
+	* libc/sys/linux/net/gethostbynis.c: Ditto.
+	* libc/sys/linux/net/gethostnamadr.c: Ditto.
+	* libc/sys/linux/net/getifaddrs.3: Ditto.
+	* libc/sys/linux/net/getifaddrs.c: Ditto.
+	* libc/sys/linux/net/getipnodebyname.3: Ditto.
+	* libc/sys/linux/net/getnameinfo.3: Ditto.
+	* libc/sys/linux/net/getnetbydns.c: Ditto.
+	* libc/sys/linux/net/getnetbyht.c: Ditto.
+	* libc/sys/linux/net/getnetbynis.c: Ditto.
+	* libc/sys/linux/net/getnetent.3: Ditto.
+	* libc/sys/linux/net/getnetnamadr.c: Ditto.
+	* libc/sys/linux/net/getprotoent.3: Ditto.
+	* libc/sys/linux/net/getprotoent.c: Ditto.
+	* libc/sys/linux/net/getprotoname.c: Ditto.
+	* libc/sys/linux/net/getservbyname.c: Ditto.
+	* libc/sys/linux/net/getservbyport.c: Ditto.
+	* libc/sys/linux/net/getservent.3: Ditto.
+	* libc/sys/linux/net/herror.c: Ditto.
+	* libc/sys/linux/net/hesiod.3: Ditto.
+	* libc/sys/linux/net/hesiod.c: Ditto.
+	* libc/sys/linux/net/if_indextoname.3: Ditto.
+	* libc/sys/linux/net/inet.3: Ditto.
+	* libc/sys/linux/net/inet6_option_space.3: Ditto.
+	* libc/sys/linux/net/inet6_rthdr_space.3: Ditto.
+	* libc/sys/linux/net/inet_makeaddr.c: Ditto.
+	* libc/sys/linux/net/inet_net.3: Ditto.
+	* libc/sys/linux/net/inet_network.c: Ditto.
+	* libc/sys/linux/net/innetgr-stub.c: Ditto.
+	* libc/sys/linux/net/ip6opt.c: Ditto.
+	* libc/sys/linux/net/iso_addr.3: Ditto.
+	* libc/sys/linux/net/iso_addr.c: Ditto.
+	* libc/sys/linux/net/linkaddr.3: Ditto.
+	* libc/sys/linux/net/linkaddr.c: Ditto.
+	* libc/sys/linux/net/map_v4v6.c: Ditto.
+	* libc/sys/linux/net/name6.c: Ditto.
+	* libc/sys/linux/net/namespace.h: Ditto.
+	* libc/sys/linux/net/ns.3: Ditto.
+	* libc/sys/linux/net/ns_addr.c: Ditto.
+	* libc/sys/linux/net/ns_ntoa.c: Ditto.
+	* libc/sys/linux/net/nsdispatch.3: Ditto.
+	* libc/sys/linux/net/nsdispatch.c: Ditto.
+	* libc/sys/linux/net/nslexer.c: Ditto.
+	* libc/sys/linux/net/nslexer.l: Ditto.
+	* libc/sys/linux/net/nsparser.c: Ditto.
+	* libc/sys/linux/net/nsparser.h: Ditto.
+	* libc/sys/linux/net/nsparser.y: Ditto.
+	* libc/sys/linux/net/rcmd.3: Ditto.
+	* libc/sys/linux/net/rcmdsh.3: Ditto.
+	* libc/sys/linux/net/res_mkupdate.c: Ditto.
+	* libc/sys/linux/net/res_update.c: Ditto.
+	* libc/sys/linux/net/resolver.3: Ditto.
+	* libc/sys/linux/net/rthdr.c: Ditto.
+	* libc/sys/linux/net/vars.c: Ditto.
+	* libc/sys/linux/shlib-compat.h: New file.
+	* libc/sys/linux/machine/i386/atomic.h: Ditto.
+	* libc/sys/linux/net/XXX-lookup.c: Ditto.
+	* libc/sys/linux/net/alias-lookup.c: Ditto.
+	* libc/sys/linux/net/res_libc.c: Ditto.
+	* libc/sys/linux/net/aliases.h: Ditto.
+	* libc/sys/linux/net/check_pf.c: Ditto.
+	* libc/sys/linux/net/databases.def: Ditto.
+	* libc/sys/linux/net/digits_dots.c: Ditto.
+	* libc/sys/linux/net/ether_aton.c: Ditto.
+	* libc/sys/linux/net/ether_aton_r.c: Ditto.
+	* libc/sys/linux/net/ether_hton.c: Ditto.
+	* libc/sys/linux/net/ether_line.c: Ditto.
+	* libc/sys/linux/net/ether_ntoa.c: Ditto.
+	* libc/sys/linux/net/ether_ntoa_r.c: Ditto.
+	* libc/sys/linux/net/ether_ntoh.c: Ditto.
+	* libc/sys/linux/net/etherent.h: Ditto.
+	* libc/sys/linux/net/ethers-lookup.c: Ditto.
+	* libc/sys/linux/net/function.def: Ditto.
+	* libc/sys/linux/net/getXXbyYY.c: Ditto.
+	* libc/sys/linux/net/getXXbyYY_r.c: Ditto.
+	* libc/sys/linux/net/getXXent.c: Ditto.
+	* libc/sys/linux/net/getXXent_r.c: Ditto.
+	* libc/sys/linux/net/getaliasent.c: Ditto.
+	* libc/sys/linux/net/getaliasent_r.c: Ditto.
+	* libc/sys/linux/net/getaliasname.c: Ditto.
+	* libc/sys/linux/net/getaliasname_r.c: Ditto.
+	* libc/sys/linux/net/gethstbyad.c: Ditto.
+	* libc/sys/linux/net/gethstbyad_r.c: Ditto.
+	* libc/sys/linux/net/gethstbynm.c: Ditto.
+	* libc/sys/linux/net/gethstbynm2.c: Ditto.
+	* libc/sys/linux/net/gethstbynm2_r.c: Ditto.
+	* libc/sys/linux/net/gethstbynm_r.c: Ditto.
+	* libc/sys/linux/net/gethstent.c: Ditto.
+	* libc/sys/linux/net/gethstent_r.c: Ditto.
+	* libc/sys/linux/net/getnetbyad.c: Ditto.
+	* libc/sys/linux/net/getnetbyad_r.c: Ditto.
+	* libc/sys/linux/net/getnetbynm.c: Ditto.
+	* libc/sys/linux/net/getnetbynm_r.c: Ditto.
+	* libc/sys/linux/net/getnetent.c: Ditto.
+	* libc/sys/linux/net/getnetent_r.c: Ditto.
+	* libc/sys/linux/net/getnetgrent.c: Ditto.
+	* libc/sys/linux/net/getnetgrent_r.c: Ditto.
+	* libc/sys/linux/net/getnssent.c: Ditto.
+	* libc/sys/linux/net/getnssent_r.c: Ditto.
+	* libc/sys/linux/net/getproto_r.c: Ditto.
+	* libc/sys/linux/net/getprtent.c: Ditto.
+	* libc/sys/linux/net/getprtent_r.c: Ditto.
+	* libc/sys/linux/net/getprtname.c: Ditto.
+	* libc/sys/linux/net/getprtname_r.c: Ditto.
+	* libc/sys/linux/net/getrpcbyname.c: Ditto.
+	* libc/sys/linux/net/getrpcbyname_r.c: Ditto.
+	* libc/sys/linux/net/getrpcbynumber.c: Ditto.
+	* libc/sys/linux/net/getrpcbynumber_r.c: Ditto.
+	* libc/sys/linux/net/getrpcent.c: Ditto.
+	* libc/sys/linux/net/getrpcent_r.c: Ditto.
+	* libc/sys/linux/net/getservent_r.c: Ditto.
+	* libc/sys/linux/net/getsrvbynm.c: Ditto.
+	* libc/sys/linux/net/getsrvbynm_r.c: Ditto.
+	* libc/sys/linux/net/getsrvbypt.c: Ditto.
+	* libc/sys/linux/net/getsrvbypt_r.c: Ditto.
+	* libc/sys/linux/net/grp-lookup.c: Ditto.
+	* libc/sys/linux/net/herrno.c: Ditto.
+	* libc/sys/linux/net/hosts-lookup.c: Ditto.
+	* libc/sys/linux/net/ifaddrs.h: Ditto.
+	* libc/sys/linux/net/ifreq.c: Ditto.
+	* libc/sys/linux/net/ifreq.h: Ditto.
+	* libc/sys/linux/net/in6_addr.c: Ditto.
+	* libc/sys/linux/net/inet6_option.c: Ditto.
+	* libc/sys/linux/net/inet_mkadr.c: Ditto.
+	* libc/sys/linux/net/inet_net.c: Ditto.
+	* libc/sys/linux/net/key-lookup.c: Ditto.
+	* libc/sys/linux/net/local.h: Ditto.
+	* libc/sys/linux/net/netgroup.h: Ditto.
+	* libc/sys/linux/net/netgrp-lookup.c: Ditto.
+	* libc/sys/linux/net/network-lookup.c: Ditto.
+	* libc/sys/linux/net/not-cancel.h: Ditto.
+	* libc/sys/linux/net/ns_samedomain.c: Ditto.
+	* libc/sys/linux/net/nscd-types.h: Ditto.
+	* libc/sys/linux/net/nss.h: Ditto.
+	* libc/sys/linux/net/nsswitch.c: Ditto.
+	* libc/sys/linux/net/nsswitch.h: Ditto.
+	* libc/sys/linux/net/opensock.c: Ditto.
+	* libc/sys/linux/net/proto-lookup.c: Ditto.
+	* libc/sys/linux/net/pwd-lookup.c: Ditto.
+	* libc/sys/linux/net/res_debug.h: Ditto.
+	* libc/sys/linux/net/res_hconf.c: Ditto.
+	* libc/sys/linux/net/res_hconf.h: Ditto.
+	* libc/sys/linux/net/rexec.c: Ditto.
+	* libc/sys/linux/net/rpc-lookup.c: Ditto.
+	* libc/sys/linux/net/ruserpass.c: Ditto.
+	* libc/sys/linux/net/service-lookup.c: Ditto.
+	* libc/sys/linux/net/spwd-lookup.c: Ditto.
+	* libc/sys/linux/net/nscd/nscd-client.h: Ditto.
+	* libc/sys/linux/net/nscd/nscd_proto.h: Ditto.
+
+2008-05-21  Eric Blake  <ebb9@byu.net>
+
+	Optimize the generic strchr.
+	* libc/string/strchr.c (strchr) [!__OPTIMIZE_SIZE__]: Pre-align
+	data so unaligned searches aren't penalized.  Special-case
+	searching for 0.
+
+	Optimize strchr for x86.
+	* libc/machine/i386/strchr.S (strchr) [!__OPTIMIZE_SIZE__]:
+	Pre-align data so unaligned searches aren't penalized.
+	Special-case searching for 0.
+
+2008-05-20  Nick Clifton  <nickc@redhat.com>
+
+	* libc/sys/sysnecv850/crt0.S (___dso_handle): Define (weak).
+
+2008-05-20  DJ Delorie  <dj@redhat.com>
+
+	* libc/sys/sysnecv850/isatty.c (_isatty): Renamed from isatty.
+
+2008-05-14  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/sys/reent.h: Change _REENT_INIT... macros to
+	access macro parameter with parentheses around it.
+
+2008-04-26  Mark Mitchell  <mark@codesourcery.com>
+
+	* libc/include/stdint.h (SIZE_MIN): Remove.
+	(SIZE_MAX): Define.
+	* testsuite/newlib.stdlib/stdlib.exp: New.
+	* testsuite/newlib.stdlib/size_max.c: Likewise.
+
+2008-04-29  Eric Blake  <ebb9@byu.net>
+
+	Fix 2008-04-14 regression in asprintf(ptr,"").
+	* libc/stdio/asnprintf.c (asnprintf, _asnprintf_r): Avoid stdio
+	baggage.
+	* libc/stdio/asniprintf.c (asniprintf, _asniprintf_r): Likewise.
+	* libc/stdio/asiprintf.c (asiprintf, _asiprintf_r): Likewise.
+	* libc/stdio/vasniprintf.c (_vasniprintf_r): Likewise.
+	* libc/stdio/vsnprintf.c (_vsnprintf_r): Likewise.
+	* libc/stdio/vfprintf.c (_VFPRINTF_R) [STRING_ONLY]: Always malloc
+	an initial buffer for asprintf.
+
+2008-04-24  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/sys/stat.h: Guard at-functions with !__INSIDE_CYGWIN__.
+	(fstatat): Fix type of third parameter.
+
+2008-04-25  Nick Clifton  <nickc@redhat.com>
+
+	* libc/machine/arm/setjmp.S: Fix thumb2 support.
+
+2008-04-24  Nick Clifton  <nickc@redhat.com>
+
+	* libc/include/machine/ieeefp.h: Fix typo: _DOUBLE_IS_32_BITS
+	should be _DOUBLE_IS_32BITS.
+
+2008-04-24  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/sys/stat.h (UTIME_NOW): Define for Cygwin.
+	(UTIME_OMIT): Ditto.
+	(utimensat): Declare for Cygwin.
+	(futimens): Ditto.
+
+2008-04-23  Ken Werner  <ken.werner@de.ibm.com>
+
+	* libc/include/_ansi.h: _LONG_LONG renamed to _LONG_LONG_TYPE.
+	* libc/include/math.h: Likewise.
+
+2008-04-23  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/stdio.h (renameat): Declare for Cygwin.
+	(symlinkat): Ditto.
+	* libc/include/sys/unistd.h (readlink): Align declaration to POSIX.
+	(faccessat): Declare for Cygwin.
+	(fchownat): Ditto.
+	(linkat): Ditto.
+	(readlinkat): Ditto.
+	* libc/include/sys/_default_fcntl.h (AT_FDCWD): Define for Cygwin.
+	(AT_EACCESS): Ditto.
+	(AT_SYMLINK_NOFOLLOW): Ditto.
+	(AT_SYMLINK_FOLLOW): Ditto.
+	(AT_REMOVEDIR): Ditto.
+	(futimesat): Declare for Cygwin.
+	(openat): Ditto.
+	(unlinkat): Ditto.
+	* libc/include/sys/stat.h (fchmodat): Ditto.
+	(fstatat): Ditto.
+	(mkdirat): Ditto.
+	(mkfifoat): Ditto.
+	(mknodat): Ditto.
+
+2008-04-22  Nick Clifton  <nickc@redhat.com>
+
+	* libc/machine/arm/setjmp.S: Add support for thumb2 multiple
+	register load/store instructions.
+
+2008-04-16  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* libc/machine/spu/sys/errno.h: Use _impure_data, not _reent_data.
+
+2008-04-16  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* libc/machine/spu/impure.c: Add missing underscore to impure_data.
+
+2008-04-14  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* libc/machine/spu/impure.c: New file, supply a non-static _impure_data.
+	* libc/machine/spu/Makefile.am: Add new file impure.c.
+	* libc/machine/spu/Makefile.in: Regenerate.
+	* libc/machine/spu/sys/errno.h: Define errno to be _reent_data._errno.
+
+2008-04-14  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdio/Makefile.am: Build vfprintf.c and vfscanf.c with
+	-DSTRING_ONLY defined with and without -DINTEGER_ONLY defined
+	to build special versions for sprintf/sscanf family functions.
+	* libc/stdio/Makefile.in: Regenerated.
+	* libc/stdio/vfprintf.c[STRING_ONLY][INTEGER_ONLY](_VFPRINTF_R):
+	Redefine to be _svfiprintf_r which is optimized to work with siprintf
+	family of functions (i.e. no I/O) and does not support floating-point.
+	[STRING_ONLY][!INTEGER_ONLY](_VFPRINTF_R): Redefine to be
+	_svfprintf_r which is optimized to work with sprintf family of
+	functions and not use I/O.
+	[STRING_ONLY](__sprint_r): New string only version of static function.
+	designed to work with sprintf family of functions.
+	* libc/stdio/vfscanf.c[STRING_ONLY][INTEGER_ONLY](_SVFSCANF_R):
+	Redefine to be _ssvfiscanf_r which is optimized to work with siscanf
+	family of functions (i.e. no I/O) and no float-point support.
+	[STRING_ONLY][!INTEGER_ONLY](_SVFSCANF_R): Redefine to be
+	__ssvfscanf_r which is optimized to work with sscanf family of
+	functions and does not require I/O functions.
+	* libc/stdio/asprintf.c: Call _svfprintf_r instead of _vfprintf_r.
+	* libc/stdio/snprintf.c: Ditto.
+	* libc/stdio/sprintf.c: Ditto.
+	* libc/stdio/vasnprintf.c: Ditto.
+	* libc/stdio/vasprintf.c: Ditto.
+	* libc/stdio/siprintf.c: Call _svfiprintf_r instead of _vfiprintf_r.
+	* libc/stdio/sniprintf.c: Ditto.
+	* libc/stdio/vasiprintf.c: Ditto.
+	* libc/stdio/vsiprintf.c: Ditto.
+	* libc/stdio/vsniprintf.c: Ditto.
+	* libc/stdio/vsprintf.c: Ditto.
+	* libc/stdio/local.h: Add prototypes for _svfprintf_r, _svfiprintf_r,
+	_ssvfscanf_r, and _ssvfiscanf_r.
+	* libc/stdio/sscanf.c: Call _ssvfscanf_r instead of _svfscanf_r.
+	* libc/stdio/vsscanf.c: Ditto.
+	* libc/stdio/siscanf.c: Call _ssvfiscanf_r instead of _svfiscanf_r.
+	* libc/stdio/vsiscanf.c: Ditto.
+
+2008-04-04  DJ Delorie  <dj@redhat.com>
+
+	* libm/machine/spu/configure: Regenerate with autoconf 2.61.
+	* libc/sys/configure: Regenerate with autoconf 2.61.
+	* libc/machine/configure: Regenerate with autoconf 2.61.
+
+2008-04-01 Patrick Mansfield <patmans@us.ibm.com>
+
+	* libc/machine/spu/memcmp.c: New file for SPU optimized memcmp.
+	* libc/machine/spu/strncmp.h: New file supply _strncmp_internal.
+	* libc/machine/spu/Makefile.am: Add memcmp.c.
+	* libc/machine/spu/Makefile.in: Rebuild.
+	* libc/machine/spu/strncmp.c: Use _strncmp_internal.
+
+2008-04-01 Patrick Mansfield <patmans@us.ibm.com>
+
+	* configure.host: Build SPU with -DREENTRANT_SYSCALLS_PROVIDED and
+	  -DMISSING_SYSCALL_NAMES.
+
+2008-04-01 Patrick Mansfield <patmans@us.ibm.com>
+
+	* libc/machine/spu/Makefile.am: Add assert.c.
+	* libc/machine/spu/Makefile.in: Regenerate.
+	* libc/machine/spu/assert.c: New file.
+
+2008-03-27 Patrick Mansfield <patmans@us.ibm.com>
+
+	* libc/include/reent.h: Define _func_r functions in this file to
+	func if REENTRANT_SYSCALLS_PROVIDED and MISSING_SYSCALL_NAMES are
+	defined.
+
+2008-03-27  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/sys/unistd.h: Declare lockf(2) and define lockf
+	constants when building for Cygwin.
+
+2008-03-11  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/stdio/rgetc.c (__srget_r): Invoke CHECK_INIT to ensure
+	stdin gets resolved properly before refilling.
+
+2008-03-07  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/getopt.h: Hide newlib extensions under
+	the __need_getopt_newlib flag.
+	* libc/stdlib/getopt.c: #define __need_getopt_newlib before including
+	getopt.h.  Put entire code under !HAVE_GETOPT to support platforms
+	with their own getopt implementation.
+	* configure.host: Specify HAVE_GETOPT for x86-linux.
+
+2008-03-07  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/sys/reent.h(_REENT_SMALL_CHECK_INIT): Specify
+	this macro completely instead of referring to CHECK_STD_INIT which
+	is only found in libc/stdio/local.h.
+	* libc/stdio/dprintf.c: Add include of local.h.
+	* libc/stdio/vdprintf.c: Ditto.
+	* libc/stdio/vdiprintf.c: Ditto.
+
+2008-03-04  Eric Blake  <ebb9@byu.net>
+
+	Fix strtod("nan()", ptr).
+	* libc/stdlib/gdtoa-hexnan.c (hexnan): When the optional
+	n-char-sequence is omitted, still parse the ().
+
+2008-03-03  Eric Blake  <ebb9@byu.net>
+
+	Fix ftell bug after ungetc.
+	* libc/stdio/ftell.c (_ftell_r): Don't flush ungetc buffer on
+	ftell.
+	* libc/stdio64/ftello64.c (_ftello64_r): Likewise.
+	* libc/stdio/fflush.c (_fflush_r): Clear unget buffer when
+	repositioning underlying fd offset.
+
+2008-03-02  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/include/getopt.h (no_argument): Added for glibc compatibility.
+	(required_argument, optional_argument): Ditto.
+
+2008-02-29  Gregory Pietsch  <gpietsch@comcast.net>
+
+	* libc/stdlib/getopt.c (getopt_internal): Rewrite to accept
+	data area so as to support reentrant calls.  Change all callers
+	to fill in data area with global values and restore any changes
+	to the global values after call.
+	(__getopt_r, __getopt_long_r, __getopt_long_only_r): New routines
+	to support reentrancy that add a data area argument.
+	* libc/include/getopt.h: Add new _r routines and provide macros
+	so they can be called with using double-underscores.
+
+2008-02-21  Eric Blake  <ebb9@byu.net>
+
+	Fix strtod("-0x", NULL).
+	* libc/stdlib/strtod.c (_strtod_r): Fall back to 0 if hex parse
+	fails.
+
+2008-02-12  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/machine/powerpc/vfprintf.c (_VFPRINTF_R): Prepare
+	for user specifying --disable-newlib-io-long-long on configure.
+	Call _fflush_r instead of fflush.  For _mbtowc_r, pass the
+	reentrant pointer passed in rather than _REENT.
+
+2008-02-12  Peter Rosin  <peda@lysator.liu.se>
+
+	* libc/stdlib/getopt.c (getopt_internal): Handle optional
+	arguments better for long options and short options not
+	appearing as the first option in a sequence.
+
+2008-02-11  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* libc/machine/spu/straddr.h: New file, supplies _straddr.
+	* libc/machine/spu/strcat.c: Use _straddr and _strcpy.
+	* libc/machine/spu/strcpy.c: Use _strcpy.
+	* libc/machine/spu/strcpy.h: Supply _strcpy for optimized SPU
+	str[n]cpy and str[n]cat.
+	* libc/machine/spu/strncat.c: Use _straddr and _strcpy.
+	* libc/machine/spu/strncpy.c: Use _strcpy.
+
+2008-02-11  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* libc/machine/spu/strlen.c: Remove the len variable and unneeded
+	calculation of its value.
+
+2008-01-25  Hans-Peter Nilsson  <hp@bitrange.com>
+
+	* libc/sys/mmixware/isatty.c (_isatty): Renamed from isatty.
+	Make ISO C.
+
+2008-01-21  DJ Delorie  <dj@redhat.com>
+
+	* libc/sys/sh/syscalls.c (_isatty): New.
+
+2008-01-21  Neal H. Walfield  <neal@gnu.org>
+
+	* Makefile.am (crt1.o): Use correct source.
+	* Makefile.in: Regenerated.
+
+2008-01-15  Eric Blake  <ebb9@byu.net>
+
+	* libc/string/Makefile.am (ELIX_2_SOURCES): Fix definition.
+	* libc/string/Makefile: Regenerate.
+
+2008-01-15  Corinna Vinschen  <corinna@vinschen.de>
+
+	* libc/include/machine/setjmp.h (__SIGMASK_FUNC): Define as
+	pthread_sigmask or sigprocmask depending on _POSIX_THREADS.
+	(sigsetjmp): Use __SIGMASK_FUNC.
+	(siglongjmp): Ditto.
+	(_setjmp): Define as macro.
+	(_longjmp): Ditto.
+
+2008-01-11  Eric Blake  <ebb9@byu.net>
+
+	Make strstr and strcasestr O(n), not O(n^2); add memmem.
+	* libc/string/str-two-way.h: New file.
+	* libc/string/memmem.c (memmem): New file.
+	* libc/include/string.h (memmem): Declare for all platforms.
+	* libc/string/strstr.c (strstr): Provide O(n) implementation when
+	not optimizing for space.
+	* libc/string/strcasestr.c (strcasestr): Likewise.
+	* libc/string/Makefile.am (ELIX_SOURCES): Rename to...
+	(ELIX_2_SOURCES): ...this.
+	(ELIX_4_SOURCES): New category, for memmem.
+	(lib_a_SOURCES, libstring_la_SOURCES): Build new file.
+	(CHEWOUT_FILES): Build documentation for memmem.
+	* libc/string/strings.tex: Include new docs.
+
+2008-01-08  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/machine/m68k/memcpy.S: Remove % from register references
+	as this is already handled by m68kasm.h.
+	* libc/machine/m68k/memset.S: Ditto.
+
+2008-01-07  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/machine/m68k/m68kasm.h: New file.
+	* libc/machine/m68k/setjmp.S: Remove common definitions and
+	place in m68kasm.h.  Include "m68kasm.h".
+	* libc/machine/m68k/memcpy.S: Include "m68kasm.h" and use
+	SYM() macro when referencing function name.
+	* libc/machine/m68k/memset.S: Ditto.
+
+2008-01-03  Jeff Johnston  <jjohnstn@redhat.com>
+
+	Make isatty syscall handling consistent with other newlib syscalls.
+
+	* libc/include/_syslist.h: Add _isatty.
+	* libc/include/reent.h: Add _isatty_r.
+	* libc/include/sys/unistd.h: Add _isatty.
+	* libc/posix/Makefile.am: Add new _isatty.c file.
+	* libc/posix/Makefile.in: Regenerated.
+	* libc/posix/_isatty.c: New file.
+	* libc/posix/isatty.c: Changed to call _isatty().
+	* libc/reent/Makefile.am: Add new isattyr.c file.
+	* libc/reent/Makefile.in: Regenerated.
+	* libc/reent/isattyr.c: New file.
+	* libc/stdio/freopen.c: Changed to call _isatty_r().
+	* libc/stdio/makebuf.c: Ditto.
+	* libc/sys/a29khif/_isatty.S: Change isatty to _isatty.
+	* libc/sys/arc/isatty.c: Ditto.
+	* libc/sys/arm/syscalls.c: Ditto.
+	* libc/sys/d10v/syscalls.c: Ditto.
+	* libc/sys/h8300hms/syscalls.c: Ditto.
+	* libc/sys/h8500hms/syscalls.c: Ditto.
+	* libc/sys/linux/Makefile.am: Add new isatty.c file.
+	* libc/sys/linux/Makefile.in: Regenerated.
+	* libc/sys/linux/isatty.c: New file.
+	* libc/syscalls/Makefile.am: Add new sysisatty.c file.
+	* libc/syscalls/Makefile.in: Regenerated.
+	* libc/syscalls/sysisatty.c: New file.
+
+2008-01-02  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* libc/syscalls/sysclose.c: Always call reentrant version of the
+	underlying syscall since one is guaranteed to exist in libc/reent.
+	* libc/syscalls/sysexecve.c: Ditto.
+	* libc/syscalls/sysfcntl.c: Ditto.
+	* libc/syscalls/sysfork.c: Ditto.
+	* libc/syscalls/sysfstat.c: Ditto.
+	* libc/syscalls/sysgetpid.c: Ditto.
+	* libc/syscalls/sysgettod.c: Ditto.
+	* libc/syscalls/syskill.c: Ditto.
+	* libc/syscalls/syslink.c: Ditto.
+	* libc/syscalls/syslseek.c: Ditto.
+	* libc/syscalls/sysopen.c: Ditto.
+	* libc/syscalls/sysread.c: Ditto.
+	* libc/syscalls/syssbrk.c: Ditto.
+	* libc/syscalls/sysstat.c: Ditto.
+	* libc/syscalls/systimes.c: Ditto.
+	* libc/syscalls/sysunlink.c: Ditto.
+	* libc/syscalls/syswait.c: Ditto.
+	* libc/syscalls/syswrite.c: Ditto.
+
 2007-12-19  Jeff Johnston  <jjohnstn@redhat.com>
 
-        * NEWS: Update with 1.16.0 info.
-        * README: Ditto.
-        * acinclude.m4: Change version number to 1.16.0.
-        * aclocal.m4: Regenerated.
-        * configure: Ditto.
-        * doc/aclocal.m4: Ditto.
-        * doc/configure: Ditto.
-        * libc/*/aclocal.m4: Ditto.
-        * libc/*/configure: Ditto.
-        * libc/libc.texinfo: Ditto.
-        * libm/*/aclocal.m4: Ditto.
-        * libm/*/configure: Ditto.
-        * libm/libm.texinfo: Ditto.
-        * libc/sys/linux/shared.ld: Add VERS_1.16.
+	* NEWS: Update with 1.16.0 info.
+	* README: Ditto.
+	* acinclude.m4: Change version number to 1.16.0.
+	* aclocal.m4: Regenerated.
+	* configure: Ditto.
+	* doc/aclocal.m4: Ditto.
+	* doc/configure: Ditto.
+	* libc/*/aclocal.m4: Ditto.
+	* libc/*/configure: Ditto.
+	* libc/libc.texinfo: Ditto.
+	* libm/*/aclocal.m4: Ditto.
+	* libm/*/configure: Ditto.
+	* libm/libm.texinfo: Ditto.
+	* libc/sys/linux/shared.ld: Add VERS_1.16.
 
 2007-12-19  Jeff Johnston  <jjohnstn@redhat.com>
 
@@ -105,7 +1863,7 @@
 2007-11-07  Dave Brolley  <brolley@redhat.com>
 
 	* libc/machine/configure: Regenerated to pick up mep-elf changes.
-	
+
 	* Contribute mep-elf from Red Hat
 	2006-10-27  DJ Delorie  <dj@redhat.com>
 

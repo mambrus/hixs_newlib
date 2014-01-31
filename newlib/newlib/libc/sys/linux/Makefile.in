@@ -138,7 +138,8 @@ DIST_COMMON = $(srcdir)/../../../../config.guess \
 	$(srcdir)/../../../../compile $(srcdir)/../../../../compile \
 	$(srcdir)/../../../../compile $(srcdir)/../../../../compile \
 	$(srcdir)/../../../../compile $(srcdir)/../../../../compile \
-	$(srcdir)/../../../../compile $(srcdir)/../../../../ltmain.sh \
+	$(srcdir)/../../../../compile $(srcdir)/../../../../compile \
+	$(srcdir)/../../../../ltmain.sh \
 	$(srcdir)/../../../../config.guess \
 	$(srcdir)/../../../../config.sub
 subdir = .
@@ -147,7 +148,10 @@ am__aclocal_m4_deps = $(top_srcdir)/../../../../libtool.m4 \
 	$(top_srcdir)/../../../../ltoptions.m4 \
 	$(top_srcdir)/../../../../ltsugar.m4 \
 	$(top_srcdir)/../../../../ltversion.m4 \
-	$(top_srcdir)/../../../acinclude.m4 $(top_srcdir)/configure.in
+	$(top_srcdir)/../../../../lt~obsolete.m4 \
+	$(top_srcdir)/../../../acinclude.m4 \
+	$(top_srcdir)/../../../confsubdir.m4 \
+	$(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -170,35 +174,36 @@ am__objects_1 = lib_a-aio.$(OBJEXT) lib_a-brk.$(OBJEXT) \
 	lib_a-gethostid.$(OBJEXT) lib_a-gethostname.$(OBJEXT) \
 	lib_a-getreent.$(OBJEXT) lib_a-ids.$(OBJEXT) \
 	lib_a-inode.$(OBJEXT) lib_a-io.$(OBJEXT) lib_a-ipc.$(OBJEXT) \
-	lib_a-linux.$(OBJEXT) lib_a-mallinfor.$(OBJEXT) \
-	lib_a-malloc.$(OBJEXT) lib_a-mallocr.$(OBJEXT) \
-	lib_a-mallstatsr.$(OBJEXT) lib_a-mmap.$(OBJEXT) \
-	lib_a-mq_close.$(OBJEXT) lib_a-mq_getattr.$(OBJEXT) \
-	lib_a-mq_notify.$(OBJEXT) lib_a-mq_open.$(OBJEXT) \
-	lib_a-mq_receive.$(OBJEXT) lib_a-mq_send.$(OBJEXT) \
-	lib_a-mq_setattr.$(OBJEXT) lib_a-mq_unlink.$(OBJEXT) \
-	lib_a-msize.$(OBJEXT) lib_a-msizer.$(OBJEXT) \
-	lib_a-mstats.$(OBJEXT) lib_a-mtrim.$(OBJEXT) \
-	lib_a-mtrimr.$(OBJEXT) lib_a-ntp_gettime.$(OBJEXT) \
-	lib_a-pread.$(OBJEXT) lib_a-process.$(OBJEXT) \
-	lib_a-prof-freq.$(OBJEXT) lib_a-profile.$(OBJEXT) \
-	lib_a-psignal.$(OBJEXT) lib_a-pwrite.$(OBJEXT) \
-	lib_a-raise.$(OBJEXT) lib_a-realloc.$(OBJEXT) \
-	lib_a-reallocr.$(OBJEXT) lib_a-rename.$(OBJEXT) \
-	lib_a-resource.$(OBJEXT) lib_a-sched.$(OBJEXT) \
-	lib_a-select.$(OBJEXT) lib_a-seteuid.$(OBJEXT) \
-	lib_a-sethostid.$(OBJEXT) lib_a-sethostname.$(OBJEXT) \
-	lib_a-shm_open.$(OBJEXT) lib_a-shm_unlink.$(OBJEXT) \
-	lib_a-sig.$(OBJEXT) lib_a-sigaction.$(OBJEXT) \
-	lib_a-sigqueue.$(OBJEXT) lib_a-signal.$(OBJEXT) \
-	lib_a-siglongjmp.$(OBJEXT) lib_a-sigset.$(OBJEXT) \
-	lib_a-sigwait.$(OBJEXT) lib_a-socket.$(OBJEXT) \
-	lib_a-sleep.$(OBJEXT) lib_a-strsignal.$(OBJEXT) \
-	lib_a-strverscmp.$(OBJEXT) lib_a-sysconf.$(OBJEXT) \
-	lib_a-sysctl.$(OBJEXT) lib_a-systat.$(OBJEXT) \
-	lib_a-tcdrain.$(OBJEXT) lib_a-tcsendbrk.$(OBJEXT) \
-	lib_a-termios.$(OBJEXT) lib_a-time.$(OBJEXT) \
-	lib_a-usleep.$(OBJEXT) lib_a-versionsort.$(OBJEXT)
+	lib_a-isatty.$(OBJEXT) lib_a-linux.$(OBJEXT) \
+	lib_a-mallinfor.$(OBJEXT) lib_a-malloc.$(OBJEXT) \
+	lib_a-mallocr.$(OBJEXT) lib_a-mallstatsr.$(OBJEXT) \
+	lib_a-mmap.$(OBJEXT) lib_a-mq_close.$(OBJEXT) \
+	lib_a-mq_getattr.$(OBJEXT) lib_a-mq_notify.$(OBJEXT) \
+	lib_a-mq_open.$(OBJEXT) lib_a-mq_receive.$(OBJEXT) \
+	lib_a-mq_send.$(OBJEXT) lib_a-mq_setattr.$(OBJEXT) \
+	lib_a-mq_unlink.$(OBJEXT) lib_a-msize.$(OBJEXT) \
+	lib_a-msizer.$(OBJEXT) lib_a-mstats.$(OBJEXT) \
+	lib_a-mtrim.$(OBJEXT) lib_a-mtrimr.$(OBJEXT) \
+	lib_a-ntp_gettime.$(OBJEXT) lib_a-pread.$(OBJEXT) \
+	lib_a-process.$(OBJEXT) lib_a-prof-freq.$(OBJEXT) \
+	lib_a-profile.$(OBJEXT) lib_a-psignal.$(OBJEXT) \
+	lib_a-pwrite.$(OBJEXT) lib_a-raise.$(OBJEXT) \
+	lib_a-realloc.$(OBJEXT) lib_a-reallocr.$(OBJEXT) \
+	lib_a-rename.$(OBJEXT) lib_a-resource.$(OBJEXT) \
+	lib_a-sched.$(OBJEXT) lib_a-select.$(OBJEXT) \
+	lib_a-seteuid.$(OBJEXT) lib_a-sethostid.$(OBJEXT) \
+	lib_a-sethostname.$(OBJEXT) lib_a-shm_open.$(OBJEXT) \
+	lib_a-shm_unlink.$(OBJEXT) lib_a-sig.$(OBJEXT) \
+	lib_a-sigaction.$(OBJEXT) lib_a-sigqueue.$(OBJEXT) \
+	lib_a-signal.$(OBJEXT) lib_a-siglongjmp.$(OBJEXT) \
+	lib_a-sigset.$(OBJEXT) lib_a-sigwait.$(OBJEXT) \
+	lib_a-socket.$(OBJEXT) lib_a-sleep.$(OBJEXT) \
+	lib_a-strsignal.$(OBJEXT) lib_a-strverscmp.$(OBJEXT) \
+	lib_a-sysconf.$(OBJEXT) lib_a-sysctl.$(OBJEXT) \
+	lib_a-systat.$(OBJEXT) lib_a-tcdrain.$(OBJEXT) \
+	lib_a-tcsendbrk.$(OBJEXT) lib_a-termios.$(OBJEXT) \
+	lib_a-time.$(OBJEXT) lib_a-usleep.$(OBJEXT) \
+	lib_a-versionsort.$(OBJEXT)
 am__objects_2 = lib_a-aio64.$(OBJEXT) lib_a-confstr.$(OBJEXT) \
 	lib_a-ctermid.$(OBJEXT) lib_a-fclean.$(OBJEXT) \
 	lib_a-fpathconf.$(OBJEXT) lib_a-fstab.$(OBJEXT) \
@@ -235,13 +240,13 @@ am__objects_6 = aio.lo brk.lo calloc.lo callocr.lo cfreer.lo \
 	cfspeed.lo clock_getres.lo clock_gettime.lo clock_settime.lo \
 	flockfile.lo free.lo freer.lo ftok.lo funlockfile.lo \
 	getdate.lo getdate_err.lo gethostid.lo gethostname.lo \
-	getreent.lo ids.lo inode.lo io.lo ipc.lo linux.lo mallinfor.lo \
-	malloc.lo mallocr.lo mallstatsr.lo mmap.lo mq_close.lo \
-	mq_getattr.lo mq_notify.lo mq_open.lo mq_receive.lo mq_send.lo \
-	mq_setattr.lo mq_unlink.lo msize.lo msizer.lo mstats.lo \
-	mtrim.lo mtrimr.lo ntp_gettime.lo pread.lo process.lo \
-	prof-freq.lo profile.lo psignal.lo pwrite.lo raise.lo \
-	realloc.lo reallocr.lo rename.lo resource.lo sched.lo \
+	getreent.lo ids.lo inode.lo io.lo ipc.lo isatty.lo linux.lo \
+	mallinfor.lo malloc.lo mallocr.lo mallstatsr.lo mmap.lo \
+	mq_close.lo mq_getattr.lo mq_notify.lo mq_open.lo \
+	mq_receive.lo mq_send.lo mq_setattr.lo mq_unlink.lo msize.lo \
+	msizer.lo mstats.lo mtrim.lo mtrimr.lo ntp_gettime.lo pread.lo \
+	process.lo prof-freq.lo profile.lo psignal.lo pwrite.lo \
+	raise.lo realloc.lo reallocr.lo rename.lo resource.lo sched.lo \
 	select.lo seteuid.lo sethostid.lo sethostname.lo shm_open.lo \
 	shm_unlink.lo sig.lo sigaction.lo sigqueue.lo signal.lo \
 	siglongjmp.lo sigset.lo sigwait.lo socket.lo sleep.lo \
@@ -312,6 +317,7 @@ CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -342,6 +348,7 @@ LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LINUX_MACH_LIB = @LINUX_MACH_LIB@
+LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
@@ -352,8 +359,11 @@ MAY_SUPPLY_SYSCALLS_FALSE = @MAY_SUPPLY_SYSCALLS_FALSE@
 MAY_SUPPLY_SYSCALLS_TRUE = @MAY_SUPPLY_SYSCALLS_TRUE@
 NEWLIB_CFLAGS = @NEWLIB_CFLAGS@
 NM = @NM@
+NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OTOOL = @OTOOL@
+OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -370,8 +380,20 @@ STRIP = @STRIP@
 USE_LIBTOOL_FALSE = @USE_LIBTOOL_FALSE@
 USE_LIBTOOL_TRUE = @USE_LIBTOOL_TRUE@
 VERSION = @VERSION@
+ac_ct_AR = @ac_ct_AR@
+ac_ct_AS = @ac_ct_AS@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_DLLTOOL = @ac_ct_DLLTOOL@
+ac_ct_DSYMUTIL = @ac_ct_DSYMUTIL@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+ac_ct_LIPO = @ac_ct_LIPO@
+ac_ct_NMEDIT = @ac_ct_NMEDIT@
+ac_ct_OBJDUMP = @ac_ct_OBJDUMP@
+ac_ct_OTOOL = @ac_ct_OTOOL@
+ac_ct_OTOOL64 = @ac_ct_OTOOL64@
+ac_ct_RANLIB = @ac_ct_RANLIB@
+ac_ct_READELF = @ac_ct_READELF@
+ac_ct_STRIP = @ac_ct_STRIP@
 aext = @aext@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
@@ -387,23 +409,18 @@ build_cpu = @build_cpu@
 build_os = @build_os@
 build_vendor = @build_vendor@
 datadir = @datadir@
-datarootdir = @datarootdir@
-docdir = @docdir@
-dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 host = @host@
 host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
-htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
 libm_machine_dir = @libm_machine_dir@
-localedir = @localedir@
 localstatedir = @localstatedir@
 lpfx = @lpfx@
 lt_ECHO = @lt_ECHO@
@@ -413,10 +430,8 @@ mkdir_p = @mkdir_p@
 newlib_basedir = @newlib_basedir@
 oext = @oext@
 oldincludedir = @oldincludedir@
-pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
-psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 subdirs = @subdirs@
@@ -465,6 +480,7 @@ GENERAL_SOURCES = \
 	inode.c \
 	io.c \
 	ipc.c \
+	isatty.c \
 	linux.c \
 	mallinfor.c \
 	malloc.c \
@@ -806,6 +822,12 @@ lib_a-ipc.o: ipc.c
 
 lib_a-ipc.obj: ipc.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-ipc.obj `if test -f 'ipc.c'; then $(CYGPATH_W) 'ipc.c'; else $(CYGPATH_W) '$(srcdir)/ipc.c'; fi`
+
+lib_a-isatty.o: isatty.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-isatty.o `test -f 'isatty.c' || echo '$(srcdir)/'`isatty.c
+
+lib_a-isatty.obj: isatty.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-isatty.obj `if test -f 'isatty.c'; then $(CYGPATH_W) 'isatty.c'; else $(CYGPATH_W) '$(srcdir)/isatty.c'; fi`
 
 lib_a-linux.o: linux.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-linux.o `test -f 'linux.c' || echo '$(srcdir)/'`linux.c

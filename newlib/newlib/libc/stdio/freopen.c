@@ -76,6 +76,7 @@ Supporting OS subroutines required: <<close>>, <<fstat>>, <<isatty>>,
 #include <reent.h>
 #include <time.h>
 #include <stdio.h>
+#include <string.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -167,7 +168,7 @@ _DEFUN(_freopen_r, (ptr, file, mode, fp),
       /*
        * F_SETFL doesn't change textmode.  Don't mess with modes of ttys.
        */
-      if (0 <= f && ! isatty (f)
+      if (0 <= f && ! _isatty_r (ptr, f)
 	  && setmode (f, oflags & (O_BINARY | O_TEXT)) == -1)
 	f = -1;
 #endif
@@ -201,6 +202,9 @@ _DEFUN(_freopen_r, (ptr, file, mode, fp),
   if (HASLB (fp))
     FREELB (ptr, fp);
   fp->_lb._size = 0;
+  fp->_flags & ~__SORD;
+  fp->_flags2 = 0;
+  memset (&fp->_mbstate, 0, sizeof (_mbstate_t));
 
   if (f < 0)
     {				/* did not get it after all */

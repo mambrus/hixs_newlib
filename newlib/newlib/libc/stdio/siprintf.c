@@ -22,41 +22,51 @@ FUNCTION
 INDEX
 	fiprintf
 INDEX
+	_fiprintf_r
+INDEX
 	iprintf
+INDEX
+	_iprintf_r
 INDEX
 	siprintf
 INDEX
+	_siprintf_r
+INDEX
 	sniprintf
+INDEX
+	_sniprintf_r
 INDEX
 	asiprintf
 INDEX
+	_asiprintf_r
+INDEX
 	asniprintf
+INDEX
+	_asniprintf_r
 
 ANSI_SYNOPSIS
         #include <stdio.h>
 
-        int iprintf(const char *<[format]> [, <[arg]>, ...]);
-        int fiprintf(FILE *<[fd]>, const char *<[format]> [, <[arg]>, ...]);
-        int siprintf(char *<[str]>, const char *<[format]> [, <[arg]>, ...]);
-        int sniprintf(char *<[str]>, size_t <[size]>, const char *<[format]>
-                      [, <[arg]>, ...]);
-        int asiprintf(char **<[strp]>, const char *<[format]> [, <[arg]>, ...]);
-        char *asniprintf(char *<[str]>, size_t *<[size]>, const char *<[format]>
-                        [, <[arg]>, ...]);
+        int iprintf(const char *<[format]>, ...);
+        int fiprintf(FILE *<[fd]>, const char *<[format]> , ...);
+        int siprintf(char *<[str]>, const char *<[format]>, ...);
+        int sniprintf(char *<[str]>, size_t <[size]>, const char *<[format]>, 
+			...);
+        int asiprintf(char **<[strp]>, const char *<[format]>, ...);
+        char *asniprintf(char *<[str]>, size_t *<[size]>, 
+			const char *<[format]>, ...);
 
-        int _iprintf_r(struct _reent *<[ptr]>, const char *<[format]>
-                       [, <[arg]>, ...]);
+        int _iprintf_r(struct _reent *<[ptr]>, const char *<[format]>, ...);
         int _fiprintf_r(struct _reent *<[ptr]>, FILE *<[fd]>,
-                        const char *<[format]> [, <[arg]>, ...]);
+                        const char *<[format]>, ...);
         int _siprintf_r(struct _reent *<[ptr]>, char *<[str]>,
-                        const char *<[format]> [, <[arg]>, ...]);
+                        const char *<[format]>, ...);
         int _sniprintf_r(struct _reent *<[ptr]>, char *<[str]>, size_t <[size]>,
-                         const char *<[format]> [, <[arg]>, ...]);
+                         const char *<[format]>, ...);
         int _asiprintf_r(struct _reent *<[ptr]>, char **<[strp]>,
-                         const char *<[format]> [, <[arg]>, ...]);
+                         const char *<[format]>, ...);
         char *_asniprintf_r(struct _reent *<[ptr]>, char *<[str]>,
-                            size_t *<[size]>, const char *<[format]>
-                            [, <[arg]>, ...]);
+                            size_t *<[size]>, const char *<[format]>, ...);
 
 DESCRIPTION
         <<iprintf>>, <<fiprintf>>, <<siprintf>>, <<sniprintf>>,
@@ -119,7 +129,7 @@ _siprintf_r(ptr, str, fmt, va_alist)
 #else
   va_start (ap);
 #endif
-  ret = _vfiprintf_r (ptr, &f, fmt, ap);
+  ret = _svfiprintf_r (ptr, &f, fmt, ap);
   va_end (ap);
   *f._p = 0;
   return (ret);
@@ -152,7 +162,7 @@ siprintf(str, fmt, va_alist)
 #else
   va_start (ap);
 #endif
-  ret = _vfiprintf_r (_REENT, &f, fmt, ap);
+  ret = _svfiprintf_r (_REENT, &f, fmt, ap);
   va_end (ap);
   *f._p = 0;
   return (ret);

@@ -38,7 +38,7 @@
 	whereby multiple words of an IEEE floating point are in big endian order, but the
 	words themselves are little endian with respect to the bytes.
 
-   _DOUBLE_IS_32_BITS 
+   _DOUBLE_IS_32BITS 
 
         This is used on platforms that support double by using the 32-bit IEEE
         float type.
@@ -147,6 +147,10 @@
 
 #ifdef __i960__
 #define __IEEE_LITTLE_ENDIAN
+#endif
+
+#ifdef __lm32__
+#define __IEEE_BIG_ENDIAN
 #endif
 
 #ifdef __M32R__

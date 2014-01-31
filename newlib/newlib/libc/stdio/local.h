@@ -33,8 +33,17 @@
 #endif
 
 
+extern u_char *_EXFUN(__sccl, (char *, u_char *fmt));
 extern int    _EXFUN(__svfscanf_r,(struct _reent *,FILE *, _CONST char *,va_list));
+extern int    _EXFUN(__ssvfscanf_r,(struct _reent *,FILE *, _CONST char *,va_list));
 extern int    _EXFUN(__svfiscanf_r,(struct _reent *,FILE *, _CONST char *,va_list));
+extern int    _EXFUN(__ssvfiscanf_r,(struct _reent *,FILE *, _CONST char *,va_list));
+int	      _EXFUN(_svfprintf_r,(struct _reent *, FILE *, const char *, 
+				  va_list)
+               			_ATTRIBUTE ((__format__ (__printf__, 3, 0))));
+int	      _EXFUN(_svfiprintf_r,(struct _reent *, FILE *, const char *, 
+				  va_list)
+               			_ATTRIBUTE ((__format__ (__printf__, 3, 0))));
 extern FILE  *_EXFUN(__sfp,(struct _reent *));
 extern int    _EXFUN(__sflags,(struct _reent *,_CONST char*, int*));
 extern int    _EXFUN(__srefill_r,(struct _reent *,FILE *));
@@ -51,6 +60,7 @@ extern _VOID   _EXFUN(__smakebuf_r,(struct _reent *, FILE *));
 extern int    _EXFUN(_fwalk,(struct _reent *, int (*)(FILE *)));
 extern int    _EXFUN(_fwalk_reent,(struct _reent *, int (*)(struct _reent *, FILE *)));
 struct _glue * _EXFUN(__sfmoreglue,(struct _reent *,int n));
+extern int _EXFUN(__submore, (struct _reent *, FILE *));
 
 #ifdef __LARGE64_FILES
 extern _fpos64_t _EXFUN(__sseek64,(struct _reent *, void *, _fpos64_t, int));
@@ -113,6 +123,24 @@ extern _READ_WRITE_RETURN_TYPE _EXFUN(__swrite64,(struct _reent *, void *,
 #define	HASLB(fp) ((fp)->_lb._base != NULL)
 #define	FREELB(ptr, fp) { _free_r(ptr,(char *)(fp)->_lb._base); \
       (fp)->_lb._base = NULL; }
+
+/*
+ * Set the orientation for a stream. If o > 0, the stream has wide-
+ * orientation. If o < 0, the stream has byte-orientation.
+ */
+#define ORIENT(fp,ori)					\
+  do								\
+    {								\
+      if (!((fp)->_flags & __SORD))	\
+	{							\
+	  (fp)->_flags |= __SORD;				\
+	  if (ori > 0)						\
+	    (fp)->_flags2 |= __SWID;				\
+	  else							\
+	    (fp)->_flags2 &= ~__SWID;				\
+	}							\
+    }								\
+  while (0)
 
 /* WARNING: _dcvt is defined in the stdlib directory, not here!  */
 

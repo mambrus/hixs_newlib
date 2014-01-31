@@ -45,6 +45,8 @@ _DEFUN(__srefill_r, (ptr, fp),
 
   CHECK_INIT (ptr, fp);
 
+  ORIENT (fp, -1);
+
   fp->_r = 0;			/* largely a convenience for callers */
 
 #ifndef __CYGWIN__
@@ -105,7 +107,6 @@ _DEFUN(__srefill_r, (ptr, fp),
     _CAST_VOID _fwalk (_GLOBAL_REENT, lflush);
   fp->_p = fp->_bf._base;
   fp->_r = fp->_read (ptr, fp->_cookie, (char *) fp->_p, fp->_bf._size);
-  fp->_flags &= ~__SMOD;	/* buffer contents are again pristine */
 #ifndef __CYGWIN__
   if (fp->_r <= 0)
 #else

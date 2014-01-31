@@ -29,7 +29,8 @@ A pointer to the (string) value of the environment variable, or
 
 PORTABILITY
 <<_getenv_r>> is not ANSI; the rules for properly forming names of environment
-variables vary from one system to another.
+variables vary from one system to another.  This implementation does not
+permit '=' to be in identifiers.
 
 <<_getenv_r>> requires a global pointer <<environ>>.
 */
@@ -74,7 +75,6 @@ static char ***p_environ = &environ;
  *	Returns pointer to value associated with name, if any, else NULL.
  *	Sets offset to be the offset of the name/value combination in the
  *	environmental array, for use by setenv(3) and unsetenv(3).
- *	Explicitly removes '=' in argument name.
  *
  *	This routine *should* be a static; don't use it.
  */
@@ -100,21 +100,21 @@ _DEFUN (_findenv_r, (reent_ptr, name, offset),
     }
 
   c = name;
-  len = 0;
-  while (*c && *c != '=')
+  while (*c && *c != '=')  c++;
+ 
+  /* Identifiers may not contain an '=', so cannot match if does */
+  if(*c != '=')
     {
-      c++;
-      len++;
-    }
-
-  for (p = *p_environ; *p; ++p)
-    if (!strncmp (*p, name, len))
-      if (*(c = *p + len) == '=')
+    len = c - name;
+    for (p = *p_environ; *p; ++p)
+      if (!strncmp (*p, name, len))
+        if (*(c = *p + len) == '=')
 	{
 	  *offset = p - *p_environ;
-          ENV_UNLOCK;
+	  ENV_UNLOCK;
 	  return (char *) (++c);
 	}
+    }
   ENV_UNLOCK;
   return NULL;
 }

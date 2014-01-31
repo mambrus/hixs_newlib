@@ -5,6 +5,8 @@
  */
 
 #include <_ansi.h>
+#include <argz.h>
+#include <stddef.h>
 #include <sys/types.h>
 
 void

@@ -41,15 +41,27 @@ FUNCTION
 INDEX
 	vfprintf
 INDEX
+	_vfprintf_r
+INDEX
 	vprintf
+INDEX
+	_vprintf_r
 INDEX
 	vsprintf
 INDEX
+	_vsprintf_r
+INDEX
 	vsnprintf
+INDEX
+	_vsnprintf_r
 INDEX
 	vasprintf
 INDEX
+	_vasprintf_r
+INDEX
 	vasnprintf
+INDEX
+	_vasnprintf_r
 
 ANSI_SYNOPSIS
 	#include <stdio.h>
@@ -72,11 +84,9 @@ ANSI_SYNOPSIS
 	int _vasprintf_r(struct _reent *<[reent]>, char **<[str]>,
                          const char *<[fmt]>, va_list <[list]>);
 	int _vsnprintf_r(struct _reent *<[reent]>, char *<[str]>,
-                         size_t <[size]>, const char *<[fmt]>,
-                         va_list <[list]>);
+                         size_t <[size]>, const char *<[fmt]>, va_list <[list]>);
 	char *_vasnprintf_r(struct _reent *<[reent]>, char *<[str]>,
-                            size_t *<[size]>, const char *<[fmt]>,
-                            va_list <[list]>);
+                            size_t *<[size]>, const char *<[fmt]>, va_list <[list]>);
 
 DESCRIPTION
 <<vprintf>>, <<vfprintf>>, <<vasprintf>>, <<vsprintf>>, <<vsnprintf>>,
@@ -116,10 +126,18 @@ static char *rcsid = "$Id: vfprintf.c,v 1.43 2002/08/13 02:40:06 fitzsim Exp $";
 
 #ifdef INTEGER_ONLY
 # define VFPRINTF vfiprintf
-# define _VFPRINTF_R _vfiprintf_r
+# ifdef STRING_ONLY
+#   define _VFPRINTF_R _svfiprintf_r
+# else
+#   define _VFPRINTF_R _vfiprintf_r
+# endif
 #else
 # define VFPRINTF vfprintf
-# define _VFPRINTF_R _vfprintf_r
+# ifdef STRING_ONLY
+#   define _VFPRINTF_R _svfprintf_r
+# else
+#   define _VFPRINTF_R _vfprintf_r
+# endif
 # ifndef NO_FLOATING_POINT
 #  define FLOATING_POINT
 # endif
@@ -158,6 +176,100 @@ static char *rcsid = "$Id: vfprintf.c,v 1.43 2002/08/13 02:40:06 fitzsim Exp $";
 # undef _NO_LONGLONG
 #endif
 
+#ifdef STRING_ONLY
+static int
+_DEFUN(__sprint_r, (ptr, fp, uio),
+       struct _reent *ptr _AND
+       FILE *fp _AND
+       register struct __suio *uio)
+{
+	register size_t len;
+	register int w;
+	register struct __siov *iov;
+	register _CONST char *p = NULL;
+
+	iov = uio->uio_iov;
+	len = 0;
+
+	if (uio->uio_resid == 0) {
+		uio->uio_iovcnt = 0;
+		return (0);
+	}
+
+        do {
+		while (len == 0) {
+			p = iov->iov_base;
+			len = iov->iov_len;
+			iov++;
+		}
+		w = fp->_w;
+		if (len >= w && fp->_flags & (__SMBF | __SOPT)) {
+			/* must be asprintf family */
+			unsigned char *str;
+			int curpos = (fp->_p - fp->_bf._base);
+			/* Choose a geometric growth factor to avoid
+		 	 * quadratic realloc behavior, but use a rate less
+			 * than (1+sqrt(5))/2 to accomodate malloc
+		 	 * overhead. asprintf EXPECTS us to overallocate, so
+		 	 * that it can add a trailing \0 without
+		 	 * reallocating.  The new allocation should thus be
+		 	 * max(prev_size*1.5, curpos+len+1). */
+			int newsize = fp->_bf._size * 3 / 2;
+			if (newsize < curpos + len + 1)
+				newsize = curpos + len + 1;
+			if (fp->_flags & __SOPT)
+			{
+				/* asnprintf leaves original buffer alone.  */
+				str = (unsigned char *)_malloc_r (ptr, newsize);
+				if (!str)
+				{
+					ptr->_errno = ENOMEM;
+					goto err;
+				}
+				memcpy (str, fp->_bf._base, curpos);
+				fp->_flags = (fp->_flags & ~__SOPT) | __SMBF;
+			}
+			else
+			{
+				str = (unsigned char *)_realloc_r (ptr, fp->_bf._base,
+						newsize);
+				if (!str) {
+					/* Free unneeded buffer.  */
+					_free_r (ptr, fp->_bf._base);
+					/* Ensure correct errno, even if free
+					 * changed it.  */
+					ptr->_errno = ENOMEM;
+					goto err;
+				}
+			}
+			fp->_bf._base = str;
+			fp->_p = str + curpos;
+			fp->_bf._size = newsize;
+			w = len;
+			fp->_w = newsize - curpos;
+		}
+		if (len < w)
+			w = len;
+		(void)memmove ((_PTR) fp->_p, (_PTR) p, (size_t) (w));
+		fp->_w -= w;
+		fp->_p += w;
+		w = len;          /* pretend we copied all */
+		p += w;
+		len -= w;
+        } while ((uio->uio_resid -= w) != 0);
+
+	uio->uio_resid = 0;
+	uio->uio_iovcnt = 0;
+	return 0;
+
+err:
+  fp->_flags |= __SERR;
+  uio->uio_resid = 0;
+  uio->uio_iovcnt = 0;
+  return EOF;
+}
+
+#else /* !STRING_ONLY */
 /*
  * Flush out all the vectors defined by the given uio,
  * then reset it so that it can be reused.
@@ -222,6 +334,7 @@ _DEFUN(__sbprintf, (rptr, fp, fmt, ap),
 #endif
 	return (ret);
 }
+#endif /* !STRING_ONLY */
 
 
 #ifdef FLOATING_POINT
@@ -322,8 +435,8 @@ union arg_val
 };
 
 static union arg_val *
-_EXFUN(get_arg, (struct _reent *data, int n, char *fmt, 
-                 va_list *ap, int *numargs, union arg_val *args, 
+_EXFUN(get_arg, (struct _reent *data, int n, char *fmt,
+                 va_list *ap, int *numargs, union arg_val *args,
                  int *arg_type, char **last_fmt));
 #endif /* !_NO_POS_ARGS */
 
@@ -360,7 +473,8 @@ _EXFUN(get_arg, (struct _reent *data, int n, char *fmt,
 
 int _EXFUN(_VFPRINTF_R, (struct _reent *, FILE *, _CONST char *, va_list));
 
-int 
+#ifndef STRING_ONLY
+int
 _DEFUN(VFPRINTF, (fp, fmt0, ap),
        FILE * fp         _AND
        _CONST char *fmt0 _AND
@@ -370,8 +484,9 @@ _DEFUN(VFPRINTF, (fp, fmt0, ap),
   result = _VFPRINTF_R (_REENT, fp, fmt0, ap);
   return result;
 }
+#endif /* STRING_ONLY */
 
-int 
+int
 _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
        struct _reent *data _AND
        FILE * fp           _AND
@@ -517,12 +632,16 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 	    (u_long)GET_ARG (N, ap, u_int))
 #endif
 
+#ifndef STRING_ONLY
+	/* Initialize std streams if not dealing with sprintf family.  */
 	CHECK_INIT (data, fp);
 	_flockfile (fp);
 
+	ORIENT(fp, -1);
+
 	/* sorry, fprintf(read_only_file, "") returns EOF, not 0 */
 	if (cantwrite (data, fp)) {
-		_funlockfile (fp);	
+		_funlockfile (fp);
 		return (EOF);
 	}
 
@@ -532,6 +651,19 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 		_funlockfile (fp);
 		return (__sbprintf (data, fp, fmt0, ap));
 	}
+#else /* STRING_ONLY */
+        /* Create initial buffer if we are called by asprintf family.  */
+        if (fp->_flags & __SMBF && !fp->_bf._base)
+        {
+		fp->_bf._base = fp->_p = _malloc_r (data, 64);
+		if (!fp->_p)
+		{
+			data->_errno = ENOMEM;
+			return EOF;
+		}
+		fp->_bf._size = 64;
+        }
+#endif /* STRING_ONLY */
 
 	fmt = (char *)fmt0;
 	uio.uio_iov = iovp = iov;
@@ -810,7 +942,7 @@ reswitch:	switch (ch) {
 					       (wchar_t)GET_ARG (N, ap, wint_t),
 						&ps)) == -1) {
 					fp->_flags |= __SERR;
-					goto error; 
+					goto error;
 				}
 			}
 			else
@@ -988,7 +1120,7 @@ reswitch:	switch (ch) {
 #ifndef _NO_LONGLONG
 			if (flags & QUADINT)
 				*GET_ARG (N, ap, quad_ptr_t) = ret;
-			else 
+			else
 #endif
 			if (flags & LONGINT)
 				*GET_ARG (N, ap, long_ptr_t) = ret;
@@ -1330,7 +1462,9 @@ done:
 error:
 	if (malloc_buf != NULL)
 		_free_r (data, malloc_buf);
+#ifndef STRING_ONLY
 	_funlockfile (fp);
+#endif
 	return (__sferror (fp) ? EOF : ret);
 	/* NOTREACHED */
 }
@@ -1492,7 +1626,7 @@ exponent(char *p0, int exp, int fmtch)
       Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-      
+
       The name of Red Hat Incorporated may not be used to endorse
       or promote products derived from this software without specific
       prior written permission.
@@ -1517,24 +1651,24 @@ typedef enum {
   DOT,    /* '.' */
   STAR,   /* '*' */
   FLAG,   /* format flag */
-  OTHER,  /* all other chars */ 
+  OTHER,  /* all other chars */
   MAX_CH_CLASS /* place-holder */
 } CH_CLASS;
 
-typedef enum { 
+typedef enum {
   START,  /* start */
   SFLAG,  /* seen a flag */
   WDIG,   /* seen digits in width area */
   WIDTH,  /* processed width */
   SMOD,   /* seen spec modifier */
-  SDOT,   /* seen dot */ 
+  SDOT,   /* seen dot */
   VARW,   /* have variable width specifier */
   VARP,   /* have variable precision specifier */
   PREC,   /* processed precision */
   VWDIG,  /* have digits in variable width specification */
   VPDIG,  /* have digits in variable precision specification */
-  DONE,   /* done */   
-  MAX_STATE, /* place-holder */ 
+  DONE,   /* done */
+  MAX_STATE, /* place-holder */
 } STATE;
 
 typedef enum {
@@ -1559,7 +1693,7 @@ _CONST static CH_CLASS chclass[256] = {
   /* 30-37 */  ZERO,    DIGIT,   DIGIT,   DIGIT,   DIGIT,   DIGIT,   DIGIT,   DIGIT,
   /* 38-3f */  DIGIT,   DIGIT,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
   /* 40-47 */  OTHER,   SPEC,    OTHER,   SPEC,    SPEC,    SPEC,    SPEC,    SPEC,
-  /* 48-4f */  OTHER,   OTHER,   OTHER,   OTHER,   MODFR,   OTHER,   OTHER,   SPEC, 
+  /* 48-4f */  OTHER,   OTHER,   OTHER,   OTHER,   MODFR,   OTHER,   OTHER,   SPEC,
   /* 50-57 */  OTHER,   OTHER,   OTHER,   SPEC,    OTHER,   SPEC,    OTHER,   OTHER,
   /* 58-5f */  SPEC,    OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
   /* 60-67 */  OTHER,   SPEC,    OTHER,   SPEC,    SPEC,    SPEC,    SPEC,    SPEC,
@@ -1585,7 +1719,7 @@ _CONST static CH_CLASS chclass[256] = {
 };
 
 _CONST static STATE state_table[MAX_STATE][MAX_CH_CLASS] = {
-  /*             '0'     '1-9'     '$'     MODFR    SPEC    '.'     '*'    FLAG    OTHER */ 
+  /*             '0'     '1-9'     '$'     MODFR    SPEC    '.'     '*'    FLAG    OTHER */
   /* START */  { SFLAG,   WDIG,    DONE,   SMOD,    DONE,   SDOT,  VARW,   SFLAG,  DONE },
   /* SFLAG */  { SFLAG,   WDIG,    DONE,   SMOD,    DONE,   SDOT,  VARW,   SFLAG,  DONE },
   /* WDIG  */  { DONE,    DONE,    WIDTH,  SMOD,    DONE,   SDOT,  DONE,   DONE,   DONE },
@@ -1600,7 +1734,7 @@ _CONST static STATE state_table[MAX_STATE][MAX_CH_CLASS] = {
 };
 
 _CONST static ACTION action_table[MAX_STATE][MAX_CH_CLASS] = {
-  /*             '0'     '1-9'     '$'     MODFR    SPEC    '.'     '*'    FLAG    OTHER */ 
+  /*             '0'     '1-9'     '$'     MODFR    SPEC    '.'     '*'    FLAG    OTHER */
   /* START */  { NOOP,    NUMBER,  NOOP,   GETMOD,  GETARG, NOOP,  NOOP,   NOOP,   NOOP },
   /* SFLAG */  { NOOP,    NUMBER,  NOOP,   GETMOD,  GETARG, NOOP,  NOOP,   NOOP,   NOOP },
   /* WDIG  */  { NOOP,    NOOP,    GETPOS, GETMOD,  GETARG, NOOP,  NOOP,   NOOP,   NOOP },
@@ -1656,10 +1790,10 @@ _DEFUN(get_arg, (data, n, fmt, ap, numargs_p, args, arg_type, last_fmt),
   while (*fmt && n >= numargs)
     {
 # ifdef _MB_CAPABLE
-      while ((nbytes = _mbtowc_r (data, &wc, fmt, MB_CUR_MAX, &wc_state)) > 0) 
+      while ((nbytes = _mbtowc_r (data, &wc, fmt, MB_CUR_MAX, &wc_state)) > 0)
 	{
 	  fmt += nbytes;
-	  if (wc == '%') 
+	  if (wc == '%')
 	    break;
 	}
 

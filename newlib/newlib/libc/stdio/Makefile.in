@@ -45,7 +45,9 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/../../libtool.m4 \
 	$(top_srcdir)/../../ltoptions.m4 \
 	$(top_srcdir)/../../ltsugar.m4 \
-	$(top_srcdir)/../../ltversion.m4 $(top_srcdir)/../acinclude.m4 \
+	$(top_srcdir)/../../ltversion.m4 \
+	$(top_srcdir)/../../lt~obsolete.m4 \
+	$(top_srcdir)/../acinclude.m4 $(top_srcdir)/../confsubdir.m4 \
 	$(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -54,8 +56,11 @@ CONFIG_CLEAN_FILES =
 LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
 lib_a_AR = $(AR) $(ARFLAGS)
-am__DEPENDENCIES_1 = $(lpfx)vfiprintf.$(oext) $(lpfx)vfprintf.$(oext) \
-	$(lpfx)vfscanf.$(oext) $(lpfx)vfiscanf.$(oext)
+am__DEPENDENCIES_1 = $(lpfx)svfiprintf.$(oext) \
+	$(lpfx)svfprintf.$(oext) $(lpfx)svfiscanf.$(oext) \
+	$(lpfx)svfscanf.$(oext) $(lpfx)vfiprintf.$(oext) \
+	$(lpfx)vfprintf.$(oext) $(lpfx)vfscanf.$(oext) \
+	$(lpfx)vfiscanf.$(oext)
 am__objects_1 = lib_a-clearerr.$(OBJEXT) lib_a-fclose.$(OBJEXT) \
 	lib_a-fdopen.$(OBJEXT) lib_a-feof.$(OBJEXT) \
 	lib_a-ferror.$(OBJEXT) lib_a-fflush.$(OBJEXT) \
@@ -110,10 +115,20 @@ am__objects_1 = lib_a-clearerr.$(OBJEXT) lib_a-fclose.$(OBJEXT) \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-asnprintf.$(OBJEXT) \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-diprintf.$(OBJEXT) \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-dprintf.$(OBJEXT) \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-fgetwc.$(OBJEXT) \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-fgetws.$(OBJEXT) \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-fmemopen.$(OBJEXT) \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-fopencookie.$(OBJEXT) \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-fputwc.$(OBJEXT) \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-fputws.$(OBJEXT) \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-funopen.$(OBJEXT) \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-fwide.$(OBJEXT) \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-getwc.$(OBJEXT) \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-getwchar.$(OBJEXT) \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-open_memstream.$(OBJEXT) \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-putwc.$(OBJEXT) \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-putwchar.$(OBJEXT) \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-ungetwc.$(OBJEXT) \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-vasniprintf.$(OBJEXT) \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	lib_a-vasnprintf.$(OBJEXT)
 @USE_LIBTOOL_FALSE@am_lib_a_OBJECTS = $(am__objects_1) \
@@ -143,10 +158,20 @@ am__objects_4 = clearerr.lo fclose.lo fdopen.lo feof.lo ferror.lo \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	asnprintf.lo \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	diprintf.lo \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	dprintf.lo \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fgetwc.lo \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fgetws.lo \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fmemopen.lo \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fopencookie.lo \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fputwc.lo \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fputws.lo \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	funopen.lo \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fwide.lo \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	getwc.lo \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	getwchar.lo \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	open_memstream.lo \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	putwc.lo \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	putwchar.lo \
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	ungetwc.lo \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	vasniprintf.lo \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	vasnprintf.lo
 @USE_LIBTOOL_TRUE@am_libstdio_la_OBJECTS = $(am__objects_4) \
@@ -190,6 +215,7 @@ CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -244,6 +270,7 @@ LIBC_UNIX_LIB = @LIBC_UNIX_LIB@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
+LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
@@ -254,8 +281,11 @@ MAY_SUPPLY_SYSCALLS_FALSE = @MAY_SUPPLY_SYSCALLS_FALSE@
 MAY_SUPPLY_SYSCALLS_TRUE = @MAY_SUPPLY_SYSCALLS_TRUE@
 NEWLIB_CFLAGS = @NEWLIB_CFLAGS@
 NM = @NM@
+NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OTOOL = @OTOOL@
+OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -272,8 +302,20 @@ STRIP = @STRIP@
 USE_LIBTOOL_FALSE = @USE_LIBTOOL_FALSE@
 USE_LIBTOOL_TRUE = @USE_LIBTOOL_TRUE@
 VERSION = @VERSION@
+ac_ct_AR = @ac_ct_AR@
+ac_ct_AS = @ac_ct_AS@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_DLLTOOL = @ac_ct_DLLTOOL@
+ac_ct_DSYMUTIL = @ac_ct_DSYMUTIL@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+ac_ct_LIPO = @ac_ct_LIPO@
+ac_ct_NMEDIT = @ac_ct_NMEDIT@
+ac_ct_OBJDUMP = @ac_ct_OBJDUMP@
+ac_ct_OTOOL = @ac_ct_OTOOL@
+ac_ct_OTOOL64 = @ac_ct_OTOOL64@
+ac_ct_RANLIB = @ac_ct_RANLIB@
+ac_ct_READELF = @ac_ct_READELF@
+ac_ct_STRIP = @ac_ct_STRIP@
 aext = @aext@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
@@ -289,9 +331,6 @@ build_cpu = @build_cpu@
 build_os = @build_os@
 build_vendor = @build_vendor@
 datadir = @datadir@
-datarootdir = @datarootdir@
-docdir = @docdir@
-dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 extra_dir = @extra_dir@
 host = @host@
@@ -299,14 +338,12 @@ host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
-htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
 libm_machine_dir = @libm_machine_dir@
-localedir = @localedir@
 localstatedir = @localstatedir@
 lpfx = @lpfx@
 lt_ECHO = @lt_ECHO@
@@ -316,10 +353,8 @@ mkdir_p = @mkdir_p@
 newlib_basedir = @newlib_basedir@
 oext = @oext@
 oldincludedir = @oldincludedir@
-pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
-psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 subdirs = @subdirs@
@@ -427,10 +462,20 @@ GENERAL_SOURCES = \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	asnprintf.c		\
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	diprintf.c		\
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	dprintf.c		\
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fgetwc.c		\
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fgetws.c		\
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fmemopen.c		\
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fopencookie.c		\
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fputwc.c		\
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fputws.c		\
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	funopen.c		\
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	fwide.c			\
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	getwc.c			\
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	getwchar.c		\
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	open_memstream.c	\
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	putwc.c			\
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	putwchar.c		\
+@ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	ungetwc.c		\
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	vasniprintf.c		\
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_FALSE@@ELIX_LEVEL_3_FALSE@	vasnprintf.c
 
@@ -438,6 +483,8 @@ GENERAL_SOURCES = \
 @ELIX_LEVEL_1_FALSE@@ELIX_LEVEL_2_TRUE@ELIX_4_SOURCES = 
 @ELIX_LEVEL_1_TRUE@ELIX_4_SOURCES = 
 LIBADD_OBJS = \
+	$(lpfx)svfiprintf.$(oext) $(lpfx)svfprintf.$(oext) \
+	$(lpfx)svfiscanf.$(oext) $(lpfx)svfscanf.$(oext) \
 	$(lpfx)vfiprintf.$(oext) $(lpfx)vfprintf.$(oext) \
 	$(lpfx)vfscanf.$(oext) $(lpfx)vfiscanf.$(oext)
 
@@ -468,18 +515,23 @@ CHEWOUT_FILES = \
 	fgetc.def		\
 	fgetpos.def		\
 	fgets.def		\
+	fgetwc.def		\
+	fgetws.def		\
 	fileno.def		\
 	fmemopen.def		\
 	fopen.def		\
 	fopencookie.def		\
 	fputc.def		\
 	fputs.def		\
+	fputwc.def		\
+	fputws.def		\
 	fread.def		\
 	freopen.def		\
 	fseek.def		\
 	fsetpos.def		\
 	ftell.def		\
 	funopen.def		\
+	fwide.def		\
 	fwrite.def		\
 	getc.def		\
 	getc_u.def		\
@@ -489,6 +541,8 @@ CHEWOUT_FILES = \
 	getline.def		\
 	gets.def		\
 	getw.def		\
+	getwc.def		\
+	getwchar.def		\
 	mktemp.def		\
 	open_memstream.def	\
 	perror.def		\
@@ -498,6 +552,8 @@ CHEWOUT_FILES = \
 	putchar_u.def		\
 	puts.def		\
 	putw.def		\
+	putwc.def		\
+	putwchar.def		\
 	remove.def		\
 	rename.def		\
 	rewind.def		\
@@ -512,6 +568,7 @@ CHEWOUT_FILES = \
 	tmpfile.def		\
 	tmpnam.def		\
 	ungetc.def		\
+	ungetwc.def		\
 	vfprintf.def		\
 	vfscanf.def		\
 	viprintf.def		\
@@ -1146,6 +1203,18 @@ lib_a-dprintf.o: dprintf.c
 lib_a-dprintf.obj: dprintf.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-dprintf.obj `if test -f 'dprintf.c'; then $(CYGPATH_W) 'dprintf.c'; else $(CYGPATH_W) '$(srcdir)/dprintf.c'; fi`
 
+lib_a-fgetwc.o: fgetwc.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fgetwc.o `test -f 'fgetwc.c' || echo '$(srcdir)/'`fgetwc.c
+
+lib_a-fgetwc.obj: fgetwc.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fgetwc.obj `if test -f 'fgetwc.c'; then $(CYGPATH_W) 'fgetwc.c'; else $(CYGPATH_W) '$(srcdir)/fgetwc.c'; fi`
+
+lib_a-fgetws.o: fgetws.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fgetws.o `test -f 'fgetws.c' || echo '$(srcdir)/'`fgetws.c
+
+lib_a-fgetws.obj: fgetws.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fgetws.obj `if test -f 'fgetws.c'; then $(CYGPATH_W) 'fgetws.c'; else $(CYGPATH_W) '$(srcdir)/fgetws.c'; fi`
+
 lib_a-fmemopen.o: fmemopen.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fmemopen.o `test -f 'fmemopen.c' || echo '$(srcdir)/'`fmemopen.c
 
@@ -1158,17 +1227,65 @@ lib_a-fopencookie.o: fopencookie.c
 lib_a-fopencookie.obj: fopencookie.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fopencookie.obj `if test -f 'fopencookie.c'; then $(CYGPATH_W) 'fopencookie.c'; else $(CYGPATH_W) '$(srcdir)/fopencookie.c'; fi`
 
+lib_a-fputwc.o: fputwc.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fputwc.o `test -f 'fputwc.c' || echo '$(srcdir)/'`fputwc.c
+
+lib_a-fputwc.obj: fputwc.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fputwc.obj `if test -f 'fputwc.c'; then $(CYGPATH_W) 'fputwc.c'; else $(CYGPATH_W) '$(srcdir)/fputwc.c'; fi`
+
+lib_a-fputws.o: fputws.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fputws.o `test -f 'fputws.c' || echo '$(srcdir)/'`fputws.c
+
+lib_a-fputws.obj: fputws.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fputws.obj `if test -f 'fputws.c'; then $(CYGPATH_W) 'fputws.c'; else $(CYGPATH_W) '$(srcdir)/fputws.c'; fi`
+
 lib_a-funopen.o: funopen.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-funopen.o `test -f 'funopen.c' || echo '$(srcdir)/'`funopen.c
 
 lib_a-funopen.obj: funopen.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-funopen.obj `if test -f 'funopen.c'; then $(CYGPATH_W) 'funopen.c'; else $(CYGPATH_W) '$(srcdir)/funopen.c'; fi`
 
+lib_a-fwide.o: fwide.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fwide.o `test -f 'fwide.c' || echo '$(srcdir)/'`fwide.c
+
+lib_a-fwide.obj: fwide.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-fwide.obj `if test -f 'fwide.c'; then $(CYGPATH_W) 'fwide.c'; else $(CYGPATH_W) '$(srcdir)/fwide.c'; fi`
+
+lib_a-getwc.o: getwc.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-getwc.o `test -f 'getwc.c' || echo '$(srcdir)/'`getwc.c
+
+lib_a-getwc.obj: getwc.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-getwc.obj `if test -f 'getwc.c'; then $(CYGPATH_W) 'getwc.c'; else $(CYGPATH_W) '$(srcdir)/getwc.c'; fi`
+
+lib_a-getwchar.o: getwchar.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-getwchar.o `test -f 'getwchar.c' || echo '$(srcdir)/'`getwchar.c
+
+lib_a-getwchar.obj: getwchar.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-getwchar.obj `if test -f 'getwchar.c'; then $(CYGPATH_W) 'getwchar.c'; else $(CYGPATH_W) '$(srcdir)/getwchar.c'; fi`
+
 lib_a-open_memstream.o: open_memstream.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-open_memstream.o `test -f 'open_memstream.c' || echo '$(srcdir)/'`open_memstream.c
 
 lib_a-open_memstream.obj: open_memstream.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-open_memstream.obj `if test -f 'open_memstream.c'; then $(CYGPATH_W) 'open_memstream.c'; else $(CYGPATH_W) '$(srcdir)/open_memstream.c'; fi`
+
+lib_a-putwc.o: putwc.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-putwc.o `test -f 'putwc.c' || echo '$(srcdir)/'`putwc.c
+
+lib_a-putwc.obj: putwc.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-putwc.obj `if test -f 'putwc.c'; then $(CYGPATH_W) 'putwc.c'; else $(CYGPATH_W) '$(srcdir)/putwc.c'; fi`
+
+lib_a-putwchar.o: putwchar.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-putwchar.o `test -f 'putwchar.c' || echo '$(srcdir)/'`putwchar.c
+
+lib_a-putwchar.obj: putwchar.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-putwchar.obj `if test -f 'putwchar.c'; then $(CYGPATH_W) 'putwchar.c'; else $(CYGPATH_W) '$(srcdir)/putwchar.c'; fi`
+
+lib_a-ungetwc.o: ungetwc.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-ungetwc.o `test -f 'ungetwc.c' || echo '$(srcdir)/'`ungetwc.c
+
+lib_a-ungetwc.obj: ungetwc.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-ungetwc.obj `if test -f 'ungetwc.c'; then $(CYGPATH_W) 'ungetwc.c'; else $(CYGPATH_W) '$(srcdir)/ungetwc.c'; fi`
 
 lib_a-vasniprintf.o: vasniprintf.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-vasniprintf.o `test -f 'vasniprintf.c' || echo '$(srcdir)/'`vasniprintf.c
@@ -1345,11 +1462,23 @@ $(lpfx)vfprintf.$(oext): vfprintf.c
 $(lpfx)vfiprintf.$(oext): vfprintf.c
 	$(LIB_COMPILE) -fshort-enums -DINTEGER_ONLY -c $(srcdir)/vfprintf.c -o $@
 
+$(lpfx)svfprintf.$(oext): vfprintf.c
+	$(LIB_COMPILE) -fshort-enums -DSTRING_ONLY -c $(srcdir)/vfprintf.c -o $@
+
+$(lpfx)svfiprintf.$(oext): vfprintf.c
+	$(LIB_COMPILE) -fshort-enums -DINTEGER_ONLY -DSTRING_ONLY -c $(srcdir)/vfprintf.c -o $@
+
 $(lpfx)vfscanf.$(oext): vfscanf.c
 	$(LIB_COMPILE) -c $(srcdir)/vfscanf.c -o $@
 
 $(lpfx)vfiscanf.$(oext): vfscanf.c
 	$(LIB_COMPILE) -DINTEGER_ONLY -c $(srcdir)/vfscanf.c -o $@
+
+$(lpfx)svfscanf.$(oext): vfscanf.c
+	$(LIB_COMPILE) -DSTRING_ONLY -c $(srcdir)/vfscanf.c -o $@
+
+$(lpfx)svfiscanf.$(oext): vfscanf.c
+	$(LIB_COMPILE) -DINTEGER_ONLY -DSTRING_ONLY -c $(srcdir)/vfscanf.c -o $@
 
 .c.def:
 	$(CHEW) < $< > $*.def 2> $*.ref
@@ -1361,11 +1490,15 @@ doc: $(CHEWOUT_FILES)
 $(lpfx)fclose.$(oext): local.h
 $(lpfx)fdopen.$(oext): local.h
 $(lpfx)fflush.$(oext): local.h
+$(lpfx)fgetwc.$(oext): local.h
+$(lpfx)fgetws.$(oext): local.h
 $(lpfx)findfp.$(oext): local.h
 $(lpfx)fmemopen.$(oext): local.h
 $(lpfx)fopen.$(oext): local.h
 $(lpfx)fopencookie.$(oext): local.h
 $(lpfx)fputs.$(oext): fvwrite.h
+$(lpfx)fputwc.$(oext): local.h
+$(lpfx)fputws.$(oext): local.h fvwrite.h
 $(lpfx)fread.$(oext): local.h
 $(lpfx)freopen.$(oext): local.h
 $(lpfx)fseek.$(oext): local.h
@@ -1373,11 +1506,16 @@ $(lpfx)ftell.$(oext): local.h
 $(lpfx)funopen.$(oext): local.h
 $(lpfx)fvwrite.$(oext): local.h fvwrite.h
 $(lpfx)fwalk.$(oext): local.h
+$(lpfx)fwide.$(oext): local.h
+$(lpfx)getwc.$(oext): local.h
+$(lpfx)getwchar.$(oext): local.h
 $(lpfx)fwrite.$(oext): local.h fvwrite.h
 $(lpfx)iscanf.$(oext): local.h
 $(lpfx)makebuf.$(oext): local.h
 $(lpfx)open_memstream.$(oext): local.h
 $(lpfx)puts.$(oext): fvwrite.h
+$(lpfx)putwc.$(oext): local.h
+$(lpfx)putwchar.$(oext): local.h
 $(lpfx)refill.$(oext): local.h
 $(lpfx)scanf.$(oext): local.h
 $(lpfx)setbuf.$(oext): local.h
@@ -1388,7 +1526,12 @@ $(lpfx)sprintf.$(oext): local.h
 $(lpfx)siscanf.$(oext): local.h
 $(lpfx)sscanf.$(oext): local.h
 $(lpfx)stdio.$(oext): local.h
+$(lpfx)svfiprintf.$(oext): local.h
+$(lpfx)svfiscanf.$(oext): local.h floatio.h
+$(lpfx)svfprintf.$(oext): local.h
+$(lpfx)svfscanf.$(oext): local.h floatio.h
 $(lpfx)ungetc.$(oext): local.h
+$(lpfx)ungetwc.$(oext): local.h
 $(lpfx)vfiprintf.$(oext): local.h
 $(lpfx)vfprintf.$(oext): local.h
 $(lpfx)vfiscanf.$(oext): local.h floatio.h

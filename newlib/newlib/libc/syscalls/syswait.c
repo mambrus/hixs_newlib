@@ -1,14 +1,11 @@
 /* connector for wait */
 
 #include <reent.h>
+#include <sys/wait.h>
 
-int
+pid_t
 _DEFUN (wait, (status),
         int *status)
 {
-#ifdef REENTRANT_SYSCALLS_PROVIDED
   return _wait_r (_REENT, status);
-#else
-  return _wait (status);
-#endif
 }

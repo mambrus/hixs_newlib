@@ -1,3 +1,215 @@
+2008-12-17  Jon Beniston <jon@beniston.com>
+
+	* README: Add description of lm32 directory.
+	* configure.in: Add lm32 target.        
+	* configure: Regenerated.
+	* libnosys/configure.in: Add lm32 target.
+	* libnosys/configure: Regenerated.
+	* lm32: New directory.
+	* lm32/aclocal.m4: New file.
+	* lm32/Makefile.in: New file.
+	* lm32/configure.in: New file.
+	* lm32/configure: New file.
+	* lm32/crt0.S: New file.
+	* lm32/isatty.c: New file.
+	* lm32/scall.S: New file.
+	* lm32/sim.ld: New file.
+
+2008-12-11  Ken Werner  <ken.werner@de.ibm.com
+
+	* spu/crt0.S: Call __monstartup if profiling is enabled.
+	* spu/Makefile.in: Add gcrt1.o gcrt2.o.
+
+2008-12-06  Adam Nemet  <anemet@caviumnetworks.com>
+
+	* mips/idt32.ld: Set arch to mips:isa32r2 from mips:isa32.  Update
+	comment.
+
+2008-12-05  Adam Nemet  <anemet@caviumnetworks.com>
+
+	* mips/idt64.ld: Set arch to mips:isa64r2 from mips:isa64.  Update
+	comment.
+
+2008-11-20  Ken Werner  <ken.werner@de.ibm.com>
+            Patrick Mansfield  <patmans@us.ibm.com>
+            Joel Schopp   <jschopp@austin.ibm.com>
+
+	* spu/Makefile.in: Add new files.
+	* spu/jsre.h: Add JSRE_MMAP, JSRE_MREMAP, JSRE_MSYNC and
+	JSRE_MUNMAP opcodes.
+	* spu/mmap_eaddr.c: New File.
+	* spu/mremap_eaddr.c: Likewise.
+	* spu/msync_eaddr.c: Likewise.
+	* spu/munmap_eaddr.c: Likewise.
+
+2008-11-17  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* m32r/Makefile.in: Add building m32r-stub.o from local copy instead
+	of up and over in gdb.
+	* m32r/m32r-stub.c: New file copied from gdb.
+
+2008-10-06  Bill Tompkins  <bill+newlib@key-square.com>
+
+	* arm/crt0.S: Fix calling hardware_init_hook() or software_init_hook()
+	under thumb and thumb2.
+
+2008-09-24  DJ Delorie  <dj@redhat.com>
+
+	* m32c/varvects.S: New.
+	* m32c/varvects.h: New.
+	* m32c/sample.c: New.
+	* m32c/Makefile.in: Add m32cgloss library support.
+	* m32c/crt0.S: Tweaks to support interrupts by default.
+	* m32c/m32c.tmpl: Likewise.
+
+2008-09-10  Ken Werner  <ken.werner@de.ibm.com>
+
+	* spu/dirfuncs.c: Avoid warnings.
+	* spu/kill.c: Likewise.
+
+2008-09-04  Ken Werner  <ken.werner@de.ibm.com>
+
+	* spu/Makefile.in: Fix missing linux_syscalls.o.
+	* spu/linux_syscalls.c: Remove extraneous "3D" sequences.
+
+2008-08-14  Jie Zhang  <jie.zhang@analog.com>
+
+	* bfin/Makefile.in: (top_srcdir): Define.
+	(mkinstalldirs): Define.
+	(BOARD_SCRIPTS): Define.
+	(BOARD_LDFLAGS): Define.
+	(BOARD_BSP): Define.
+	(BOARD_CRT0S): Define.
+	(BOARD_OBJS): Define.
+	(BOARD_TEST): Define.
+	(BOARD_INSTALL): Define.
+	(INCLUDES): Add -I$(srcdir)/include.
+	(all): Add ${BOARD_CRT0S} and ${BOARD_BSP}.
+	(.c.S): Remove target.
+	(crt0.o): New target.
+	(basiccrt.o): Likewise.
+	(basiccrtb.o): Likewise.
+	(basiccrts.o): Likewise.
+	(basiccrt561.o, basiccrt561s.o, basiccrt561b.o): Likewise
+	(clean mostlyclean): Remove ${BOARD_BSP}.
+	(install): Depend on ${BOARD_INSTALL}.
+	(install-sim): Reformat.
+	(install-board): New target.
+	* bfin/basiccrt.S: Remove useless __ADSPBF561_COREB__ in
+	workaround code for 05000229.
+	* bfin/syscalls.c (do_syscall): Use `EXCPT 0' instead of
+	`RAISE 0' for syscall.
+	* bfin/basiccrt.S: New file.
+	* bfin/bf5*ld: New file.
+	* bfin/bfin-common-mc.ld: New file.
+	* bfin/bfin-common-sc.ld: New file.
+	* bfin/include/blackfin.h: New file.
+	* bfin/include/cdefBF5*.h: New file.
+	* bfin/include/cdef_LPBlackfin.h: New file.
+	* bfin/include/cdefblackfin.h: New file.
+	* bfin/include/cplb.h: New file.
+	* bfin/include/cplbtab.h: New file.
+	* bfin/include/defBF5*.h: New files.
+	* bfin/include/def_LPBlackfin.h: New files.
+	* bfin/include/defblackfin.h: New file.
+	* bfin/include/sys/_adi_platform.h: New file.
+	* bfin/include/sys/anomaly_macros_rtl.h: New file.
+	* bfin/include/sys/excause.h: New file.
+	* bfin/include/sys/exception.h: New file.
+	* bfin/include/sys/mc_typedef.h: New file.
+	* bfin/include/sys/platform.h: New file.
+	* bfin/include/sys/pll.h: New file.
+	* bfin/include/sysreg.h: New file.
+	* libnosys/configure.in (MISSING_SYSCALL_NAMES): Don't define
+	for bfin.
+	* libnosys/configure: Regenerate.
+
+2008-07-17  Ken Werner  <ken.werner@de.ibm.com>
+
+	* spu/syscalls.c: Check and set the errno value.
+
+2008-06-17  Ken Werner  <ken.werner@de.ibm.com>
+
+	* spu/Makefile.in: Add new file.
+	* spu/linux_syscalls.c: New file to add Linux syscall support.
+		
+2008-06-16  Corrin Meyer  <cjmeyer@gmail.com>
+
+	* m68k/cf-crt1.c[__mcf_family_m1qe]: Don't access CACR.
+
+2008-05-20  Nick Clifton  <nickc@redhat.com>
+
+	* iq2000/crt0.S (__dso_handle): Define (weak).
+	* frv/crt0.S (__dso_handle): Define (weak).
+	* mn10300/crt0.S (___dso_handle): Define (weak).
+
+2008-05-05  Ken Werner  <ken.werner@de.ibm.com>
+
+	* spu/readlink.c: Align readlink implementation to POSIX.
+	
+2008-04-25  Nick Clifton  <nickc@redhat.com>
+
+	* arm/crt0.S: Allow assembly under ARMv7 ISA.  Support for
+	initializing stack pointers for interrupt modes is still pending.
+
+2008-04-14  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/sbrk.c: Remove "extern int errno", use whatever is supplied
+	by sys/errno.h.
+		  
+2008-04-04  DJ Delorie  <dj@redhat.com>
+
+	* hp74x/configure: Regenerate with autoconf 2.61.
+	* fr30/configure: Regenerate with autoconf 2.61.
+	* mips/configure: Regenerate with autoconf 2.61.
+	* xstormy16/configure: Regenerate with autoconf 2.61.
+	* rs6000/configure: Regenerate with autoconf 2.61.
+	* d30v/configure: Regenerate with autoconf 2.61.
+	* i386/configure: Regenerate with autoconf 2.61.
+	* configure: Regenerate with autoconf 2.61.
+	* wince/configure: Regenerate with autoconf 2.61.
+	* pa/configure: Regenerate with autoconf 2.61.
+	* m32r/configure: Regenerate with autoconf 2.61.
+	* mn10200/configure: Regenerate with autoconf 2.61.
+	* iq2000/configure: Regenerate with autoconf 2.61.
+	* cris/configure: Regenerate with autoconf 2.61.
+	* m68k/configure: Regenerate with autoconf 2.61.
+	* spu/configure: Regenerate with autoconf 2.61.
+	* m32c/configure: Regenerate with autoconf 2.61.
+	* mn10300/configure: Regenerate with autoconf 2.61.
+	* i960/configure: Regenerate with autoconf 2.61.
+	* arm/configure: Regenerate with autoconf 2.61.
+	* libnosys/configure: Regenerate with autoconf 2.61.
+	* m68hc11/configure: Regenerate with autoconf 2.61.
+	* bfin/configure: Regenerate with autoconf 2.61.
+	* crx/configure: Regenerate with autoconf 2.61.
+	* mt/configure: Regenerate with autoconf 2.61.
+	* sparc/configure: Regenerate with autoconf 2.61.
+	* sparc/libsys/configure: Regenerate with autoconf 2.61.
+	* mcore/configure: Regenerate with autoconf 2.61.
+	* mep/configure: Regenerate with autoconf 2.61.
+	* frv/configure: Regenerate with autoconf 2.61.
+	* doc/configure: Regenerate with autoconf 2.61.
+
+2008-01-10  DJ Delorie  <dj@redhat.com>
+
+	* m32c/exit.S (__exit): preserve both argument registers.
+
+2008-01-03  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* arm/redboot-syscalls.c: Consistently supply _isatty if syscalls
+	dir is used in newlib.
+	* bfin/syscalls.c: Ditto.
+	* cris/gensyscalls: Ditto.
+	* fr30/syscalls.c: Ditto.
+	* frv/isatty.c: Ditto.
+	* iq2000/isatty.c: Ditto.
+	* libnosys/isatty.c: Ditto.
+	* m32r/isatty.c: Ditto.
+	* mn10200/isatty.c: Ditto.
+	* mn10300/isatty.c: Ditto.
+	* xstormy16/isatty.c: New file with _isatty function.
+
 2007-12-01  Hans-Peter Nilsson  <hp@axis.com>
 
 	* cris/Makefile.in (crt0.o): Add CFLAGS when compiling crt0.S.
