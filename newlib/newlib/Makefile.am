@@ -1,6 +1,7 @@
 ## Process this file with automake to generate Makefile.in
 
 AUTOMAKE_OPTIONS = cygnus dejagnu
+ACLOCAL_AMFLAGS = -I .
 
 # Multilib support variables.
 MULTISRCTOP =
@@ -25,8 +26,10 @@ AM_MAKEFLAGS = \
 	"AR_FLAGS=$(AR_FLAGS)" \
 	"CC_FOR_BUILD=$(CC_FOR_BUILD)" \
 	"CFLAGS=$(CFLAGS)" \
+	"CCASFLAGS=$(CCASFLAGS)" \
 	"CFLAGS_FOR_BUILD=$(CFLAGS_FOR_BUILD)" \
 	"CFLAGS_FOR_TARGET=$(CFLAGS_FOR_TARGET)" \
+	"INSTALL=$(INSTALL)" \
 	"LDFLAGS=$(LDFLAGS)" \
 	"LIBCFLAGS=$(LIBCFLAGS)" \
 	"LIBCFLAGS_FOR_TARGET=$(LIBCFLAGS_FOR_TARGET)" \
@@ -87,17 +90,19 @@ toollib_DATA = $(CRT0) $(CRT1)
 # both libc.a and libm.a.  We build them in libm.a and copy them over,
 # along with some required supporting routines.
 MATHOBJS_IN_LIBC = \
-	s_isinf.$(oext) sf_isinf.$(oext) \
-	s_isnan.$(oext) sf_isnan.$(oext) \
-	s_nan.$(oext) sf_nan.$(oext) \
-	s_ldexp.$(oext) sf_ldexp.$(oext) \
-	s_frexp.$(oext) sf_frexp.$(oext) \
-	s_modf.$(oext) \
-	sf_modf.$(oext) s_scalbn.$(oext) \
-	sf_scalbn.$(oext) \
-	s_finite.$(oext) sf_finite.$(oext) \
-	s_copysign.$(oext) sf_copysign.$(oext) \
-	s_infconst.$(oext)
+	$(lpfx)s_isinf.$(oext) $(lpfx)sf_isinf.$(oext) \
+	$(lpfx)s_isnan.$(oext) $(lpfx)sf_isnan.$(oext) \
+	$(lpfx)s_isinfd.$(oext) $(lpfx)sf_isinff.$(oext) \
+	$(lpfx)s_isnand.$(oext) $(lpfx)sf_isnanf.$(oext) \
+	$(lpfx)s_nan.$(oext) $(lpfx)sf_nan.$(oext) \
+	$(lpfx)s_ldexp.$(oext) $(lpfx)sf_ldexp.$(oext) \
+	$(lpfx)s_frexp.$(oext) $(lpfx)sf_frexp.$(oext) \
+	$(lpfx)s_modf.$(oext) \
+	$(lpfx)sf_modf.$(oext) $(lpfx)s_scalbn.$(oext) \
+	$(lpfx)sf_scalbn.$(oext) \
+	$(lpfx)s_finite.$(oext) $(lpfx)sf_finite.$(oext) \
+	$(lpfx)s_copysign.$(oext) $(lpfx)sf_copysign.$(oext) \
+	$(lpfx)s_infconst.$(oext)
 
 LIBC_OBJECTLISTS = \
 	$(POSIX_OBJECTLIST) \

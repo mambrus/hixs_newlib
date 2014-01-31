@@ -4,7 +4,7 @@ AUTOMAKE_OPTIONS = cygnus
 
 INCLUDES = $(NEWLIB_CFLAGS) $(CROSS_CFLAGS) $(TARGET_CFLAGS)
 
-LIB_SOURCES = dprintf.c unctrl.c ffs.c init.c
+LIB_SOURCES = __dprintf.c unctrl.c ffs.c init.c
 
 libmisc_la_LDFLAGS = -Xcompiler -nostdlib
 
@@ -15,6 +15,7 @@ noinst_DATA = objectlist.awk.in
 else
 noinst_LIBRARIES = lib.a
 lib_a_SOURCES = $(LIB_SOURCES)
+lib_a_CFLAGS = $(AM_CFLAGS)
 noinst_DATA = 
 endif # USE_LIBTOOL
 

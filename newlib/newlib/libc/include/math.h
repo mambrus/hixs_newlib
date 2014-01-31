@@ -1,4 +1,3 @@
-/* math.h -- Definitions for the math floating point package.  */
 
 #ifndef  _MATH_H_
 #define  _MATH_H_
@@ -103,7 +102,7 @@ extern double fmod _PARAMS((double, double));
 #endif /* ! defined (__math_68881) */
 #endif /* ! defined (_REENT_ONLY) */
 
-#ifndef __STRICT_ANSI__
+#if !defined(__STRICT_ANSI__) || defined(__cplusplus)
 
 /* ISO C99 types and macros. */
 
@@ -119,6 +118,10 @@ typedef double double_t;
 #define FP_SUBNORMAL   3
 #define FP_NORMAL      4
 
+extern int __isinff (float x);
+extern int __isinfd (double x);
+extern int __isnanf (float x);
+extern int __isnand (double x);
 extern int __fpclassifyf (float x);
 extern int __fpclassifyd (double x);
 extern int __signbitf (float x);
@@ -131,9 +134,19 @@ extern int __signbitd (double x);
 #define isfinite(y) \
           (__extension__ ({__typeof__(y) __y = (y); \
                            fpclassify(__y) != FP_INFINITE && fpclassify(__y) != FP_NAN;}))
-#define isnormal(z) \
-          (__extension__ ({__typeof__(z) __z = (z); \
-                           fpclassify(__z) == FP_NORMAL;}))
+
+/* Note: isinf and isnan were once functions in newlib that took double
+ *       arguments.  C99 specifies that these names are reserved for macros
+ *       supporting multiple floating point types.  Thus, they are
+ *       now defined as macros.  Implementations of the old functions
+ *       taking double arguments still exist for compatibility purposes.  */
+#define isinf(x) \
+          (__extension__ ({__typeof__(x) __x = (x); \
+                           (sizeof (__x) == sizeof (float))  ? __isinff(__x) : __isinfd(__x);}))
+#define isnan(x) \
+          (__extension__ ({__typeof__(x) __x = (x); \
+                           (sizeof (__x) == sizeof (float))  ? __isnanf(__x) : __isnand(__x);}))
+#define isnormal(y) (fpclassify(y) == FP_NORMAL)
 #define signbit(x) \
           (__extension__ ({__typeof__(x) __x = (x); \
                            (sizeof(__x) == sizeof(float)) ? __signbitf(__x) : __signbitd(__x);}))
@@ -162,8 +175,6 @@ extern int __signbitd (double x);
 
 extern double infinity _PARAMS((void));
 extern double nan _PARAMS((const char *));
-extern int isnan _PARAMS((double));
-extern int isinf _PARAMS((double));
 extern int finite _PARAMS((double));
 extern double copysign _PARAMS((double, double));
 extern int ilogb _PARAMS((double));
@@ -222,7 +233,7 @@ extern double drem _PARAMS((double, double));
 
 #endif /* ! defined (_REENT_ONLY) */
 
-#endif /* ! defined (__STRICT_ANSI__) */
+#endif /* !defined (__STRICT_ANSI__) || defined(__cplusplus)  */
 
 #if !defined(__STRICT_ANSI__) || defined(__cplusplus)
 
@@ -325,7 +336,8 @@ extern int *__signgam _PARAMS((void));
 #define __signgam_r(ptr) _REENT_SIGNGAM(ptr)
 
 /* The exception structure passed to the matherr routine.  */
-
+/* We have a problem when using C++ since `exception' is a reserved
+   name in C++.  */
 #ifdef __cplusplus
 struct __exception 
 #else
@@ -395,7 +407,7 @@ enum __fdlibm_version
 #define _LIB_VERSION_TYPE enum __fdlibm_version
 #define _LIB_VERSION __fdlib_version
 
-extern __IMPORT _CONST _LIB_VERSION_TYPE _LIB_VERSION;
+extern __IMPORT _LIB_VERSION_TYPE _LIB_VERSION;
 
 #define _IEEE_  __fdlibm_ieee
 #define _SVID_  __fdlibm_svid

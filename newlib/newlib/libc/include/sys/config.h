@@ -59,7 +59,7 @@
 /* in other words, go32 */
 #define _FLOAT_RET double
 #endif
-#ifdef __linux__
+#if defined(__linux__) || defined(__RDOS__)
 /* we want the reentrancy structure to be returned by a function */
 #define __DYNAMIC_REENT__
 #define HAVE_GETDATE
@@ -94,6 +94,10 @@
 #endif
 #endif
 
+#ifdef __mips__
+#define __ATTRIBUTE_IMPURE_PTR__ __attribute__((__section__(".sdata")))
+#endif
+
 #ifdef __xstormy16__
 #define __SMALL_BITFIELDS
 #undef INT_MAX
@@ -121,6 +125,14 @@
 #define _REENT_SMALL
 #endif /* __m32c__ */
 
+#ifdef __thumb2__
+/* Thumb-2 based ARMv7M devices are really small.  */
+#define _REENT_SMALL
+#endif
+
+#ifdef __SPU__
+#define MALLOC_ALIGNMENT 16
+#endif
 
 /* This block should be kept in sync with GCC's limits.h.  The point
    of having these definitions here is to not include limits.h, which

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1990 The Regents of the University of California.
+ * Copyright (c) 1990, 2006 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms are permitted
@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 #include "local.h"
 #include "fvwrite.h"
 
@@ -43,7 +44,8 @@
  */
 
 int
-_DEFUN(__sfvwrite, (fp, uio),
+_DEFUN(__sfvwrite_r, (ptr, fp, uio),
+       struct _reent *ptr _AND
        register FILE *fp _AND
        register struct __suio *uio)
 {
@@ -59,7 +61,11 @@ _DEFUN(__sfvwrite, (fp, uio),
 
   /* make sure we can write */
   if (cantwrite (fp))
-    return EOF;
+    {
+      fp->_flags |= __SERR;
+      ptr->_errno = EBADF;
+      return EOF;
+    }
 
   iov = uio->uio_iov;
   len = 0;
@@ -121,13 +127,23 @@ _DEFUN(__sfvwrite, (fp, uio),
 	  w = fp->_w;
 	  if (fp->_flags & __SSTR)
 	    {
-	      if (len > w && fp->_flags & __SMBF)
+	      if (len >= w && fp->_flags & __SMBF)
 		{ /* must be asprintf family */
 		  unsigned char *ptr;
 		  int curpos = (fp->_p - fp->_bf._base);
+		  /* Choose a geometric growth factor to avoid
+		     quadratic realloc behavior, but use a rate less
+		     than (1+sqrt(5))/2 to accomodate malloc
+		     overhead. asprintf EXPECTS us to overallocate, so
+		     that it can add a trailing \0 without
+		     reallocating.  The new allocation should thus be
+		     max(prev_size*1.5, curpos+len+1). */
+		  int newsize = fp->_bf._size * 3 / 2;
+		  if (newsize < curpos + len + 1)
+		    newsize = curpos + len + 1;
 		  ptr = (unsigned char *)_realloc_r (_REENT, 
                                                      fp->_bf._base, 
-                                                     curpos + len);
+                                                     newsize);
 		  if (!ptr)
 		    {
 		      /* Free buffer which is no longer used.  */
@@ -136,8 +152,9 @@ _DEFUN(__sfvwrite, (fp, uio),
 		    }
 		  fp->_bf._base = ptr;
 		  fp->_p = ptr + curpos;
-		  fp->_bf._size = curpos + len;
-		  w = fp->_w = len;
+		  fp->_bf._size = newsize;
+		  w = len;
+		  fp->_w = newsize - curpos;
 		}
 	      if (len < w)
 		w = len;

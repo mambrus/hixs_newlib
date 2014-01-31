@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1990 The Regents of the University of California.
+ * Copyright (c) 1990, 2006 The Regents of the University of California.
  * All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
@@ -182,6 +182,7 @@ static char *rcsid = "$Id: vfprintf.c,v 1.43 2002/08/13 02:40:06 fitzsim Exp $";
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <stdint.h>
 #include <wchar.h>
 #include <string.h>
 #include <sys/lock.h>
@@ -212,7 +213,8 @@ static char *rcsid = "$Id: vfprintf.c,v 1.43 2002/08/13 02:40:06 fitzsim Exp $";
  * then reset it so that it can be reused.
  */
 static int
-_DEFUN(__sprint, (fp, uio),
+_DEFUN(__sprint_r, (ptr, fp, uio),
+       struct _reent *ptr _AND
        FILE *fp _AND
        register struct __suio *uio)
 {
@@ -222,7 +224,7 @@ _DEFUN(__sprint, (fp, uio),
 		uio->uio_iovcnt = 0;
 		return (0);
 	}
-	err = __sfvwrite(fp, uio);
+	err = __sfvwrite_r(ptr, fp, uio);
 	uio->uio_resid = 0;
 	uio->uio_iovcnt = 0;
 	return (err);
@@ -371,6 +373,7 @@ _EXFUN(get_arg, (struct _reent *data, int n, char *fmt,
 #define	SHORTINT	0x040		/* short integer */
 #define	ZEROPAD		0x080		/* zero (as opposed to blank) pad */
 #define FPT		0x100		/* Floating point number */
+#define CHARINT		0x200		/* char as integer */
 
 int _EXFUN(_VFPRINTF_R, (struct _reent *, FILE *, _CONST char *, va_list));
 
@@ -426,7 +429,7 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 #endif
 	int expt;		/* integer value of exponent */
 	int expsize = 0;	/* character count for expstr */
-	int ndig;		/* actual number of digits returned by cvt */
+	int ndig = 0;		/* actual number of digits returned by cvt */
 	char expstr[7];		/* buffer for exponent string */
 #endif
 	u_quad_t _uquad;	/* integer arguments %[diouxX] */
@@ -469,7 +472,7 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 	uio.uio_resid += (len); \
 	iovp++; \
 	if (++uio.uio_iovcnt >= NIOV) { \
-		if (__sprint(fp, &uio)) \
+		if (__sprint_r(data, fp, &uio)) \
 			goto error; \
 		iovp = iov; \
 	} \
@@ -484,7 +487,7 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 	} \
 }
 #define	FLUSH() { \
-	if (uio.uio_resid && __sprint(fp, &uio)) \
+	if (uio.uio_resid && __sprint_r(data, fp, &uio)) \
 		goto error; \
 	uio.uio_iovcnt = 0; \
 	iovp = iov; \
@@ -516,24 +519,28 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 	(flags&QUADINT ? GET_ARG (N, ap, quad_t) : \
 	    flags&LONGINT ? GET_ARG (N, ap, long) : \
 	    flags&SHORTINT ? (long)(short)GET_ARG (N, ap, int) : \
+	    flags&CHARINT ? (long)(signed char)GET_ARG (N, ap, int) : \
 	    (long)GET_ARG (N, ap, int))
 #define	UARG() \
 	(flags&QUADINT ? GET_ARG (N, ap, u_quad_t) : \
 	    flags&LONGINT ? GET_ARG (N, ap, u_long) : \
 	    flags&SHORTINT ? (u_long)(u_short)GET_ARG (N, ap, int) : \
+	    flags&CHARINT ? (u_long)(unsigned char)GET_ARG (N, ap, int) : \
 	    (u_long)GET_ARG (N, ap, u_int))
 #else
 #define	SARG() \
 	(flags&LONGINT ? GET_ARG (N, ap, long) : \
 	    flags&SHORTINT ? (long)(short)GET_ARG (N, ap, int) : \
+	    flags&CHARINT ? (long)(signed char)GET_ARG (N, ap, int) : \
 	    (long)GET_ARG (N, ap, int))
 #define	UARG() \
 	(flags&LONGINT ? GET_ARG (N, ap, u_long) : \
 	    flags&SHORTINT ? (u_long)(u_short)GET_ARG (N, ap, int) : \
+	    flags&CHARINT ? (u_long)(unsigned char)GET_ARG (N, ap, int) : \
 	    (u_long)GET_ARG (N, ap, u_int))
 #endif
 
-	CHECK_INIT (data);
+	CHECK_INIT (data, fp);
 	_flockfile (fp);
 
 	/* sorry, fprintf(read_only_file, "") returns EOF, not 0 */
@@ -603,6 +610,12 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 
 rflag:		ch = *fmt++;
 reswitch:	switch (ch) {
+		case '\'':
+		  /* In the C locale, LC_NUMERIC requires
+		     thousands_sep to be the empty string.  And since
+		     no other locales are supported (yet), this flag
+		     is currently a no-op.  */
+		  goto rflag;
 		case ' ':
 			/*
 			 * ``If the space and + flags both appear, the space
@@ -746,7 +759,12 @@ reswitch:	switch (ch) {
 			goto rflag;
 #endif
 		case 'h':
-			flags |= SHORTINT;
+			if (*fmt == 'h') {
+				fmt++;
+				flags |= CHARINT;
+			} else {
+				flags |= SHORTINT;
+			}
 			goto rflag;
 		case 'l':
 			if (*fmt == 'l') {
@@ -759,6 +777,43 @@ reswitch:	switch (ch) {
 		case 'q':
 			flags |= QUADINT;
 			goto rflag;
+		case 'j':
+		  if (sizeof (intmax_t) == sizeof (long))
+		    flags |= LONGINT;
+		  else
+		    flags |= QUADINT;
+		  goto rflag;
+		case 'z':
+		  if (sizeof (size_t) < sizeof (int))
+		    /* POSIX states size_t is 16 or more bits, as is short.  */
+		    flags |= SHORTINT;
+		  else if (sizeof (size_t) == sizeof (int))
+		    /* no flag needed */;
+		  else if (sizeof (size_t) <= sizeof (long))
+		    flags |= LONGINT;
+		  else
+		    /* POSIX states that at least one programming
+		       environment must support size_t no wider than
+		       long, but that means other environments can
+		       have size_t as wide as long long.  */
+		    flags |= QUADINT;
+		  goto rflag;
+		case 't':
+		  if (sizeof (ptrdiff_t) < sizeof (int))
+		    /* POSIX states ptrdiff_t is 16 or more bits, as
+		       is short.  */
+		    flags |= SHORTINT;
+		  else if (sizeof (ptrdiff_t) == sizeof (int))
+		    /* no flag needed */;
+		  else if (sizeof (ptrdiff_t) <= sizeof (long))
+		    flags |= LONGINT;
+		  else
+		    /* POSIX states that at least one programming
+		       environment must support ptrdiff_t no wider than
+		       long, but that means other environments can
+		       have ptrdiff_t as wide as long long.  */
+		    flags |= QUADINT;
+		  goto rflag;
 		case 'c':
 		case 'C':
 			cp = buf;
@@ -915,6 +970,8 @@ reswitch:	switch (ch) {
 				*GET_ARG (N, ap, long_ptr_t) = ret;
 			else if (flags & SHORTINT)
 				*GET_ARG (N, ap, short_ptr_t) = ret;
+			else if (flags & CHARINT)
+				*GET_ARG (N, ap, char_ptr_t) = ret;
 			else
 				*GET_ARG (N, ap, int_ptr_t) = ret;
 			continue;	/* no output */
@@ -1444,7 +1501,7 @@ _CONST static CH_CLASS chclass[256] = {
   /* 08-0f */  OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
   /* 10-17 */  OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
   /* 18-1f */  OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
-  /* 20-27 */  FLAG,    OTHER,   OTHER,   FLAG,    DOLLAR,  OTHER,   OTHER,   OTHER,
+  /* 20-27 */  FLAG,    OTHER,   OTHER,   FLAG,    DOLLAR,  OTHER,   OTHER,   FLAG,
   /* 28-2f */  OTHER,   OTHER,   STAR,    FLAG,    OTHER,   FLAG,    DOT,     OTHER,
   /* 30-37 */  ZERO,    DIGIT,   DIGIT,   DIGIT,   DIGIT,   DIGIT,   DIGIT,   DIGIT,
   /* 38-3f */  DIGIT,   DIGIT,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
@@ -1453,9 +1510,9 @@ _CONST static CH_CLASS chclass[256] = {
   /* 50-57 */  OTHER,   OTHER,   OTHER,   SPEC,    OTHER,   SPEC,    OTHER,   SPEC, 
   /* 58-5f */  OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
   /* 60-67 */  OTHER,   OTHER,   OTHER,   SPEC,    SPEC,    SPEC,    SPEC,    SPEC, 
-  /* 68-6f */  MODFR,   SPEC,    OTHER,   OTHER,   MODFR,   OTHER,   OTHER,   SPEC, 
-  /* 70-77 */  SPEC,    MODFR,   OTHER,   SPEC,    OTHER,   SPEC,    OTHER,   OTHER,
-  /* 78-7f */  SPEC,    OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
+  /* 68-6f */  MODFR,   SPEC,    MODFR,   OTHER,   MODFR,   OTHER,   OTHER,   SPEC, 
+  /* 70-77 */  SPEC,    MODFR,   OTHER,   SPEC,    MODFR,   SPEC,    OTHER,   OTHER,
+  /* 78-7f */  SPEC,    OTHER,   MODFR,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
   /* 80-87 */  OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
   /* 88-8f */  OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
   /* 90-97 */  OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,   OTHER,
@@ -1525,7 +1582,7 @@ _DEFUN(get_arg, (data, n, fmt, ap, numargs_p, args, arg_type, last_fmt),
   ACTION action;
   int pos, last_arg;
   int max_pos_arg = n;
-  enum types { INT, LONG_INT, SHORT_INT, QUAD_INT, CHAR, CHAR_PTR, DOUBLE, LONG_DOUBLE, WIDE_CHAR };
+  enum types { INT, LONG_INT, SHORT_INT, CHAR_INT, QUAD_INT, CHAR, CHAR_PTR, DOUBLE, LONG_DOUBLE, WIDE_CHAR };
 #ifdef _MB_CAPABLE
   wchar_t wc;
   mbstate_t wc_state;
@@ -1584,13 +1641,56 @@ _DEFUN(get_arg, (data, n, fmt, ap, numargs_p, args, arg_type, last_fmt),
 	      switch (ch)
 		{
 		case 'h':
-		  flags |= SHORTINT;
+		  if (*fmt == 'h')
+		    {
+		      flags |= CHARINT;
+		      ++fmt;
+		    }
+		  else
+		    flags |= SHORTINT;
 		  break;
 		case 'L':
 		  flags |= LONGDBL;
 		  break;
 		case 'q':
 		  flags |= QUADINT;
+		  break;
+		case 'j':
+		  if (sizeof (intmax_t) == sizeof (long))
+		    flags |= LONGINT;
+		  else
+		    flags |= QUADINT;
+		  break;
+		case 'z':
+		  if (sizeof (size_t) < sizeof (int))
+		    /* POSIX states size_t is 16 or more bits, as is short.  */
+		    flags |= SHORTINT;
+		  else if (sizeof (size_t) == sizeof (int))
+		    /* no flag needed */;
+		  else if (sizeof (size_t) <= sizeof (long))
+		    flags |= LONGINT;
+		  else
+		    /* POSIX states that at least one programming
+		       environment must support size_t no wider than
+		       long, but that means other environments can
+		       have size_t as wide as long long.  */
+		    flags |= QUADINT;
+		  break;
+		case 't':
+		  if (sizeof (ptrdiff_t) < sizeof (int))
+		    /* POSIX states ptrdiff_t is 16 or more bits, as
+		       is short.  */
+		    flags |= SHORTINT;
+		  else if (sizeof (ptrdiff_t) == sizeof (int))
+		    /* no flag needed */;
+		  else if (sizeof (ptrdiff_t) <= sizeof (long))
+		    flags |= LONGINT;
+		  else
+		    /* POSIX states that at least one programming
+		       environment must support ptrdiff_t no wider than
+		       long, but that means other environments can
+		       have ptrdiff_t as wide as long long.  */
+		    flags |= QUADINT;
 		  break;
 		case 'l':
 		default:
@@ -1620,6 +1720,8 @@ _DEFUN(get_arg, (data, n, fmt, ap, numargs_p, args, arg_type, last_fmt),
 		      spec_type = LONG_INT;
 		    else if (flags & SHORTINT)
 		      spec_type = SHORT_INT;
+		    else if (flags & CHARINT)
+		      spec_type = CHAR_INT;
 #ifndef _NO_LONGLONG
 		    else if (flags & QUADINT)
 		      spec_type = QUAD_INT;
@@ -1675,6 +1777,7 @@ _DEFUN(get_arg, (data, n, fmt, ap, numargs_p, args, arg_type, last_fmt),
 			args[numargs++].val_wint_t = va_arg (*ap, wint_t);
 			break;
 		      case CHAR:
+		      case CHAR_INT:
 		      case SHORT_INT:
 		      case INT:
 			args[numargs++].val_int = va_arg (*ap, int);
@@ -1760,6 +1863,7 @@ _DEFUN(get_arg, (data, n, fmt, ap, numargs_p, args, arg_type, last_fmt),
 	  args[numargs++].val_wint_t = va_arg (*ap, wint_t);
 	  break;
 	case INT:
+	case CHAR_INT:
 	case SHORT_INT:
 	case CHAR:
 	default:

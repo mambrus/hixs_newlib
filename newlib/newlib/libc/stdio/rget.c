@@ -22,6 +22,7 @@ static char sccsid[] = "%W% (Berkeley) %G%";
 
 #include <_ansi.h>
 #include <stdio.h>
+#include <errno.h>
 #include "local.h"
 
 /*
@@ -31,13 +32,24 @@ static char sccsid[] = "%W% (Berkeley) %G%";
  */
 
 int
-_DEFUN(__srget, (fp),
+_DEFUN(__srget_r, (ptr, fp),
+       struct _reent *ptr _AND
        register FILE *fp)
 {
-  if (__srefill (fp) == 0)
+  if (__srefill_r (ptr, fp) == 0)
     {
       fp->_r--;
       return *fp->_p++;
     }
   return EOF;
+}
+
+/* This function isn't any longer declared in stdio.h, but it's
+   required for backward compatibility with applications built against
+   earlier dynamically built newlib libraries. */
+int
+_DEFUN(__srget, (fp),
+       register FILE *fp)
+{
+  return __srget_r (_REENT, fp);
 }

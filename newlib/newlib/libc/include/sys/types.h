@@ -126,14 +126,11 @@ typedef	long	daddr_t;
 typedef	char *	caddr_t;
 
 #ifndef __CYGWIN__
-#if defined(__MS_types__) || defined(__rtems__)
-typedef	unsigned long	ino_t;
-#else
-#ifdef __sparc__
+#if defined(__MS_types__) || defined(__rtems__) || \
+    defined(__sparc__) || defined(__SPU__)
 typedef	unsigned long	ino_t;
 #else
 typedef	unsigned short	ino_t;
-#endif
 #endif
 #endif /*__CYGWIN__*/
 
@@ -262,7 +259,8 @@ typedef _TIMER_T_ timer_t;
 #define __timer_t_defined
 #endif
 
-typedef long useconds_t;
+typedef unsigned long useconds_t;
+typedef long suseconds_t;
 
 #include <sys/features.h>
 
@@ -372,6 +370,36 @@ typedef struct {
 #include <cygwin/types.h>
 #endif
 #endif /* defined(_POSIX_THREADS) */
+
+/* POSIX Barrier Types */
+
+#if defined(_POSIX_BARRIERS)
+typedef __uint32_t pthread_barrier_t;        /* POSIX Barrier Object */
+typedef struct {
+  int   is_initialized;  /* is this structure initialized? */
+#if defined(_POSIX_THREAD_PROCESS_SHARED)
+  int   process_shared;       /* allow this to be shared amongst processes */
+#endif
+} pthread_barrierattr_t;
+#endif /* defined(_POSIX_BARRIERS) */
+
+/* POSIX Spin Lock Types */
+
+#if defined(_POSIX_SPIN_LOCKS)
+typedef __uint32_t pthread_spinlock_t;        /* POSIX Spin Lock Object */
+#endif /* defined(_POSIX_SPIN_LOCKS) */
+
+/* POSIX Reader/Writer Lock Types */
+
+#if defined(_POSIX_READER_WRITER_LOCKS)
+typedef __uint32_t pthread_rwlock_t;         /* POSIX RWLock Object */
+typedef struct {
+  int   is_initialized;       /* is this structure initialized? */
+#if defined(_POSIX_THREAD_PROCESS_SHARED)
+  int   process_shared;       /* allow this to be shared amongst processes */
+#endif
+} pthread_rwlockattr_t;
+#endif /* defined(_POSIX_READER_WRITER_LOCKS) */
 
 #endif  /* !__need_inttypes */
 

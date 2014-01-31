@@ -1,9 +1,10 @@
 dnl This is the newlib configure.in file.
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.13)
-AC_INIT(libc)
-AM_CONFIG_HEADER(newlib.h:newlib.hin)
+AC_PREREQ(2.59)
+AC_INIT([newlib],[NEWLIB_VERSION])
+AC_CONFIG_SRCDIR([libc])
+AC_CONFIG_HEADER(newlib.h:newlib.hin)
 
 dnl Can't be done in NEWLIB_CONFIGURE because that confuses automake. 
 AC_CONFIG_AUX_DIR(..)
@@ -85,6 +86,17 @@ AC_ARG_ENABLE(newlib-iconv-external-ccs,
    esac
  fi], [newlib_iconv_external_ccs=${newlib_iconv_external_ccs}])dnl
 
+dnl Support --disable-newlib-atexit-dynamic-alloc
+AC_ARG_ENABLE(newlib-atexit-dynamic-alloc,
+[  --disable-newlib-atexit-alloc    disable dynamic allocation of atexit entries],
+[if test "${newlib_atexit_dynamic_alloc+set}" != set; then
+  case "${enableval}" in
+    yes) newlib_atexit_dynamic_alloc=yes ;;
+    no)  newlib_atexit_dynamic_alloc=no  ;;
+    *)   AC_MSG_ERROR(bad value ${enableval} for newlib-atexit-dynamic-alloc option) ;;
+  esac
+ fi], [newlib_atexit_dynamic_alloc=${newlib_atexit_dynamic_alloc}])dnl
+
 NEWLIB_CONFIGURE(.)
 
 dnl We have to enable libtool after NEWLIB_CONFIGURE because if we try and
@@ -96,8 +108,6 @@ AM_PROG_LIBTOOL
 AC_PROG_AWK
 fi
 
-configdirs="libc libm"
-
 AC_ARG_ENABLE(newlib_hw_fp,
 [  --enable-newlib-hw-fp    Turn on hardware floating point math],
 [case "${enableval}" in
@@ -106,23 +116,6 @@ AC_ARG_ENABLE(newlib_hw_fp,
    *) AC_MSG_ERROR(bad value ${enableval} for --enable-newlib-hw-fp) ;;
  esac],[newlib_hw_fp=false])
 AM_CONDITIONAL(NEWLIB_HW_FP, test x$newlib_hw_fp = xtrue)
-
-if test -z "${with_multisubdir}"; then
-  configdirs="${configdirs} doc"
-  have_doc=yes
-else
-  have_doc=
-fi
-AM_CONDITIONAL(HAVE_DOC, test x$have_doc = xyes)
-
-EXTRA_DIRS=
-case $host in
-  i[[34567]]86-pc-linux-*)
-	configdirs="${configdirs} iconvdata"
-	EXTRA_DIRS=iconvdata
-	;;
-esac
-AC_SUBST(EXTRA_DIRS)
 
 # These get added in the top-level configure.in, except in the case where
 # newlib is being built natively.
@@ -135,7 +128,25 @@ else
 fi
 AC_SUBST(CC_FOR_NEWLIB)
 
-AC_CONFIG_SUBDIRS(${configdirs})
+AC_CONFIG_SUBDIRS(libc)
+AC_CONFIG_SUBDIRS(libm)
+
+if test -z "${with_multisubdir}"; then
+  AC_CONFIG_SUBDIRS(doc)
+  have_doc=yes
+else
+  have_doc=
+fi
+AM_CONDITIONAL(HAVE_DOC, test x$have_doc = xyes)
+
+EXTRA_DIRS=
+case $host in
+  i[[34567]]86-pc-linux-*)
+  	AC_CONFIG_SUBDIRS(iconvdata)
+	EXTRA_DIRS=iconvdata
+	;;
+esac
+AC_SUBST(EXTRA_DIRS)
 
 CRT0=
 CRT0_DIR=
@@ -232,7 +243,7 @@ if test "${newlib_iconv_external_ccs}" = "yes"; then
 AC_DEFINE_UNQUOTED(_ICONV_ENABLE_EXTERNAL_CCS)
 fi
 
-AC_DEFINE_UNQUOTED(_NEWLIB_VERSION,"$VERSION")
+AC_DEFINE_UNQUOTED(_NEWLIB_VERSION,"NEWLIB_VERSION")
 
 if test "${multilib}" = "yes"; then
   multilib_arg="--enable-multilib"
@@ -251,16 +262,19 @@ if test "x${newlib_iconv_external_ccs}" = "xyes"; then
   AC_DEFINE_UNQUOTED(_ICONV_ENABLE_EXTERNAL_CCS,1)
 fi
 
+if test "${newlib_atexit_dynamic_alloc}" = "yes"; then
+AC_DEFINE_UNQUOTED(_ATEXIT_DYNAMIC_ALLOC)
+fi
+
 dnl
 dnl Parse --enable-newlib-iconv-encodings option argument
 dnl
+
 if test "x${iconv_encodings}" != "x" \
    || test "x${iconv_to_encodings}" != "x" \
    || test "x${iconv_from_encodings}" != "x"; then
-  
-  dnl Check that --enable-newlib-iconv was enabled
   if test "x${newlib_iconv}" = "x"; then
-      AC_MSG_ERROR(--enable-newlib-iconv-encodings, --enable-newlib-iconv-from-encodings and --enable-newlib-iconv-to-encodings option can't be used if iconv library is disabled, use --enable-newlib-iconv to enable it.)
+      AC_MSG_ERROR([--enable-newlib-iconv-encodings, --enable-newlib-iconv-from-encodings and --enable-newlib-iconv-to-encodings option can't be used if iconv library is disabled, use --enable-newlib-iconv to enable it.])
   fi
   
   dnl Normalize encodings names and delete commas
@@ -340,7 +354,7 @@ EOF
 if AC_TRY_COMMAND([${CC} $CFLAGS $CPPFLAGS $LDFLAGS -o conftest conftest.c
 		   -static -nostartfiles -nostdlib 1>&AS_MESSAGE_LOG_FD])
 then
-  if readelf -S conftest | grep -e INIT_ARRAY > /dev/null; then
+  if ${READELF} -S conftest | grep -e INIT_ARRAY > /dev/null; then
     libc_cv_initfinit_array=yes
   else
     libc_cv_initfinit_array=no
@@ -373,14 +387,13 @@ if test $libc_cv_array_aliasing = yes; then
   AC_DEFINE_UNQUOTED(_HAVE_ARRAY_ALIASING)
 fi
 
-AC_OUTPUT(Makefile,
+AC_CONFIG_FILES([Makefile],
 [if test -n "$CONFIG_FILES"; then
   unset ac_file
   . ${newlib_basedir}/../config-ml.in
 fi],
 srcdir=${srcdir}
 host=${host}
-target=${target}
 with_multisubdir=${with_multisubdir}
 ac_configure_args="${multilib_arg} ${ac_configure_args}"
 CONFIG_SHELL=${CONFIG_SHELL-/bin/sh}
@@ -388,3 +401,4 @@ newlib_basedir=${newlib_basedir}
 CC="${CC}"
 LDFLAGS="${LDFLAGS}"
 )
+AC_OUTPUT

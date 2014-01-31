@@ -6,64 +6,83 @@ AUTOMAKE_OPTIONS = cygnus
 # to output a definition for newlib_basedir.
 INCLUDES = -I $(newlib_basedir)/libm/common $(NEWLIB_CFLAGS) $(CROSS_CFLAGS) $(TARGET_CFLAGS)
 
+AM_CCASFLAGS = $(INCLUDES)
+
 noinst_LIBRARIES = lib.a
 
 lib_a_SOURCES = setjmp.S
+lib_a_CCASFLAGS = $(AM_CCASFLAGS)
+lib_a_CFLAGS = $(AM_CFLAGS)
 
 ACLOCAL_AMFLAGS = -I ../../..
 CONFIG_STATUS_DEPENDENCIES = $(newlib_basedir)/configure.host
 
-lib_a_LIBADD = malloc.o free.o realloc.o calloc.o cfree.o malign.o \
-	valloc.o pvalloc.o mallinfo.o mallstats.o msize.o mallopt.o \
-	mallocr.o freer.o reallocr.o callocr.o
+lib_a_LIBADD = $(lpfx)malloc.o \
+	$(lpfx)free.o \
+	$(lpfx)realloc.o \
+	$(lpfx)calloc.o \
+	$(lpfx)cfree.o \
+	$(lpfx)malign.o \
+	$(lpfx)valloc.o \
+	$(lpfx)pvalloc.o \
+	$(lpfx)mallinfo.o \
+	$(lpfx)mallstats.o \
+	$(lpfx)msize.o \
+	$(lpfx)mallopt.o \
+	$(lpfx)mallocr.o \
+	$(lpfx)freer.o \
+	$(lpfx)reallocr.o \
+	$(lpfx)callocr.o
+
+lib_a_DEPENDENCIES = $(lib_a_LIBADD)
 
 MALLOC_COMPILE = $(COMPILE)
 
-malloc.o: tiny-malloc.c
+$(lpfx)malloc.o: tiny-malloc.c
 	$(MALLOC_COMPILE) -DDEFINE_MALLOC -c $(srcdir)/tiny-malloc.c -o $@
 
-free.o: tiny-malloc.c
+$(lpfx)free.o: tiny-malloc.c
 	$(MALLOC_COMPILE) -DDEFINE_FREE -c $(srcdir)/tiny-malloc.c -o $@
 
-realloc.o: tiny-malloc.c
+$(lpfx)realloc.o: tiny-malloc.c
 	$(MALLOC_COMPILE) -DDEFINE_REALLOC -c $(srcdir)/tiny-malloc.c -o $@
 
-calloc.o: tiny-malloc.c
+$(lpfx)calloc.o: tiny-malloc.c
 	$(MALLOC_COMPILE) -DDEFINE_CALLOC -c $(srcdir)/tiny-malloc.c -o $@
 
-cfree.o: tiny-malloc.c
+$(lpfx)cfree.o: tiny-malloc.c
 	$(MALLOC_COMPILE) -DDEFINE_CFREE -c $(srcdir)/tiny-malloc.c -o $@
 
-malign.o: tiny-malloc.c
+$(lpfx)malign.o: tiny-malloc.c
 	$(MALLOC_COMPILE) -DDEFINE_MEMALIGN -c $(srcdir)/tiny-malloc.c -o $@
 
-valloc.o: tiny-malloc.c
+$(lpfx)valloc.o: tiny-malloc.c
 	$(MALLOC_COMPILE) -DDEFINE_VALLOC -c $(srcdir)/tiny-malloc.c -o $@
 
-pvalloc.o: tiny-malloc.c
+$(lpfx)pvalloc.o: tiny-malloc.c
 	$(MALLOC_COMPILE) -DDEFINE_PVALLOC -c $(srcdir)/tiny-malloc.c -o $@
 
-mallinfo.o: tiny-malloc.c
+$(lpfx)mallinfo.o: tiny-malloc.c
 	$(MALLOC_COMPILE) -DDEFINE_MALLINFO -c $(srcdir)/tiny-malloc.c -o $@
 
-mallstats.o: tiny-malloc.c
+$(lpfx)mallstats.o: tiny-malloc.c
 	$(MALLOC_COMPILE) -DDEFINE_MALLOC_STATS -c $(srcdir)/tiny-malloc.c -o $@
 
-msize.o: tiny-malloc.c
+$(lpfx)msize.o: tiny-malloc.c
 	$(MALLOC_COMPILE) -DDEFINE_MALLOC_USABLE_SIZE -c $(srcdir)/tiny-malloc.c -o $@
 
-mallopt.o: mallocr.c
+$(lpfx)mallopt.o: mallocr.c
 	$(MALLOC_COMPILE) -DDEFINE_MALLOPT -c $(srcdir)/mallocr.c -o $@
 
-mallocr.o: mallocr.c
+$(lpfx)mallocr.o: mallocr.c
 	$(MALLOC_COMPILE) -DDEFINE_MALLOC -c $(srcdir)/mallocr.c -o $@
 
-freer.o: mallocr.c
+$(lpfx)freer.o: mallocr.c
 	$(MALLOC_COMPILE) -DDEFINE_FREE -c $(srcdir)/mallocr.c -o $@
 
-reallocr.o: mallocr.c
+$(lpfx)reallocr.o: mallocr.c
 	$(MALLOC_COMPILE) -DDEFINE_REALLOC -c $(srcdir)/mallocr.c -o $@
 
-callocr.o: mallocr.c
+$(lpfx)callocr.o: mallocr.c
 	$(MALLOC_COMPILE) -DDEFINE_CALLOC -c $(srcdir)/mallocr.c -o $@
 

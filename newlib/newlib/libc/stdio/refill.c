@@ -19,6 +19,7 @@
 #include <_ansi.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 #include "local.h"
 
 static int
@@ -36,12 +37,13 @@ _DEFUN(lflush, (fp),
  */
 
 int
-_DEFUN(__srefill, (fp),
+_DEFUN(__srefill_r, (ptr, fp),
+       struct _reent * ptr _AND
        register FILE * fp)
 {
   /* make sure stdio is set up */
 
-  CHECK_INIT (_REENT);
+  CHECK_INIT (_REENT, fp);
 
   fp->_r = 0;			/* largely a convenience for callers */
 
@@ -55,7 +57,11 @@ _DEFUN(__srefill, (fp),
   if ((fp->_flags & __SRD) == 0)
     {
       if ((fp->_flags & __SRW) == 0)
-	return EOF;
+	{
+	  ptr->_errno = EBADF;
+	  fp->_flags |= __SERR;
+	  return EOF;
+	}
       /* switch to reading */
       if (fp->_flags & __SWR)
 	{

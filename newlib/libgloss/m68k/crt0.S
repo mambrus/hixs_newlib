@@ -52,11 +52,17 @@ SYM (environ):
 	.extern _end
 
 /*
- * set things up so the application will run. This *must* be called start.
+ * Set things up so the application will run. For historical reasons
+ * this is called 'start'.  We set things up to provide '_start'
+ * as with other systems, but also provide a weak alias called
+ * 'start' for compatibility with existing linker scripts.
  */
 	.global SYM (start)
+	.weak SYM (start)
+	.set SYM (start),SYM(_start)
 
-SYM (start):
+	.global SYM (_start)
+SYM (_start):
 	/*
 	 * put any hardware init code here
 	 */
@@ -84,7 +90,7 @@ SYM (start):
 	subql	IMM(1), d0
 2:
 	clrb	(a0)+
-#if !defined(__mcoldfire__) && !defined(__mcf5200__)
+#if !defined(__mcoldfire__)
 	dbra	d0, 2b
 	clrw	d0
 	subql	IMM(1), d0

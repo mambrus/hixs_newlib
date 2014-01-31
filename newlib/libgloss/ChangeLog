@@ -1,3 +1,717 @@
+2006-12-18  Kazu Hirata  <kazu@codesourcery.com>
+
+	Merge from newlib-csl-20060320-branch:
+	2006-12-15  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* m68k/fido-crt0.S (_vector_table): Reference
+	_PrivilegeViolationHandler.
+
+	2006-12-15  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* m68k/fido-crt0.S (_start): Set %vbr for context 0 in
+	RAM configs.
+	* m68k/fido.sc: Clean up formatting.  Add comments.  Move
+	stack and heap end to SDRAM for SRAM and SDRAM configurations.
+	Put RedBoot application text in SRAM.
+
+	2006-12-13  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/Makefile (install_cf): Don't loop over files here.  Only
+	install sources for the default multilib.
+	(install_fido): Likewise.
+	(install_io): Install bsps in one go.
+
+	2006-12-01  Nathan Sidwell  <nathan@codesourcery.com>
+		    Kazu Hirata  <kazu@codesourcery.com>
+
+	* configure.in: Recognize fido-*-*.
+	* configure: Regenerate.
+	* m68k/Makefile.in (CF_ISRS): Use addprefix.
+	(FIDO_CRT0, FIDO_BSP, FIDO_OBJS, FIDO_HANDLERS,
+	FIDO_UNHOSTED_SCRIPTS, FIDO_HOSTED_SCRIPTS, FIDO_SCRIPTS,
+	FIDO_SOURCES, all_fido, fido-%-crt0.o, fido-rom.ld,
+	fido-rom-hosted.ld, fido-sram.ld, fido-sram-hosted.ld,
+	fido-sdram.ld, fido-sdram-hosted.ld, fido-redboot.ld,
+	install_fido): New.
+	* m68k/asm.h (mbb): New.
+	* m68k/configure.in (DO): Check for __mfido__.
+	* m68k/configure: Regenerate.
+	* m68k/fido-_exit.c, m68k/fido-crt0.S, m68k/fido-handler.c,
+	m68k/fido-hosted.S, m68k/fido-sbrk.c, m68k/fido.h,
+	m68k/fido.sc, m68k/fido_profiling.h: New.
+
+2006-12-18  Ben Elliston  <bje@au.ibm.com>
+
+       * spu/stat.c (stat): Cast new sys.pathname value to unsigned int.
+
+2006-12-13  Ben Elliston  <bje@au.ibm.com>
+
+        * libnosys/_exit.c (_exit): Finish with an infinite loop to
+        eliminate a warning about this noreturn function returning.
+
+2006-12-13  Sa Liu  <saliu@de.ibm.com>
+
+        * spu/access.c: New file
+        * spu/dup.c: New file
+        * spu/ftruncate.c: New file
+        * spu/jsre.h: add structures for new functions
+        * spu/time.c: New file
+        * spu/Makefile.in (access.o, dup.o, ftruncate.o, time.o): New targets.
+
+2006-12-12  Ben Elliston  <bje@au.ibm.com>
+
+	* configure.in: Remove superfluous semicolons.
+	* configure: Regenerate.
+
+2006-12-11 Kazu Hirata <kazu@codesourcery.com>
+
+	Merge from newlib-csl-20060320-branch:
+	2006-12-01  Nathan Sidwell  <nathan@codesourcery.com>
+		    Kazu Hirata  <kazu@codesourcery.com>
+
+	* m68k/Makefile.in (CF_ISRS): Use addprefix.
+
+	2006-11-01 Nathan Sidwell <nathan@codesourcery.com>
+
+	* m68k/Makefile.in (CFLAGS): Do not clear.  Add to all compilations.
+	(ARFLAGS): Remove commented out definition.
+
+
+	* m68k/configure.in (DO) Set to list of target cpu families.
+	* m68k/configure: Rebuilt.
+	* m68k/Makefile.in (DO): New.
+	(UNHOSTED_BSP, UNHOSTED_OBJS, HOSTED_BSP, HOSTED_OBJS): Move
+	later.
+	(m5208evb, m5213evb, m52235evb, m5235evb, m5273c3, m5275evb,
+	m5282evb, m5329evb, m5485evb): Move earlier.
+	(all): Add all_$DO dependencies.
+	(all_cf, all_m68k): New targets, depend on cf & m68k bsps as
+	appropriate.
+	(m%-ram.ld, m%-rom.ld, m%-ram-hosted.ld, m%-rom-hosted.ld): Add
+	'm' prefix.
+	(install): Add install_$DO dependencies.
+	(install_cf, install_m68k): New targets.  Perform cf and m68k
+	installs as appropriate.
+	(install_io): New, install the io libraries.
+
+
+	2006-10-23 Nathan Sidwell <nathan@codesourcery.com>
+
+	* m68k/Makefile.in (CF_CRT0): Rename to CF_CRT0S, separate hosted
+	& unhosted versions.
+	(CF_OBJS): Add cf-isv.o.
+	(CF_SOURCES): Add cf-isv.S.
+	(cf-hosted-crt0.o, cf-unhosted-crt0.o): New targets.
+	* m68k/cf-isv.S: New, broken out of ...
+	* m68k/cf-crt0.S: ... here.  Add HOSTED & UNHOSTED differences.
+	* m68k/cf-crt1.c (__start1): Add heap_limit argument.
+	(__heap_limit): Define.
+	* m68k/cf-sbrk.c (__heap_limit): Declare.
+	(sbrk): Adjust for __heap_limit.
+	* m68k/cf.sc: Use different crt0's for hosted & unhosted.
+	Install a separate isv.o file.
+	* m68k/io.h (HOSTED_PUTCHAR): Replace with ...
+	(HOSTED_INIT_SIM): ... this.
+
+
+	2006-10-20 Nathan Sidwell <nathan@codesourcery.com>
+
+	* m68k/Makefile.in (CF_BOARDS): Add m5275evb.
+	(m5275evb): New board.
+
+
+	2006-10-20 Vladimir Prus <vladimir@codesourcery.com>
+
+	* m68k/cf.sc: Add linkonce sections and
+	DWARF sections.
+
+
+	2006-10-07 Nathan Sidwell <nathan@codesourcery.com>
+
+	* m68k/Makefile.in: Adjust Coldfire rules.
+	(BDM_CRT0, BDM_BSP, BDM_OBJS, BDM_ISRS): Rename	to ...
+	(CF_CRT0, CF_BSP, CF_OBJS, CF_ISRS): ... here.  Adjust.
+	(BDM_OTHER_OBJS): Remove.
+	(BDM_SYSOBJS): Rename to ...
+	(UNHOSTED_OBJS): ... here.  Adjust.
+	(UNHOSTED_BSP, HOSTED_OBJS, HOSTED_BSP): New.
+	(CF_HOSTED_SCRIPTS): New.
+	(CF_SCRIPTS, CF_SOURCES): Adjust.
+	* m68k/cf.sc: Add IO library variable.
+	* m68k/bdm-crt0.S, m68k/bdm-crt1.c, m68k/bdm-isrs.c,
+	m68k/bdm-sbrk.c, m68k/bdm-semihost.S: Rename to ...
+	* m68k/cf-crt0.S, m68k/cf-crt1.c, m68k/cf-isrs.c, m68k/cf-sbrk.c,
+	m68k/cf-hosted.S: ... here.
+	* m68k/cf-exit.c: New.
+	* m68k/bdm-gdb.h, m68k/bdm-semihost.h: Merge into ...
+	* m68k/io.h: ... here.  Add unhosted support.  Adjust conversion
+	function names.
+	* m68k/bdm-gdb.c: Rename to ...
+	* m68k/io-gdb.c: ... here.  Adjust names of conversion functions.
+	* m68k/bdm-close.c, m68k/bdm-exit.c, m68k/bdm-fstat.c,
+	m68k/bdm-gettimeofday.c, m68k/bdm-isatty.c, m68k/bdm-lseek.c,
+	m68k/bdm-open.c, m68k/bdm-read.c, m68k/bdm-rename.c,
+	m68k/bdm-stat.c, m68k/bdm-system.c, m68k/bdm-time.c,
+	m68k/bdm-unlink.c, m68k/bdm-write.c: Rename to ...
+	* m68k/io-close.c, m68k/io-exit.c, m68k/io-fstat.c,
+	m68k/io-gettimeofday.c, m68k/io-isatty.c, m68k/io-lseek.c,
+	m68k/io-open.c, m68k/io-read.c, m68k/io-rename.c, m68k/io-stat.c,
+	m68k/io-system.c, m68k/io-time.c, m68k/io-unlink.c,
+	m68k/io-write.c: ... here.  Include io.h. Adjust for hosted &
+	unhosted libraries.  Adjust names of gdb conversion functions.
+
+
+	2006-09-29 Nathan Sidwell <nathan@codesourcery.com>
+
+	* m68k/bdm-semihost.S: Add more comments. Make instruction weirder.
+
+	2006-09-22 Nathan Sidwell <nathan@codesourcery.com>
+
+	* m68k/bdm-crt1.c (hardware_init_hook): Use #defines for CACR bits.
+
+	2006-09-18 Nathan Sidwell <nathan@codesourcery.com>
+
+	* m68k/Makefile.in: Don't force a frame pointer on the ISRs.
+	* m68k/bdm-crt1.c (__start1): Don't set the VBR here.
+	(hardeare_init_hook): Define weakly.  Set VBR here, enable caching
+	if supported.
+
+
+	* m68k/Makefile.in (bdm-semihost.o): Build from bdm-semihost.S.
+	* m68k/bdm-semihost.c: Remove.
+	* m68k/bdm-semihost.S: New.
+	* m68k/bdm-crt0.S: Don't install semihosting trap handler.
+	* m68k/bdm-close.c, bdm-exit.c, bdm-fstat.c, bdm-gettimeofday.c,
+	bdm-isatty.c, bdm-lseek.c, bdm-open.c, bdm-read.c, bdm-rename.c,
+	bdm-stat.c, bdm-system.c, bdm-unlink.c, bdm-write.c): Update.
+	* m68k/bdm-isrs.c: Update comment.
+	* m68k/bdm-semihost.h (BDM_TRAPNUM, BDM_FUNC_REG, BDM_ARG_REG,
+	BDM_TRAP): Remove.
+	(__bdm_semihost): Declare.
+
+
+	2006-09-15 Nathan Sidwell <nathan@codesourcery.com>
+
+	* m68k/Makefile.in (BDM_OTHER_OBJS): Remove sbrk.o.
+	(BDM_SYSOBJS): Add bdm-sbrk.o.
+	* m68k/bdm-sbrk.c: New.
+
+
+	2006-09-06 Nathan Sidwell <nathan@codesourcery.com>
+
+	* m68k/Makefile.in (CF_SOURCES): New.
+	(install): Install them.
+
+
+	2006-09-01 Nathan Sidwell <nathan@codesourcery.com>
+
+	* m68k/cf.sc: Add .jcr section to .text.
+
+2006-12-11  Ben Elliston  <bje@au.ibm.com>
+
+        * configure.in: Remove extra whitespace from config_testsuite =
+        VALUE statements to eliminate shell errors.
+	* configure: Regenerate.
+
+2006-12-08  Sa Liu  <saliu@de.ibm.com>
+
+        * spu/exit.c (libgloss_exit): Rename from this ..
+        (_exit): .. to this. Overhaul.
+        (exit): Remove.
+        * spu/crt0.S, spu/crti.S, spu/crtn.S: New files.
+        * spu/crt0.C, spu/init.c: Remove.
+        * spu/configure.in (AC_INIT): Check for crt0.S, not crt0.C.
+        * spu/configure: Regenerate.
+        * spu/Makefile.in (crti.o, crtn.o, crt1.o, crt2.o): New targets.
+        (OBJS): Remove init.o.
+        (CRTOBJS): New.
+        (OUTPUTS): Add $(CRTOBJS).
+
+2006-11-27  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* mips/crt0.S: Fix preprocessor statements from previous patch
+	to be ANSI.
+
+2006-11-24  Thiemo Seufer  <ths@mips.com>
+            Nigel Stephens  <nigel@mips.com>
+
+	* mips/crt0.S (_start): Use all available float registers. Don't touch
+	SR_PE on post-mips2 CPUs, it means soft reset there.
+
+2006-11-22  Luca Barbato  <lu_zero@gentoo.org>
+
+	* spu/syscalls.c: Include spu_intrinsics.h to provide vector keyword.
+
+2006-11-17  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* mn10300/Makefile.in: Add spaces after do in "for" loop.
+
+2006-11-08  Jie Zhang  <jie.zhang@analog.com>
+
+	* bfin/configure.in: New.
+	* bfin/crt0.S: New.
+	* bfin/Makefile.in: New.
+	* bfin/syscalls.c: New.
+	* bfin/aclocal.m4: Generate.
+	* bfin/configure: Ditto.
+	* configure.in: Add support for bfin-*-*.
+	* configure: Regenerate.
+	* syscall.h (SYS_argc): Define.
+	(SYS_argnlen): Define.
+	(SYS_argn): Define.
+
+2006-10-10  Thiemo Seufer  <ths@mips.com>
+
+	* mips/Makefile.in: Add INCLUDES to local compile rules.
+
+2006-10-06  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* Makefile.in: Add CFLAGS_FOR_TARGET and CCASFLAGS to
+	FLAGS_TO_PASS.
+
+2006-10-03  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* arm/linux-syscalls0.c: Rewrite bx insn architecture flag check 
+	to avoid use of __ARM_ARCH__.
+
+2006-10-02  Nick Clifton  <nickc@redhat.com>
+
+	* arm/linux-syscalls0.c: Add arm architecture flag
+	checks around bx insn.
+
+2006-09-07  Masaki Muranaka  <monaka@monami-software.com>
+
+	* xstormy16/Makefile.in (clean): Fix a mismatched parenthesis.
+
+2006-09-01  Kazu Hirata  <kazu@codesourcery.com>
+
+	Merge from newlib-csl-20060320-branch:
+	2006-08-31  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/bdm-crt1.c: Call hardware_init_hook before copying
+	initialized data.
+
+	* m68k/Makefile.in (CF_BDM_SCRIPTS): Rename to CF_RAM_SCRIPTS.
+	(CF_SCRIPTS): Update.
+	(%-bdm.ld): Rename to %-ram.ld.
+
+	2006-08-25  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/Makefile.in (DBUG_BSP, DBUG_OBJS): Remove.
+	(BDM_CRT0): New.
+	(BDM_OBJS): Add bdm-crt1.o.
+	(BDM_OTHER_OBJS): Remove print.o putnum.o
+	(CF_BOARDS): New.
+	(CF_BDM_SCRIPTS): Generated name of ram scripts.
+	(CF_ROM_SCRIPTS): Generated name of rom scripts.
+	(CF_SCRIPTS): Adjust.
+	(all): Add BDM_CRT0.
+	(bdm-crt0.o, bdm-crt1.o): New targets.
+	(bdm-isv.o): Remove.
+	(m5208evb, m5213evb, m52235evb, m5235evb, m5273c3, m5282evb,
+	m5329evb, m5485evb): New.
+	(%-bdm.ld, %-rom.ld): New. Replace individual linker script rules.
+	(install): Remove DBUG installs.
+	* m68k/bdm-crt0.S: New.
+	* m68k/bdm-crt1.c: New.
+	* m68k/bdm-exit.c: Call __reset.
+	* m68k/bdm-isv.c: Remove.
+	* m68k/cf.sc: Adjust to produce either rom or ram images.
+	* m68k/dbug-exit.S, m68k/dbug-inbyte.S, m68k/dbug-outbyte.S: Remove.
+
+	2006-07-24  Nathan Sidwell  <nathan@codesourcery.com>
+
+	Bug 844
+	* m68k/cf.sc: Set entry point to _start.
+	* m68k/crt0.X (_start): New name for entrypoint
+	(start): Weak alias for start.
+
+	2006-06-09  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/bdm-system.c (_system): Support system(NULL).
+
+	2006-06-08  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/bdm-system.c (_system): Properly encode non failure exit
+	code.
+
+	2006-06-05  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/Makefile.in (BDM_SYSOBJS): Remove bdm-inbyte.o.
+	Add bdm-time.o.
+	* m68k/bdm-close.c: Add copyright notice.
+	* m68k/bdm-fstat.c: Add copyright notice.
+	* m68k/bdm-gettimeofday.c: Add copyright notice.
+	* m68k/bdm-inbyte.c: Remove.
+	* m68k/bdm-isatty.c: Add copyright notice.
+	* m68k/bdm-lseek.c: Add copyright notice. Fix &/| thinko.
+	* m68k/bdm-open.c: Add copyright notice.
+	* m68k/bdm-read.c: Add copyright notice.
+	* m68k/bdm-rename.c: Add copyright notice.
+	* m68k/bdm-stat.c: Add copyright notice.
+	* m68k/bdm-system.c: Add copyright notice.
+	* m68k/bdm-time.c: New.
+	* m68k/bdm-unlink.c: Add copyright notice.
+	* m68k/bdm-write.c: Add copyright notice.
+
+	2006-05-25  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/Makefile.in (m52235-dbug.ld, m52235-bdm.ld): New
+	scripts.
+
+	2006-05-24  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/Makefile.in (BDM_SYSOBJS): Remove bdm-outbyte.o.
+	* m68k/bdm-outbyte.c: Delete.
+	* m68k/bdm-semihost.h (BDM_OUTBYTE): Mark as obsolete.
+
+	2006-05-22  Sandra Loosemore <sandra@codesourcery.com>
+
+	* m68k/bdm-semihost.h: Add new constants for additional
+	semihosting functions.  Add new BDM_TRAP macro to encapsulate
+	inline asm.
+	* m68k/bdm-exit.c (_exit): Use new BDM_TRAP macro.
+	* m68k/bdm-outbyte.c (outbyte): Ditto.
+	* m68k/bdm-isrs.c, m68k/bdm-isv.c: Former BDM_TRAP
+	now called BDM_TRAPNUM.
+	* m68k/bdm-gdb.h, m68k/bdm-gdb.c: New files
+	containing declarations and conversion functions for GDB's fileio
+	protocol.
+	* m68k/bdm-close.c: New file to define corresponding function.
+	* m68k/bdm-fstat.c: Ditto.
+	* m68k/bdm-gettimeofday.c: Ditto.
+	* m68k/bdm-isatty.c: Ditto.
+	* m68k/bdm-lseek.c: Ditto.
+	* m68k/bdm-open.c: Ditto.
+	* m68k/bdm-read.c: Ditto.
+	* m68k/bdm-rename.c: Ditto.
+	* m68k/bdm-stat.c: Ditto.
+	* m68k/bdm-system.c: Ditto.
+	* m68k/bdm-unlink.c: Ditto.
+	* m68k/bdm-write.c Ditto.
+	* m68k/Makefile.in: Add dependencies for new files.
+
+	2006-03-29  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/bdm-isv.c (software_init_hook): Fix trap numbering.
+
+	* m68k/Makefile.in (CF_SCRIPTS): Add m5329 board.
+	Reorder.
+	(*-dbug.ld, *-bdm.ld): Add appropriate IO definition.
+	(m5329evb-dbug.ld, m5329evb-bdm.ld): New.
+	* cf.sc (GROUP): Revert previous change.  Add IO library.
+
+	* m68k/Makefile.in (BDM_BSP, BDM_OBJS, BDM_ISRS): New.
+	(CF_SCRIPTS): Rename dbug scripts.  Add bdm scripts. Add m5485
+	scripts.
+	(all): Add new targets.
+	(BDM_BSP): New target.
+	(bdm-isv.o, bdm-exit.o, bdm-outbyte.o, bdm-semihost.o): New
+	targets.
+	(BDM_ISRS): New targets.
+	(m5208evb.ld, m5213evb.ld, m5235evb.ld, m5272c3.ld, m5282evb.ld):
+	Rename and adjust.
+	(m5485evb-dbug): New.
+	(m5208evb-bdm.ld, m5213evb-bdm.ld, m5235evb-bdm.ld,
+	m5272c3-bdm.ld, m5282evb-bdm.ld, m5485evb-bdm.ld): New.
+	(install): Add BDM_BSP.
+	* m68k/bdm-exit.c: New
+	* m68k/bdm-inbyte.c: New
+	* m68k/bdm-outbyte.c: New
+	* m68k/bdm-semihost.c: New
+	* m68k/bdm-semihost.h: New
+	* m68k/bdm-isrs.c: New.
+	* m68k/bdm-isv.c: New.
+	* dbug-cf.sc: Renamed to ...
+	* cf.sc: ... here.  Add bdm flexibility. Remove GROUP
+
+	2006-05-22  Sandra Loosemore <sandra@codesourcery.com>
+
+	* m68k/bdm-semihost.h: Add new constants for additional
+	semihosting functions.  Add new BDM_TRAP macro to encapsulate
+	inline asm.
+	* m68k/bdm-exit.c (_exit): Use new BDM_TRAP macro.
+	* m68k/bdm-outbyte.c (outbyte): Ditto.
+	* m68k/bdm-isrs.c, m68k/bdm-isv.c: Former BDM_TRAP
+	now called BDM_TRAPNUM.
+	* m68k/bdm-gdb.h, m68k/bdm-gdb.c: New files
+	containing declarations and conversion functions for GDB's fileio
+	protocol.
+	* m68k/bdm-close.c: New file to define corresponding function.
+	* m68k/bdm-fstat.c: Ditto.
+	* m68k/bdm-gettimeofday.c: Ditto.
+	* m68k/bdm-isatty.c: Ditto.
+	* m68k/bdm-lseek.c: Ditto.
+	* m68k/bdm-open.c: Ditto.
+	* m68k/bdm-read.c: Ditto.
+	* m68k/bdm-rename.c: Ditto.
+	* m68k/bdm-stat.c: Ditto.
+	* m68k/bdm-system.c: Ditto.
+	* m68k/bdm-unlink.c: Ditto.
+	* m68k/bdm-write.c Ditto.
+	* m68k/Makefile.in: Add dependencies for new files.
+
+2006-08-30  Kazunori Asayama  <asayama@sm.sony.co.jp>
+
+	* spu/syscalls.c: Add a new argument to _send_to_ppe() to 
+	specify signal code.
+	* spu/jsre.h: Update declaration of _send_to_ppe().
+	* spu/close.c: Replace _send_to_ppe_0x2101() by _send_to_ppe().
+	* spu/fstat.c: Ditto.
+	* spu/lseek.c: Ditto.
+	* spu/open.c: Ditto.
+	* spu/read.c: Ditto.
+	* spu/stat.c: Ditto.
+	* spu/unlink.c: Ditto.
+	* spu/write.c: Ditto.
+
+2006-08-30  Kazunori Asayama  <asayama@sm.sony.co.jp>
+
+	* spu/Makefile.in: Add dependency.
+
+2006-08-24  Paul Brook  <paul@codesourcery.com>
+
+	* arm/linux-crt0.c: Disable Arm stub for Thumb-2.
+
+2006-08-23  Kazunori Asayama  <asayama@sm.sony.co.jp>
+
+	* spu/Makefile.in: Add new object files.
+	* spu/syscalls.c: Move each system call to individual file.
+	* spu/jsre.h: Add declaration of _send_to_ppe_0x2101().
+	* spu/close.c: New file. Moved from spu/syscalls.c.
+	* spu/fstat.c: Likewise.
+	* spu/getpid.c: Likewise.
+	* spu/isatty.c: Likewise.
+	* spu/kill.c: Likewise.
+	* spu/lseek.c: Likewise.
+	* spu/open.c: Likewise.
+	* spu/read.c: Likewise.
+	* spu/stat.c: Likewise.
+	* spu/unlink.c: Likewise.
+	* spu/write.c: Likewise.
+
+2006-08-21  David Ung  <davidu@mips.com>
+
+	* mips/Makefile.in: Add rule for cygmon.o and pass the -mno-mips16
+	option since it uses the syscall instruction.
+
+2006-08-16  Joel Schopp  <jschopp@austin.ibm.com>
+
+	* spu/Makefile.in: Add special compiler
+	options to reduce size.
+
+2006-08-16  Joel Schopp  <jschopp@austin.ibm.com>
+
+	* spu/jsre.h(JSRE_STAT): New define.
+	(syscall_stat_t): New type.
+	* spu/syscalls.c(stat): New syscall.
+
+2006-08-16  Joel Schopp  <jschopp@austin.ibm.com>
+
+	* configure.in: Add spu support.
+	* configure: Regenerated.
+	* spu/Makefile.in: New file.
+	* spu/aclocal.m4: Ditto.
+	* spu/configure: Ditto.
+	* spu/configure.in: Ditto.
+	* spu/crt0.c: Ditto.
+	* spu/exit.c: Ditto.
+	* spu/init.c: Ditto.
+	* spu/jsre.h: Ditto.
+	* spu/sbrk.c: Ditto.
+	* spu/syscalls.c: Ditto.
+
+2006-07-05  Shaun Jackman  <sjackman@gmail.com>
+
+	* arm/linux-crt0.S: Remove file.
+	* arm/linux-crt0.c: New file. Supports PIC code.
+
+2006-07-04  Shaun Jackman  <sjackman@gmail.com>
+
+	* arm/linux-syscalls0.S (ftruncate, getegid, geteuid, getgid,
+	getgroups, getpgid, getpgrp, getuid, lchown, pause, pipe,
+	setpgid, setgid, setsid, setuid, sigprocmask, sync, uname): New
+	system call.
+
+2006-06-30  DJ Delorie  <dj@redhat.com>
+
+	* m32c/crt0.S (done_inilist): Fix dwarf2 address sizes.
+
+2006-06-23  Shaun Jackman  <sjackman@gmail.com>
+
+	* arm/elf-linux.specs: New file.
+
+2006-06-13  Sandra Loosemore <sandra@codesourcery.com>
+
+        * arm/syscalls.c (_unlink, isatty, _system, _rename):
+        Make them do something useful in the ARM_RDI_MONITOR case.
+
+2006-06-08  Fred Fish  <fnf@specifix.com>
+
+	* mips/idt.ld, mips/idt32.ld, mips/idt64.ld, mips/nullmon.ld,
+	mips/pmon.ld:  Keep special sections generated by mips gcc.
+
+2006-06-05  Shaun Jackman  <sjackman@gmail.com>
+
+	* arm/linux-syscalls0.S (reboot): Remove.
+	* arm/linux-syscalls1.c (reboot): New function.
+
+2006-06-05  Shaun Jackman  <sjackman@gmail.com>
+
+	* arm/syscalls.c (kill) [ARM_RDI_MONITOR]: Use the signal
+	argument to choose an ADP exception reason.
+	* arm/libcfunc.c (abort): Remove this function.
+
+2006-05-30  Shaun Jackman  <sjackman@gmail.com>
+
+	* arm/Makefile.in: Add Linux syscall interface.
+	* arm/linux-crt0.S: New file.
+	* arm/linux-syscall.h: New file.
+	* arm/linux-syscalls0.S: New file.
+	* arm/linux-syscalls1.c: New file.
+
+2006-05-23  Fred Fish  <fnf@specifix.com>
+
+	* mips/configure.in: Change mipsisa64-*-* to
+	mipsisa64*-*-* to catch minor variations like
+	mipsisa64sb1.
+	* mips/configure: Regenerated.
+
+2006-05-10  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* Makefile.in: Pass some additional flags in FLAGS_TO_PASS.
+	* configure.in: Add additional flags when creating Makefile.
+	* configure: Regenerated.
+	* arm/configure
+	* arm/configure.in: Set with_multisubdir when creating Makefile.
+	* cris/configure.in: Ditto.
+	* d30v/configure.in: Ditto.
+	* frv/configure.in: Ditto.
+	* i386/configure.in: Ditto.
+	* iq2000/configure.in: Ditto.
+	* libnosys/configure.in: Ditto.
+	* m32c/configure.in: Ditto.
+	* m32r/configure.in: Ditto.
+	* m68hc11/configure.in: Ditto.
+	* m68k/configure.in: Ditto.
+	* mcore/configure.in: Ditto.
+	* mips/configure.in: Ditto.
+	* mn10200/configure.in: Ditto.
+	* mn10300/configure.in: Ditto.
+	* mt/configure.in: Ditto.
+	* pa/configure.in: Ditto.
+	* rs6000/configure.in: Ditto.
+	* sparc/configure.in: Ditto.
+	* cris/configure: Regenerated.
+	* d30v/configure: Ditto.
+	* frv/configure: Ditto.
+	* i386/configure: Ditto.
+	* iq2000/configure: Ditto.
+	* libnosys/configure: Ditto.
+	* m32c/configure: Ditto.
+	* m32r/configure: Ditto.
+	* m68hc11/configure: Ditto.
+	* m68k/configure: Ditto.
+	* mcore/configure: Ditto.
+	* mips/configure: Ditto.
+	* mn10200/configure: Ditto.
+	* mn10300/configure: Ditto.
+	* mt/configure: Ditto.
+	* pa/configure: Ditto.
+	* rs6000/configure: Ditto.
+	* sparc/configure: Ditto.
+
+2006-04-19  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* configure.in: Modified to support autoconf 2.59.
+	* */configure.in: Ditto.
+	* configure: Regenerated.
+	* */configure: Ditto.
+	* wince/aclocal.m4: Ditto.
+	* acinclude.m4: New file.
+	* aclocal.m4: Ditto.
+	* arm/aclocal.m4: Ditto.
+	* cris/aclocal.m4: Ditto.
+	* crx/aclocal.m4: Ditto.
+	* d30v/aclocal.m4: Ditto.
+	* fr30/aclocal.m4: Ditto.
+	* frv/aclocal.m4: Ditto.
+	* hp74x/aclocal.m4: Ditto.
+	* i386/aclocal.m4: Ditto.
+	* i960/aclocal.m4: Ditto.
+	* iq2000/aclocal.m4: Ditto.
+	* libnosys/aclocal.m4: Ditto.
+	* m32c/aclocal.m4: Ditto.
+	* m32r/aclocal.m4: Ditto.
+	* m68hc11/aclocal.m4: Ditto.
+	* m68k/aclocal.m4: Ditto.
+	* mcore/aclocal.m4: Ditto.
+	* mips/aclocal.m4: Ditto.
+	* mn10200/aclocal.m4: Ditto.
+	* mn10300/aclocal.m4: Ditto.
+	* mt/aclocal.m4: Ditto.
+	* pa/aclocal.m4: Ditto.
+	* rs6000/aclocal.m4: Ditto.
+	* sparc/aclocal.m4: Ditto.
+	* sparc/libsys/aclocal.m4: Ditto.
+	* xstormy16/aclocal.m4: Ditto.
+
+2006-04-18  Mark Mitchell  <mark@codesourcery.com>
+
+	* doc/porting.texi: Document libgloss build conventions.
+
+2006-03-22  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* mt/startup-16-002.S (.internal_io): Make @nobits.
+	* mt/startup-16-003.S (.internal_io): Make @nobits.
+	* mt/startup-ms2.S (.internal_io): Make @nobits.
+
+2006-03-02  DJ Delorie  <dj@redhat.com>
+
+	* m32c/exit.S: Preserve r1.
+
+2006-02-24  Paul Brook  <paul@codesourcery.com>
+
+	* arm/redboot-crt0.S: Use cps in Thumb-2 mode.
+
+2006-02-22  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/Makefile.in (CF_SCRIPTS): New.
+	(all): Add CF_SCRIPTS.
+	(m5208evb.ld, m5213evb.ld, m5235evb.ld, m5272c3.ld,
+	m5282evb.ld): New targets
+	(install): Iterate over CF_SCRIPTS.
+	* m68k/crt0.S: Don't use dbra on any cf chips.
+	* m68k/dbug-cf.sc: New.
+
+2006-02-07  Paul Brook  <paul@codesourcery.com>
+
+	* arm/crt0.S: Add Thumb-2 startup code.
+	* arm/redboot-crt0.S: Ditto.
+	* arm/libcfunc.c (do_AngelSWI): Use AngelSWIInsn.
+	* arm/swi.h (AngelSWIInsn, AngelSWIAsm): Define.
+	* arm/trap.S: Disable for Thumb-2.
+
+2006-01-18  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* mt/ms2.ld (.sram): Correct typo in section names.
+
+2006-01-16  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* mt/Makefile.in (SCRIPTS, CRT0): Add ms2 files.
+	(crt0-ms2.o): New target.
+	* mt/crt0-ms2.S, mt/exit-ms2.c, mt/ms2.ld, mt/startup-ms2.S: New.
+
+2006-01-04  Paul Brook  <paul@codesourcery.com>
+
+	* m68k/bcc.ld: Add .got.plt and .got
+	* m68k/idp.ld: Ditto.
+	* m68k/idpgdb: Ditto.
+	* m68k/mvme135.ld: Ditto.
+	* m68k/sbc5204.ld: Ditto.
+	* m68k/sbc5206.ld: Ditto.
+	* m68k/sim.ld: Ditto.
+
 2005-12-13  DJ Delorie  <dj@redhat.com>
 
 	* m32c/crt0.S: Add support for preinit, init, and fini arrays, and

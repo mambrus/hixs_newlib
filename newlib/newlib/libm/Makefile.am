@@ -8,7 +8,11 @@ else
 MATHDIR = math
 endif
 
+if HAVE_LIBM_MACHINE_DIR
 SUBDIRS = $(MATHDIR) common machine
+else
+SUBDIRS = $(MATHDIR) common
+endif
 
 libm_la_LDFLAGS = -Xcompiler -nostdlib
 
@@ -37,7 +41,7 @@ $(SUBLIBS):
 
 info_TEXINFOS = libm.texinfo
 
-libm.info: targetdep.tex math/stmp-def
+libm_TEXINFOS = targetdep.tex
 
 libm.dvi: targetdep.tex math/stmp-def
 

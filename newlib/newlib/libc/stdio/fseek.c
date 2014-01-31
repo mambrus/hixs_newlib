@@ -131,7 +131,7 @@ _DEFUN(_fseek_r, (ptr, fp, offset, whence),
 
   /* Make sure stdio is set up.  */
 
-  CHECK_INIT (ptr);
+  CHECK_INIT (ptr, fp);
 
   _flockfile (fp);
 
@@ -333,7 +333,7 @@ _DEFUN(_fseek_r, (ptr, fp, offset, whence),
   n = target - curoff;
   if (n)
     {
-      if (__srefill (fp) || fp->_r < n)
+      if (__srefill_r (ptr, fp) || fp->_r < n)
 	goto dumb;
       fp->_p += n;
       fp->_r -= n;
@@ -359,6 +359,13 @@ dumb:
   fp->_r = 0;
   /* fp->_w = 0; *//* unnecessary (I think...) */
   fp->_flags &= ~__SEOF;
+  /* Reset no-optimization flag after successful seek.  The
+     no-optimization flag may be set in the case of a read
+     stream that is flushed which by POSIX/SUSv3 standards,
+     means that a corresponding seek must not optimize.  The
+     optimization is then allowed if no subsequent flush
+     is performed.  */
+  fp->_flags &= ~__SNPT;
   _funlockfile (fp);
   return 0;
 }

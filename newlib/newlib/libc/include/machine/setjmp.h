@@ -21,6 +21,10 @@ _BEGIN_STD_C
 #define	_JBLEN	13
 #endif
 
+#ifdef __BFIN__
+#define _JBLEN  40
+#endif
+
 /* necv70 was 9 as well. */
 
 #ifdef __mc68000__
@@ -204,6 +208,11 @@ _BEGIN_STD_C
 #define _JBLEN 16
 #endif
 
+#ifdef __SPU__
+#define _JBLEN 50 
+#define _JBTYPE __vector signed int
+#endif
+
 #ifdef __xstormy16__
 /* 4 GPRs plus SP plus PC. */
 #define _JBLEN 8
@@ -252,6 +261,7 @@ typedef int sigjmp_buf[_JBLEN+2];
 #if defined(__GNUC__)
 
 #define sigsetjmp(env, savemask) \
+            __extension__ \
             ({ \
               sigjmp_buf *_sjbuf = &(env); \
               ((*_sjbuf)[_SAVEMASK] = savemask,\
@@ -260,6 +270,7 @@ typedef int sigjmp_buf[_JBLEN+2];
             })
 
 #define siglongjmp(env, val) \
+            __extension__ \
             ({ \
               sigjmp_buf *_sjbuf = &(env); \
               ((((*_sjbuf)[_SAVEMASK]) ? \

@@ -40,6 +40,7 @@
 #   use_libtool         flag: use libtool to build newlib?
 #   aext                library extension - needed for libtool support
 #   oext                object file extension - needed for libtool support
+#   lpfx		library object prefix - generated when no libtool
 #   crt1                name of crt1 object if one is provided
 #   crt1_dir            directory where crt1 object is found
 #   have_crt0		"yes"/"no" if crt0 is/isn't provided.
@@ -63,8 +64,10 @@ have_sys_mach_dir=no
 default_newlib_io_long_long=no
 default_newlib_io_long_double=no
 default_newlib_io_pos_args=no
+default_newlib_atexit_dynamic_alloc=yes
 aext=a
 oext=o
+lpfx="lib_a-"
 
 case "${target_optspace}:${host}" in
   yes:*)
@@ -96,6 +99,9 @@ case "${host_cpu}" in
   avr*)
 	newlib_cflags="${newlib_cflags} -DPREFER_SIZE_OVER_SPEED -mcall-prologues"
 	;;
+  bfin)
+	machine_dir=bfin
+	;;
   cris | crisv32)
 	machine_dir=cris
 	;;
@@ -110,6 +116,10 @@ case "${host_cpu}" in
 	;;
   ep9312)
 	machine_dir=arm
+	;;
+  fido)
+	machine_dir=m68k
+	newlib_cflags="${newlib_cflags} -DCOMPACT_CTYPE"
 	;;
   fr30)
 	machine_dir=fr30
@@ -190,8 +200,8 @@ case "${host_cpu}" in
 	machine_dir=mn10300
 	;;
   mt*)
-        machine_dir=mt
-        ;;
+	machine_dir=mt
+	;;
   or16)
 	;;
   or32)
@@ -245,6 +255,10 @@ case "${host_cpu}" in
   z8k)
 	machine_dir=z8k
 	;;
+  spu)
+	machine_dir=spu
+	newlib_cflags="${newlib_cflags} -ffunction-sections -fdata-sections "
+	;;
   *)
 	echo '***' "Newlib does not support CPU ${host_cpu}" 1>&2
 	exit 1
@@ -290,6 +304,7 @@ case "${host}" in
     have_sys_mach_dir=yes
     stdio64_dir=stdio64
     oext=lo
+    lpfx=
     aext=la ;;
   *) ;; #shared library not supported for ${host}
 esac
@@ -326,6 +341,9 @@ case "${host}" in
 	  have_crt0="no"
 	fi
 	;;
+  bfin-*-*)
+	sys_dir=
+	;;
   crx*)
 	sys_dir=
 	;;
@@ -361,6 +379,10 @@ case "${host}" in
 	;;
   h8500-*-elf*)
 	sys_dir=h8500hms
+	;;
+  i[34567]86-*-rdos*)
+	sys_dir=rdos
+	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
 	;;
   i[34567]86-*-sco*)
 	sys_dir=sysvi386
@@ -416,6 +438,9 @@ case "${host}" in
   sparc64*)
 	sys_dir=sparc64
 	unix_dir=unix
+	;;
+  spu-*-*)
+	default_newlib_io_long_long="yes"
 	;;
   strongarm-*-*)
 	sys_dir=arm
@@ -485,7 +510,7 @@ case "${host}" in
 #  NOTE: When newlib malloc uses a semaphore, RTEMS will switch to that.
   *-*-rtems*)
 	default_newlib_io_long_long="yes"
-	newlib_cflags="${newlib_cflags} -DHAVE_GETTIMEOFDAY -DMALLOC_PROVIDED -DEXIT_PROVIDED -DMISSING_SYSCALL_NAMES -DSIGNAL_PROVIDED -DREENTRANT_SYSCALLS_PROVIDED -DHAVE_OPENDIR -DNO_EXEC -DHAVE_FCNTL"
+	newlib_cflags="${newlib_cflags} -DMALLOC_PROVIDED -DEXIT_PROVIDED -DMISSING_SYSCALL_NAMES -DSIGNAL_PROVIDED -DREENTRANT_SYSCALLS_PROVIDED -DHAVE_OPENDIR -DNO_EXEC -DHAVE_FCNTL"
 	;;
 # VxWorks supplies its own version of malloc, and the newlib one
 # doesn't work because VxWorks does not have sbrk.
@@ -502,11 +527,9 @@ case "${host}" in
 	;;
   arm-*-pe)
 	syscall_dir=syscalls
-	newlib_cflags="${newlib_cflags} -DABORT_PROVIDED -DHAVE_GETTIMEOFDAY"
 	;;
   arm-*-*)
 	syscall_dir=syscalls
-	newlib_cflags="${newlib_cflags} -DABORT_PROVIDED -DHAVE_GETTIMEOFDAY"
 # If newlib is supplying syscalls, select which debug protocol is being used.
 # ARM_RDP_MONITOR selects the Demon monitor.
 # ARM_RDI_MONITOR selects the Angel monitor.
@@ -526,9 +549,12 @@ case "${host}" in
   avr*)
 	newlib_cflags="${newlib_cflags} -DNO_EXEC -DSMALL_MEMORY -DMISSING_SYSCALL_NAMES"
 	;;
+  bfin*)
+	syscall_dir=syscalls
+	;;
   cris-*-* | crisv32-*-*)
 	default_newlib_io_long_long="yes"
-	newlib_cflags="${newlib_cflags} -DHAVE_RENAME -DHAVE_GETTIMEOFDAY -D_USE_WRITE -DCOMPACT_CTYPE"
+	newlib_cflags="${newlib_cflags} -DHAVE_RENAME -D_USE_WRITE -DCOMPACT_CTYPE"
 	syscall_dir=syscalls
 	;;
   crx-*-*)
@@ -545,10 +571,13 @@ case "${host}" in
 	;;
   ep9312-*-*)
 	syscall_dir=syscalls
-	newlib_cflags="${newlib_cflags} -DABORT_PROVIDED -DHAVE_GETTIMEOFDAY"
 	if [ "x${newlib_may_supply_syscalls}" = "xyes" ] ; then
 	  newlib_cflags="${newlib_cflags} -DARM_RDI_MONITOR"
 	fi
+	;;
+  fido-*-elf)
+	newlib_cflags="${newlib_cflags} -DHAVE_RENAME -DHAVE_SYSTEM -DMISSING_SYSCALL_NAMES"
+	syscall_dir=
 	;;
   fr30-*-*)
 	syscall_dir=syscalls
@@ -589,6 +618,10 @@ case "${host}" in
 	;;
   m68hc11-*-*|m6811-*-*|m68hc12-*-*|m6812-*-*)
 	newlib_cflags="${newlib_cflags} -DNO_EXEC -DABORT_PROVIDED -DSMALL_MEMORY -DMISSING_SYSCALL_NAMES"
+	;;
+  m68k-unknown-elf)
+	newlib_cflags="${newlib_cflags} -DHAVE_RENAME -DHAVE_SYSTEM -DMISSING_SYSCALL_NAMES"
+	syscall_dir=
 	;;
   mcore-*-*)
 	syscall_dir=syscalls
@@ -633,14 +666,13 @@ case "${host}" in
 	;;
   sh*-*-*)
 	default_newlib_io_long_long="yes"
-	newlib_cflags="${newlib_cflags} -DHAVE_GETTIMEOFDAY"
 	syscall_dir=syscalls
 	;;
   sparc-sun-sunos*)
 	newlib_cflags="${newlib_cflags} -DSIGNAL_PROVIDED"
 	;;
   sparc64-*-*)
-	newlib_cflags="${newlib_cflags} -DREENTRANT_SYSCALLS_PROVIDED -DHAVE_BLKSIZE -DHAVE_GETTIMEOFDAY -DHAVE_FCNTL"
+	newlib_cflags="${newlib_cflags} -DREENTRANT_SYSCALLS_PROVIDED -DHAVE_BLKSIZE -DHAVE_FCNTL"
 	# This either belongs elsewhere or nowhere. But I need *something*,
 	# so for now it's here ...
 	case "${host_os}" in
@@ -652,16 +684,13 @@ case "${host}" in
 	;;
   strongarm-*-*)
 	syscall_dir=syscalls
-	newlib_cflags="${newlib_cflags} -DABORT_PROVIDED -DHAVE_GETTIMEOFDAY"
 	;;
   thumb-*-pe)
 	syscall_dir=syscalls
-	newlib_cflags="${newlib_cflags} -DABORT_PROVIDED -DHAVE_GETTIMEOFDAY"
 # Don't use the debugging protocols just yet.
 	;;
   thumb-*-*)
 	syscall_dir=syscalls
-	newlib_cflags="${newlib_cflags} -DABORT_PROVIDED -DHAVE_GETTIMEOFDAY"
 # If newlib is supplying syscalls, select which debug protocol is being used.
 # ARM_RDP_MONITOR selects the Demon monitor.
 # ARM_RDI_MONITOR selects the Angel monitor.
@@ -692,14 +721,12 @@ case "${host}" in
 	;;	
   xscale-*-*)
 	syscall_dir=syscalls
-	newlib_cflags="${newlib_cflags} -DABORT_PROVIDED -DHAVE_GETTIMEOFDAY"
 	newlib_cflags="${newlib_cflags} -DHAVE_SYSTEM -DHAVE_RENAME"
 	if [ "x${newlib_may_supply_syscalls}" = "xyes" ] ; then
 	  newlib_cflags="${newlib_cflags} -DARM_RDI_MONITOR"
 	fi
 	;;
   xstormy16-*-*)
-	newlib_cflags="${newlib_cflags} -DHAVE_GETTIMEOFDAY"
 	syscall_dir=syscalls
 	;;
   z8k-*-*)
@@ -731,6 +758,13 @@ fi
 if [ "x${newlib_io_pos_args}" = "x" ]; then
 	if [ ${default_newlib_io_pos_args} = "yes" ]; then
 		newlib_io_pos_args="yes";
+	fi
+fi
+
+# Disable atexit dynamic allocation if requested.
+if [ "x${newlib_atexit_dynamic_alloc}" = "x" ]; then
+	if [ ${default_newlib_atexit_dynamic_alloc} = "yes" ]; then
+		newlib_atexit_dynamic_alloc="yes"; 
 	fi
 fi
 

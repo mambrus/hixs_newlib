@@ -1,8 +1,9 @@
 dnl This is the newlib/libc/sys/linux configure.in file.
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.5)
-AC_INIT(linux.c)
+AC_PREREQ(2.59)
+AC_INIT([newlib],[NEWLIB_VERSION])
+AC_CONFIG_SRCDIR([linux.c])
 
 dnl Can't be done in NEWLIB_CONFIGURE because that confuses automake. 
 AC_CONFIG_AUX_DIR(../../../..)
@@ -32,8 +33,10 @@ AC_SUBST(LINUX_MACH_LIB)
 EXTRA_SUBDIRS=
 EXTRA_SUBLIBS=
 
+AC_CONFIG_SUBDIRS(machine)
+
 if test "${newlib_multithread}" = "yes"; then
-EXTRA_CONFIG_DIRS=linuxthreads
+AC_CONFIG_SUBDIRS(linuxthreads)
 fi
 if test "x${newlib_elix_level}" = "x1"; then
 EXTRA_SUBDIRS=linuxthreads net
@@ -45,6 +48,5 @@ fi
 AC_SUBST(EXTRA_SUBDIRS)
 AC_SUBST(EXTRA_SUBLIBS)
 
-AC_CONFIG_SUBDIRS(machine $EXTRA_CONFIG_DIRS)
-
-AC_OUTPUT(Makefile intl/Makefile net/Makefile stdlib/Makefile iconv/Makefile dl/Makefile cmath/Makefile argp/Makefile)
+AC_CONFIG_FILES([Makefile intl/Makefile net/Makefile stdlib/Makefile iconv/Makefile dl/Makefile cmath/Makefile argp/Makefile])
+AC_OUTPUT

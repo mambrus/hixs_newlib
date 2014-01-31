@@ -34,7 +34,7 @@ _DEFUN(__swsetup, (fp),
 {
   /* Make sure stdio is set up.  */
 
-  CHECK_INIT (_REENT);
+  CHECK_INIT (_REENT, fp);
 
   /*
    * If we are not writing, we had better be reading and writing.
@@ -58,9 +58,11 @@ _DEFUN(__swsetup, (fp),
 
   /*
    * Make a buffer if necessary, then set _w.
+   * A string I/O file should not explicitly allocate a buffer
+   * unless asprintf is being used.
    */
-  /* NOT NEEDED FOR CYGNUS SPRINTF ONLY jpg */
-  if (fp->_bf._base == NULL)
+  if (fp->_bf._base == NULL 
+        && (!(fp->_flags & __SSTR) || (fp->_flags & __SMBF)))
     __smakebuf (fp);
 
   if (fp->_flags & __SLBF)
