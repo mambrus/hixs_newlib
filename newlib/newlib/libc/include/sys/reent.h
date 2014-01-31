@@ -36,6 +36,18 @@ typedef __uint32_t __ULong;
 
 struct _reent;
 
+#ifndef __FDSCR_T
+typedef short _fd_t;
+#else
+typedef __FDSCR_T _fd_t ;
+#endif
+
+#ifndef __FDFLG_T
+typedef short _fl_t;
+#else
+typedef __FDFLG_T _fl_t;
+#endif
+
 /*
  * If _REENT_SMALL is defined, we make struct _reent as small as possible,
  * by having nearly everything possible allocated at first use.
@@ -142,8 +154,8 @@ struct __sFILE_fake {
   unsigned char *_p;	/* current position in (some) buffer */
   int	_r;		/* read space left for getc() */
   int	_w;		/* write space left for putc() */
-  short	_flags;		/* flags, below; this FILE is free if 0 */
-  short	_file;		/* fileno, if Unix descriptor, else -1 */
+  _fl_t	_flags;		/* flags, below; this FILE is free if 0 */
+  _fd_t	_file;		/* fileno, if Unix descriptor, else -1 */
   struct __sbuf _bf;	/* the buffer (at least 1 byte, if !NULL) */
   int	_lbfsize;	/* 0 or -_bf._size, for inline putc */
 
@@ -170,8 +182,8 @@ struct __sFILE {
   unsigned char *_p;	/* current position in (some) buffer */
   int	_r;		/* read space left for getc() */
   int	_w;		/* write space left for putc() */
-  short	_flags;		/* flags, below; this FILE is free if 0 */
-  short	_file;		/* fileno, if Unix descriptor, else -1 */
+  _fl_t	_flags;		/* flags, below; this FILE is free if 0 */
+  _fd_t	_file;		/* fileno, if Unix descriptor, else -1 */
   struct __sbuf _bf;	/* the buffer (at least 1 byte, if !NULL) */
   int	_lbfsize;	/* 0 or -_bf._size, for inline putc */
 
@@ -227,8 +239,8 @@ struct __sFILE64 {
   unsigned char *_p;	/* current position in (some) buffer */
   int	_r;		/* read space left for getc() */
   int	_w;		/* write space left for putc() */
-  short	_flags;		/* flags, below; this FILE is free if 0 */
-  short	_file;		/* fileno, if Unix descriptor, else -1 */
+  _fl_t	_flags;		/* flags, below; this FILE is free if 0 */
+  _fd_t	_file;		/* fileno, if Unix descriptor, else -1 */
   struct __sbuf _bf;	/* the buffer (at least 1 byte, if !NULL) */
   int	_lbfsize;	/* 0 or -_bf._size, for inline putc */
 

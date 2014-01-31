@@ -520,6 +520,10 @@ case "${target}" in
   *-*-netware*)
     noconfigdirs="$noconfigdirs target-newlib target-libiberty target-libgloss ${libgcj} target-libmudflap"
     ;;
+  *-hixs-*)
+    echo "=== Apa 11 ==========================================="
+    noconfigdirs="$noconfigdirs target-libgloss ${libgcj}"
+    ;;
   *-*-rtems*)
     noconfigdirs="$noconfigdirs target-libgloss ${libgcj}"
     ;;
