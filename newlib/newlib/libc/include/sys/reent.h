@@ -34,6 +34,8 @@ typedef unsigned __Long __ULong;
 typedef __uint32_t __ULong;
 #endif
 
+struct _reent;
+
 /*
  * If _REENT_SMALL is defined, we make struct _reent as small as possible,
  * by having nearly everything possible allocated at first use.
@@ -106,18 +108,6 @@ struct __sbuf {
 };
 
 /*
- * We need fpos_t for the following, but it doesn't have a leading "_",
- * so we use _fpos_t instead.
- */
-
-typedef long _fpos_t;		/* XXX must match off_t in <sys/types.h> */
-				/* (and must be `long' for now) */
-
-#ifdef __LARGE64_FILES
-typedef _off64_t _fpos64_t;
-#endif
-
-/*
  * Stdio state variables.
  *
  * The following always hold:
@@ -181,11 +171,12 @@ struct __sFILE {
   /* operations */
   _PTR	_cookie;	/* cookie passed to io functions */
 
-  _READ_WRITE_RETURN_TYPE _EXFUN((*_read),(_PTR _cookie, char *_buf, int _n));
-  _READ_WRITE_RETURN_TYPE _EXFUN((*_write),(_PTR _cookie, const char *_buf,
-					    int _n));
-  _fpos_t _EXFUN((*_seek),(_PTR _cookie, _fpos_t _offset, int _whence));
-  int	_EXFUN((*_close),(_PTR _cookie));
+  _READ_WRITE_RETURN_TYPE _EXFUN((*_read),(struct _reent *, _PTR,
+					   char *, int));
+  _READ_WRITE_RETURN_TYPE _EXFUN((*_write),(struct _reent *, _PTR,
+					    const char *, int));
+  _fpos_t _EXFUN((*_seek),(struct _reent *, _PTR, _fpos_t, int));
+  int _EXFUN((*_close),(struct _reent *, _PTR));
 
   /* separate buffer for long sequences of ungetc() */
   struct __sbuf _ub;	/* ungetc buffer */
@@ -212,6 +203,12 @@ struct __sFILE {
 #endif
 };
 
+#ifdef __CUSTOM_FILE_IO__
+
+/* Get custom _FILE definition.  */
+#include <sys/custom_file.h>
+
+#else /* !__CUSTOM_FILE_IO__ */
 #ifdef __LARGE64_FILES
 struct __sFILE64 {
   unsigned char *_p;	/* current position in (some) buffer */
@@ -227,11 +224,12 @@ struct __sFILE64 {
   /* operations */
   _PTR	_cookie;	/* cookie passed to io functions */
 
-  _READ_WRITE_RETURN_TYPE _EXFUN((*_read),(_PTR _cookie, char *_buf, int _n));
-  _READ_WRITE_RETURN_TYPE _EXFUN((*_write),(_PTR _cookie, const char *_buf,
-					    int _n));
-  _fpos_t _EXFUN((*_seek),(_PTR _cookie, _fpos_t _offset, int _whence));
-  int	_EXFUN((*_close),(_PTR _cookie));
+  _READ_WRITE_RETURN_TYPE _EXFUN((*_read),(struct _reent *, _PTR,
+					   char *, int));
+  _READ_WRITE_RETURN_TYPE _EXFUN((*_write),(struct _reent *, _PTR,
+					    const char *, int));
+  _fpos_t _EXFUN((*_seek),(struct _reent *, _PTR, _fpos_t, int));
+  int _EXFUN((*_close),(struct _reent *, _PTR));
 
   /* separate buffer for long sequences of ungetc() */
   struct __sbuf _ub;	/* ungetc buffer */
@@ -250,7 +248,7 @@ struct __sFILE64 {
   int   _flags2;        /* for future use */
 
   _off64_t _offset;     /* current lseek offset */
-  _fpos64_t _EXFUN((*_seek64),(_PTR _cookie, _fpos64_t _offset, int _whence));
+  _fpos64_t _EXFUN((*_seek64),(struct _reent *, _PTR, _fpos64_t, int));
 
 #ifndef __SINGLE_THREAD__
   _flock_t _lock;	/* for thread-safety locking */
@@ -260,6 +258,7 @@ typedef struct __sFILE64 __FILE;
 #else
 typedef struct __sFILE   __FILE;
 #endif /* __LARGE64_FILES */
+#endif /* !__CUSTOM_FILE_IO__ */
 
 struct _glue 
 {
@@ -457,6 +456,10 @@ extern const struct __sFILE_fake __sf_fake_stderr;
 #define __reent_assert(x) assert(x)
 #else
 #define __reent_assert(x) ((void)0)
+#endif
+
+#ifdef __CUSTOM_FILE_IO__
+#error Custom FILE I/O and _REENT_SMALL not currently supported.
 #endif
 
 /* Generic _REENT check macro.  */

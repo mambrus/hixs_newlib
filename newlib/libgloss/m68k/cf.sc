@@ -29,7 +29,8 @@ SECTIONS
   .text :
   {
     CREATE_OBJECT_SYMBOLS
-    KEEP (*cf-isv.o(.text))
+    *(.interrupt_vector)
+    
     cf-${IO}-crt0.o(.text)
     *(.text .text.*)
     *(.gnu.linkonce.t.*)
@@ -60,14 +61,14 @@ SECTIONS
     *(.eh_frame)
 
     . = ALIGN(0x4);
-    __INIT_SECTION__ = . ;
+    _init = . ;
     LONG (0x4e560000)	/* linkw %fp,#0 */
     *(.init)
     SHORT (0x4e5e)	/* unlk %fp */
     SHORT (0x4e75)	/* rts */
 
     . = ALIGN(0x4);
-    __FINI_SECTION__ = . ;
+    _fini = . ;
     LONG (0x4e560000)	/* linkw %fp,#0 */
     *(.fini)
     SHORT (0x4e5e)	/* unlk %fp */

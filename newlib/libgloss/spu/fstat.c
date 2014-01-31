@@ -31,37 +31,26 @@ Author: Andreas Neukoetter (ti95neuk@de.ibm.com)
 */
 
 #include <sys/stat.h>
-#include <errno.h>
 #include "jsre.h"
+
+typedef struct
+{
+        unsigned int    file;
+        unsigned int    pad0[3];
+        unsigned int    ptr;
+        unsigned int    pad1[3];
+} syscall_fstat_t;
 
 int
 fstat (int file, struct stat *pstat)
 {
         syscall_fstat_t sys;
-        syscall_out_t   *psys_out = ( syscall_out_t* )&sys;
-        jsre_stat_t pjstat;
+        struct jsre_stat pjstat;
+        int ret;
 
         sys.file = file;
         sys.ptr = ( unsigned int )&pjstat;
-
-        _send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_FSTAT, &sys);
-
-        pstat->st_dev = pjstat.dev;
-        pstat->st_ino = pjstat.ino;
-        pstat->st_mode = pjstat.mode;
-        pstat->st_nlink = pjstat.nlink;
-        pstat->st_uid = pjstat.uid;
-        pstat->st_gid = pjstat.gid;
-        pstat->st_rdev = pjstat.rdev;
-        pstat->st_size = pjstat.size;
-        pstat->st_blksize = pjstat.blksize;
-        pstat->st_blocks = pjstat.blocks;
-        pstat->st_atime = pjstat.atime;
-        pstat->st_mtime = pjstat.mtime;
-        pstat->st_ctime = pjstat.ctime;
-
-
-        errno = psys_out->err;
-        return( psys_out->rc );
+        ret = __send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_FSTAT, &sys);
+        __conv_stat (pstat, &pjstat);
+        return ret;
 }
-

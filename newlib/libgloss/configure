@@ -293,6 +293,7 @@ ac_subdirs_all="$ac_subdirs_all d30v"
 ac_subdirs_all="$ac_subdirs_all fr30"
 ac_subdirs_all="$ac_subdirs_all frv"
 ac_subdirs_all="$ac_subdirs_all mcore"
+ac_subdirs_all="$ac_subdirs_all mep"
 ac_subdirs_all="$ac_subdirs_all mt"
 ac_subdirs_all="$ac_subdirs_all xstormy16"
 ac_subdirs_all="$ac_subdirs_all m32c"
@@ -1956,6 +1957,13 @@ subdirs="$subdirs frv"
 subdirs="$subdirs mcore"
 
 	config_testsuite=true
+	;;
+  mep-*-*)
+
+
+subdirs="$subdirs mep"
+
+	config_testsuite = true;
 	;;
   mt-*-*)
 

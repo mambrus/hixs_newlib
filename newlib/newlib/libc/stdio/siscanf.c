@@ -17,7 +17,7 @@
 
 /*
 FUNCTION
-<<iscanf>>, <<fiscanf>>, <<siscanf>>---scan and format non-floating input
+<<siscanf>>, <<fiscanf>>, <<iscanf>>---scan and format non-floating input
 
 INDEX
 	iscanf
@@ -112,7 +112,8 @@ Supporting OS subroutines required: <<close>>, <<fstat>>, <<isatty>>,
 /* | ARGSUSED */
 /*SUPPRESS 590*/
 static _READ_WRITE_RETURN_TYPE
-_DEFUN(eofread, (cookie, buf, len),
+_DEFUN(eofread, (ptr, cookie, buf, len),
+       struct _reent *ptr _AND
        _PTR cookie _AND
        char *buf   _AND
        int len)

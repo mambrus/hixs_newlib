@@ -29,20 +29,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include <errno.h>
 #include "jsre.h"
 
 int
 dup (int oldfd)
 {
-        syscall_dup_t sys;
-        syscall_out_t   *psys_out = ( syscall_out_t* )&sys;
-
-        sys.oldfd = oldfd;
-
-        _send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_DUP, &sys);
-
-        errno = psys_out->err;
-        return ( psys_out->rc);
+        return __send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_DUP, &oldfd);
 }
-

@@ -142,32 +142,38 @@ SECTIONS {
   /* Text section.  */
   .text :
   {
-    *(.text .gnu.linkonce.t.*)
+    *(.text .text.*)
+    *(.gnu.linkonce.t.*)
+
     . = ALIGN(0x4);
-     __CTOR_LIST__ = .;
-    ___CTOR_LIST__ = .;
-    LONG((__CTOR_END__ - __CTOR_LIST__) / 4 - 2)
-    *(.ctors)
-    LONG(0)
-    __CTOR_END__ = .;
-    __DTOR_LIST__ = .;
-    ___DTOR_LIST__ = .;
-    LONG((__DTOR_END__ - __DTOR_LIST__) / 4 - 2)
-    *(.dtors)
-     LONG(0)
-    __DTOR_END__ = .;
-    *(.rodata* .gnu.linkonce.r.*)
+    /* These are for running static constructors and destructors under ELF.  */
+    KEEP (*crtbegin.o(.ctors))
+    KEEP (*(EXCLUDE_FILE (*crtend.o) .ctors))
+    KEEP (*(SORT(.ctors.*)))
+    KEEP (*crtend.o(.ctors))
+    KEEP (*crtbegin.o(.dtors))
+    KEEP (*(EXCLUDE_FILE (*crtend.o) .dtors))
+    KEEP (*(SORT(.dtors.*)))
+    KEEP (*crtend.o(.dtors))
+
+    . = ALIGN(0x4);
+    KEEP (*crtbegin.o(.jcr))
+    KEEP (*(EXCLUDE_FILE (*crtend.o) .jcr))
+    KEEP (*crtend.o(.jcr))
+
+    *(.rodata .rodata.*)
+    *(.gnu.linkonce.r.*)
     *(.gcc_except_table) 
     *(.eh_frame)
 
     . = ALIGN(0x2);
-    __INIT_SECTION__ = . ;
+    _init = . ;
     LONG (0x4e560000)	/* linkw %fp,#0 */
     *(.init)
     SHORT (0x4e5e)	/* unlk %fp */
     SHORT (0x4e75)	/* rts */
 
-    __FINI_SECTION__ = . ;
+    _fini = . ;
     LONG (0x4e560000)	/* linkw %fp,#0 */
     *(.fini)
     SHORT (0x4e5e)	/* unlk %fp */
@@ -186,9 +192,10 @@ SECTIONS {
   .data :
   {
     _data = .;
-    KEEP (*(.jcr));
+    *(.got.plt) *(.got)
     *(.shdata);
-    *(.data .gnu.linkonce.d.*);
+    *(.data .data.*)
+    *(.gnu.linkonce.d.*)
     _edata_cksum = .;
     *(checksum);
     _edata = .;
@@ -200,7 +207,8 @@ SECTIONS {
     . = ALIGN(0x4);
     __bss_start = . ;
     *(.shbss)
-    *(.bss .gnu.linkonce.b.*)
+    *(.bss .bss.*)
+    *(.gnu.linkonce.b.*)
     *(COMMON)
     _end =  ALIGN (0x8);
     __end = _end;

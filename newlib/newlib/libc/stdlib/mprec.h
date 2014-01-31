@@ -139,15 +139,7 @@ typedef union { double d; __ULong L[2]; } U;
 #define P    	    24
 #define Bias 	    127
 #define NO_HEX_FP   /* not supported in this case */
-#if 0
-#define IEEE_Arith  /* it is, but the code doesn't handle IEEE singles yet */
-#endif
-/* Following is needed due to IEEE_Arith not being set on above.  */
-#if defined(__v800)
-#define n_bigtens 2
-#else
-#define n_bigtens 5
-#endif
+#define IEEE_Arith
 #define Emin        (-126)
 #define Exp_1       ((__uint32_t)0x3f800000L)
 #define Exp_11      ((__uint32_t)0x3f800000L)
@@ -175,7 +167,11 @@ typedef union { double d; __ULong L[2]; } U;
 
 #define word0(x) (x.i[0])
 #define word1(x) 0
+#ifdef YES_ALIAS
 #define dword0(x) ((__ULong *)&x)[0]
+#else
+#define dword0(x) ((U*)&x)->L[0]
+#endif
 #define dword1(x) 0
 #else
 
@@ -351,10 +347,14 @@ extern double rnd_prod(double, double), rnd_quot(double, double);
  * slower.  Hence the default is now to store 32 bits per long.
  */
 
-#ifndef Pack_32
-#define Pack_32
-#endif
-#endif
+ #ifndef Pack_32
+  #define Pack_32
+ #endif
+#else  /* Just_16 */
+ #ifndef Pack_16
+  #define Pack_16
+ #endif
+#endif /* Just_16 */
 
 #ifdef Pack_32
 #define ULbits 32

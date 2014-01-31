@@ -31,14 +31,26 @@ Author: Andreas Neukoetter (ti95neuk@de.ibm.com)
 */
 
 #include <unistd.h>
-#include <errno.h>
 #include "jsre.h"
+
+#define JSRE_SEEK_SET 0
+#define JSRE_SEEK_CUR 1
+#define JSRE_SEEK_END 2
+
+typedef struct
+{
+        unsigned int file;
+        unsigned int pad0[3];
+        unsigned int offset;
+        unsigned int pad1[3];
+        unsigned int whence;
+        unsigned int pad2[3];
+} syscall_lseek_t;
 
 off_t
 lseek (int file, off_t offset, int whence)
 {
         syscall_lseek_t sys;
-	syscall_out_t	*psys_out = ( syscall_out_t* )&sys;
 
 	sys.file = file;
 	sys.offset = offset;
@@ -55,9 +67,5 @@ lseek (int file, off_t offset, int whence)
 			break;
 	}
 
-	_send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_LSEEK, &sys);
-
-        errno = psys_out->err;
-        return ( psys_out->rc);
+	return __send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_LSEEK, &sys);
 }
-

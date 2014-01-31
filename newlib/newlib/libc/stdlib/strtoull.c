@@ -80,7 +80,7 @@ made, <<0>> is returned.
 value is too large, and sets <<errno>> to <<ERANGE>>.
 
 PORTABILITY
-<<strtoull>> is nonstandard.
+<<strtoull>> is ANSI.
 
 <<strtoull>> requires no supporting OS subroutines.
 */

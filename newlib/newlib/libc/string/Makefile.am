@@ -63,6 +63,7 @@ GENERAL_SOURCES = \
 	wcsspn.c \
 	wcsstr.c \
 	wcswidth.c \
+	wcsxfrm.c \
 	wcwidth.c \
 	wmemchr.c \
 	wmemcmp.c \
@@ -77,8 +78,13 @@ ELIX_SOURCES = \
 	bcmp.c \
 	memccpy.c \
 	mempcpy.c \
+	stpcpy.c \
+	stpncpy.c \
 	strndup.c \
-	strndup_r.c
+	strcasestr.c \
+	strndup_r.c \
+	wcpcpy.c \
+	wcpncpy.c \
 endif
 
 libstring_la_LDFLAGS = -Xcompiler -nostdlib
@@ -103,14 +109,14 @@ bzero.def	memset.def	strcpy.def	strncpy.def strxfrm.def \
 index.def	rindex.def	strcspn.def	strpbrk.def swab.def \
 memchr.def	strcat.def	strerror.def	strerror_r.def strrchr.def \
 memcmp.def	strchr.def	strlen.def	strnlen.def strspn.def \
-strcasecmp.def	strncasecmp.def strlwr.def	strupr.def  memccpy.def \
-mempcpy.def \
+strcasecmp.def	strncasecmp.def strcasestr.def	strlwr.def  strupr.def \
+memccpy.def 	mempcpy.def	stpcpy.def	stpncpy.def \
 wcscat.def	wcschr.def	wcscmp.def	wcscoll.def \
-wcscpy.def	wcscspn.def \
+wcscpy.def	wcscspn.def	wcpcpy.def	wcpncpy.def \
 wcslcat.def	wcslcpy.def	wcslen.def	wcsncat.def \
 wcsncmp.def	wcsncpy.def	wcsnlen.def	wcspbrk.def \
 wcsrchr.def	wcsspn.def	wcsstr.def \
-wcswidth.def	wcwidth.def	wmemchr.def \
+wcswidth.def	wcsxfrm.def	wcwidth.def	wmemchr.def \
 wmemcmp.def	wmemcpy.def	wmemmove.def	wmemset.def
 
 SUFFIXES = .def

@@ -29,21 +29,22 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 #include <unistd.h>
-#include <errno.h>
 #include "jsre.h"
+
+typedef struct
+{
+        unsigned int file;
+        unsigned int pad0[3];
+        unsigned int length;
+        unsigned int pad1[3];
+} syscall_ftruncate_t;
 
 int
 ftruncate (int file, off_t length)
 {
 	syscall_ftruncate_t sys;
-	syscall_out_t	*psys_out = ( syscall_out_t* )&sys;
 
 	sys.file = file;
 	sys.length = length;
-
-	_send_to_ppe(JSRE_POSIX1_SIGNALCODE, JSRE_FTRUNCATE, &sys);
-
-	errno = psys_out->err;
-	return ( psys_out->rc);
+	return __send_to_ppe(JSRE_POSIX1_SIGNALCODE, JSRE_FTRUNCATE, &sys);
 }
-

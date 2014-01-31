@@ -93,7 +93,7 @@ PORTABILITY
 	        if (_LIB_VERSION == _POSIX_)
 	           errno = ERANGE;
 	        else if (!matherr(&exc)) {
-	           errno = EDOM;
+	           errno = ERANGE;
 	        }
 	    } else { 
 	        /* log10(x<0) */
@@ -103,6 +103,7 @@ PORTABILITY
 	        else if (!matherr(&exc)) {
 	           errno = EDOM;
 	        }
+                exc.retval = nan("");
             }
 	    if (exc.err != 0)
                errno = exc.err;

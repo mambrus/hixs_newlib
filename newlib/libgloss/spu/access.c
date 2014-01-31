@@ -29,21 +29,22 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include <errno.h>
 #include "jsre.h"
+
+typedef struct
+{
+        unsigned int    pathname;
+        unsigned int    pad0[3];
+        unsigned int    mode;
+        unsigned int    pad1[3];
+} syscall_access_t;
 
 int
 access (const char *pathname, int mode)
 {
         syscall_access_t sys;
-        syscall_out_t   *psys_out = ( syscall_out_t* )&sys;
 
         sys.pathname = (unsigned int) pathname;
         sys.mode = mode;
-
-        _send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_ACCESS, &sys);
-
-        errno = psys_out->err;
-        return ( psys_out->rc);
+        return __send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_ACCESS, &sys);
 }
-

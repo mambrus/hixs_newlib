@@ -32,14 +32,36 @@ Author: Andreas Neukoetter (ti95neuk@de.ibm.com)
 
 #include <stdarg.h>
 #include <fcntl.h>
-#include <errno.h>
 #include "jsre.h"
+
+#define JSRE_O_RDONLY 0
+#define JSRE_O_WRONLY 1
+#define JSRE_O_RDWR 2
+
+#define JSRE_O_CREAT 64
+#define JSRE_O_EXCL 128
+#define JSRE_O_NOCTTY 256
+#define JSRE_O_TRUNC 512
+#define JSRE_O_APPEND 1024
+#define JSRE_O_NDELAY 2048
+#define JSRE_O_SYNC 4096
+#define JSRE_O_ASYNC 8192
+
+typedef struct
+{
+        unsigned int pathname;
+        unsigned int pad0[3];
+        unsigned int flags;
+        unsigned int pad1[3];
+        unsigned int mode;
+        unsigned int pad2[3];
+} syscall_open_t;
 
 int
 open (const char *filename, int flags, ...)
 {
-        syscall_open_t sys ;
-	syscall_out_t	*psys_out = ( syscall_out_t* )&sys;
+        syscall_open_t sys;
+        va_list ap;
 
         sys.pathname = ( unsigned int )filename;
 
@@ -64,26 +86,11 @@ open (const char *filename, int flags, ...)
 	sys.flags |= ( ( flags & O_WRONLY ) ? JSRE_O_WRONLY : 0 );
 	sys.flags |= ( ( flags & O_RDWR )  ? JSRE_O_RDWR  : 0 );
 
-
 	/* FIXME: we have to check/map all flags */
 
-        if ((sys.flags & O_CREAT))
-          {
-                  va_list ap;
+        va_start (ap, flags);
+        sys.mode = va_arg (ap, int);
+        va_end (ap);
 
-                  va_start (ap, flags);
-                  sys.mode = va_arg (ap, int);
-                  va_end (ap);
-
-          }
-        else
-          {
-                  sys.mode = 0;
-          }
-
-        _send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_OPEN, &sys);
-
-        errno = psys_out->err;
-        return ( psys_out->rc);
+        return __send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_OPEN, &sys);
 }
-

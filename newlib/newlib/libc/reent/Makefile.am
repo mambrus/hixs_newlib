@@ -36,15 +36,17 @@ GENERAL_SOURCES = \
 	fcntlr.c \
 	fstatr.c \
 	getreent.c \
+	gettimeofdayr.c \
 	linkr.c \
 	lseekr.c \
 	openr.c \
 	readr.c \
+	renamer.c \
 	signalr.c \
 	signgam.c \
 	sbrkr.c \
 	statr.c \
-	timer.c \
+	timesr.c \
 	unlinkr.c \
 	writer.c
 
@@ -69,14 +71,16 @@ CHEWOUT_FILES = \
 	execr.def \
 	fcntlr.def \
 	fstatr.def \
+	gettimeofdayr.def \
 	linkr.def \
 	lseekr.def \
 	openr.def \
 	readr.def \
+	renamer.def \
 	signalr.def \
 	sbrkr.def \
 	statr.def \
-	timer.def \
+	timesr.def \
 	unlinkr.def \
 	$(STDIO64_DEFS) \
 	writer.def

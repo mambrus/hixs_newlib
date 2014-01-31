@@ -54,9 +54,16 @@ OBJDUMP = `t='$(program_transform_name)'; echo objdump | sed -e $$t`
 OBJCOPY = `t='$(program_transform_name)'; echo objcopy | sed -e $$t`
 
 # object files needed
-OBJS = syscalls.o exit.o sbrk.o close.o fstat.o getpid.o isatty.o \
-	kill.o lseek.o open.o read.o unlink.o write.o stat.o \
-	ftruncate.o dup.o access.o time.o
+OBJS = \
+	access.o chdir.o chmod.o chown.o close.o conv_stat.o dirfuncs.o dup.o \
+	dup2.o exit.o fchdir.o fchmod.o fchown.o fdatasync.o fstat.o \
+	fsync.o ftruncate.o getcwd.o getpagesize.o getpid.o \
+	gettimeofday.o isatty.o kill.o lchown.o link.o lockf.o lseek.o \
+	lstat.o mkdir.o mknod.o mkstemp.o mktemp.o nanosleep.o open.o \
+	pread.o pwrite.o read.o readlink.o readv.o rmdir.o sbrk.o \
+	sched_yield.o shm_open.o shm_unlink.o stat.o symlink.o sync.o \
+	syscalls.o truncate.o umask.o unlink.o utime.o utimes.o write.o \
+	writev.o
 
 # Object files specific to particular targets.
 EVALOBJS = ${OBJS}
@@ -114,16 +121,16 @@ libgloss.a: $(EVALOBJS)
 	${RANLIB} $@
 
 # C Runtime Library startup code.
-crti.o:
+crti.o: $(srcdir)/crti.S
 	$(CC) $(srcdir)/crti.S -c -o crti.o 
 
-crtn.o:
+crtn.o: $(srcdir)/crtn.S
 	$(CC) $(srcdir)/crtn.S -c -o crtn.o 
 
-crt1.o:
+crt1.o: $(srcdir)/crt0.S
 	$(CC) $(srcdir)/crt0.S -c -o crt1.o
 
-crt2.o:
+crt2.o: $(srcdir)/crt0.S
 	$(CC) $(srcdir)/crt0.S -D_STD_MAIN -c -o crt2.o
 
 doc:	
@@ -150,4 +157,4 @@ Makefile: Makefile.in config.status @host_makefile_frag_path@
 config.status: configure
 	$(SHELL) config.status --recheck
 
-syscalls.o close.o fstat.o lseek.o open.o read.o stat.o unlink.o write.o: jsre.h
+syscalls.o close.o fstat.o lseek.o open.o read.o stat.o unlink.o write.o shm_open.o shm_unlink.o: jsre.h

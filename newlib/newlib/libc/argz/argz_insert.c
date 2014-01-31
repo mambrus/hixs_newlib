@@ -9,6 +9,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <argz.h>
+#define __need_ptrdiff_t
+#include <stddef.h>
 
 error_t
 _DEFUN (argz_insert, (argz, argz_len, before, entry),
@@ -18,6 +20,7 @@ _DEFUN (argz_insert, (argz, argz_len, before, entry),
        const char *entry)
 {
   int len = 0;
+  ptrdiff_t delta;
 
   if (before == NULL)
     return argz_add(argz, argz_len, entry);
@@ -28,13 +31,16 @@ _DEFUN (argz_insert, (argz, argz_len, before, entry),
   while (before != *argz && before[-1])
     before--;
 
+  /* delta will always be non-negative, and < *argz_len */
+  delta = before - *argz;
+
   len = strlen(entry) + 1;
 
   if(!(*argz = (char *)realloc(*argz, *argz_len + len)))
     return ENOMEM;
   
-  memmove(before + len, before, *argz + *argz_len - before);
-  memcpy(before, entry, len);
+  memmove(*argz + delta + len, *argz + delta,  *argz_len - delta);
+  memcpy(*argz + delta, entry, len);
 
   *argz_len += len;
 

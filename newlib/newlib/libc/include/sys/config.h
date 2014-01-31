@@ -132,6 +132,7 @@
 
 #ifdef __SPU__
 #define MALLOC_ALIGNMENT 16
+#define __CUSTOM_FILE_IO__
 #endif
 
 /* This block should be kept in sync with GCC's limits.h.  The point
@@ -198,6 +199,14 @@
 #ifndef __WCHAR_MAX__
 #if __INT_MAX__ == 32767 || defined (_WIN32)
 #define __WCHAR_MAX__ 0xffffu
+#endif
+#endif
+
+/* See if small reent asked for at configuration time and
+   is not chosen by the platform by default.  */
+#ifdef _WANT_REENT_SMALL
+#ifndef _REENT_SMALL
+#define _REENT_SMALL
 #endif
 #endif
 

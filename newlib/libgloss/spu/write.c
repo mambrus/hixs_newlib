@@ -31,22 +31,25 @@ Author: Andreas Neukoetter (ti95neuk@de.ibm.com)
 */
 
 #include <fcntl.h>
-#include <errno.h>
 #include "jsre.h"
+
+typedef struct
+{
+        unsigned int file;
+        unsigned int pad0[3];
+        unsigned int ptr;
+        unsigned int pad1[3];
+        unsigned int len;
+        unsigned int pad2[3];
+} syscall_write_t;
 
 int
 write (int file, const void *ptr, size_t len)
 {
         syscall_write_t sys;
-	syscall_out_t	*psys_out = ( syscall_out_t* )&sys;
 
 	sys.file = file;
 	sys.ptr = ( unsigned int )ptr;
 	sys.len = len;
-
-	_send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_WRITE, &sys);
-
-        errno = psys_out->err;
-        return ( psys_out->rc);
+	return __send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_WRITE, &sys);
 }
-

@@ -50,11 +50,16 @@ POSSIBILITY OF SUCH DAMAGE.
 #define TAGMASK			1
 #endif
 
+.comm __ea_local_store,16,16
+
 .text
 .global _start
 .type _start, @function
 	
 _start:
+	/* Save the local store base from $6.  */
+	stqr $6, __ea_local_store
+
 #ifdef _STD_MAIN
 	/* 
  	 * Copy the argument vector region from EA to LS.  The DMA
@@ -133,6 +138,7 @@ _start:
 	 */
 	ila 	$3,_end
 	sf	$3,$3,$SP
+	rotqbyi	$3,$3,12
 
         /* The BE Linux ABI passes the stack size in $2, or use
          * the default if $2 == 0.

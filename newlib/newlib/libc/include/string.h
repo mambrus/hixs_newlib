@@ -60,7 +60,10 @@ _PTR	 _EXFUN(mempcpy,(_PTR, const _PTR, size_t));
 extern void *memmem (__const void *, size_t,  __const void *, size_t);
 #endif
 char 	*_EXFUN(rindex,(const char *, int));
+char 	*_EXFUN(stpcpy,(char *, const char *));
+char 	*_EXFUN(stpncpy,(char *, const char *, size_t));
 int	 _EXFUN(strcasecmp,(const char *, const char *));
+char	*_EXFUN(strcasestr,(const char *, const char *));
 char 	*_EXFUN(strdup,(const char *));
 char 	*_EXFUN(_strdup_r,(struct _reent *, const char *));
 char 	*_EXFUN(strndup,(const char *, size_t));

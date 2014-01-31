@@ -158,20 +158,11 @@ typedef int32_t register_t;
  * how the file was compiled (e.g. -mint16 vs -mint32, etc.).
  */
 
-#if defined(__rtems__)
-/* device numbers are 32-bit major and and 32-bit minor */
-typedef unsigned long long dev_t;
-#else
-#ifndef __CYGWIN__
-typedef	short	dev_t;
-#endif
-#endif
-
 #ifndef __CYGWIN__	/* which defines these types in it's own types.h. */
-typedef long		off_t;
-
-typedef	unsigned short	uid_t;
-typedef	unsigned short	gid_t;
+typedef _off_t	off_t;
+typedef __dev_t dev_t;
+typedef __uid_t uid_t;
+typedef __gid_t gid_t;
 #endif
 
 typedef int pid_t;
@@ -391,6 +382,7 @@ typedef __uint32_t pthread_spinlock_t;        /* POSIX Spin Lock Object */
 
 /* POSIX Reader/Writer Lock Types */
 
+#if !defined (__CYGWIN__)
 #if defined(_POSIX_READER_WRITER_LOCKS)
 typedef __uint32_t pthread_rwlock_t;         /* POSIX RWLock Object */
 typedef struct {
@@ -400,6 +392,7 @@ typedef struct {
 #endif
 } pthread_rwlockattr_t;
 #endif /* defined(_POSIX_READER_WRITER_LOCKS) */
+#endif /* __CYGWIN__ */
 
 #endif  /* !__need_inttypes */
 

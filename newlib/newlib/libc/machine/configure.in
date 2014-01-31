@@ -14,7 +14,7 @@ dnl We have to add the following lines because automake detects the
 dnl references to libtool libraries from aclocal and tries to verify that
 dnl AM_PROG_LIBTOOL is being used.  This must be added after
 dnl the call to NEWLIB_CONFIGURE.
-
+_LT_DECL_SED
 if test "${use_libtool}" = "yes"; then
 AC_LIBTOOL_WIN32_DLL
 AM_PROG_LIBTOOL
@@ -42,6 +42,7 @@ if test -n "${machine_dir}"; then
 	m68hc11) AC_CONFIG_SUBDIRS(m68hc11) ;;
 	m68k) AC_CONFIG_SUBDIRS(m68k) ;;
 	m88k) AC_CONFIG_SUBDIRS(m88k) ;;
+	mep ) AC_CONFIG_SUBDIRS(mep) ;;
 	mips) AC_CONFIG_SUBDIRS(mips) ;;
 	mn10200) AC_CONFIG_SUBDIRS(mn10200) ;;
 	mn10300) AC_CONFIG_SUBDIRS(mn10300) ;;
@@ -55,6 +56,7 @@ if test -n "${machine_dir}"; then
 	tic80) AC_CONFIG_SUBDIRS(tic80) ;;
 	v850) AC_CONFIG_SUBDIRS(v850) ;;
 	w65) AC_CONFIG_SUBDIRS(w65) ;;
+	x86_64) AC_CONFIG_SUBDIRS(x86_64) ;;
 	xscale) AC_CONFIG_SUBDIRS(xscale) ;;
 	xstormy16) AC_CONFIG_SUBDIRS(xstormy16) ;;
 	z8k) AC_CONFIG_SUBDIRS(z8k) ;;

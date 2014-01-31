@@ -70,7 +70,7 @@ static void *hash_realloc(SEGMENT **, int, int);
 static int   hash_seq(const DB *, DBT *, DBT *, __uint32_t);
 static int   hash_sync(const DB *, __uint32_t);
 static int   hdestroy(HTAB *);
-static HTAB *init_hash(HTAB *, const char *, HASHINFO *);
+static HTAB *init_hash(HTAB *, const char *, const HASHINFO *);
 static int   init_htab(HTAB *, int);
 #if (BYTE_ORDER == LITTLE_ENDIAN)
 static void  swap_header(HTAB *);
@@ -110,7 +110,11 @@ __hash_open(file, flags, mode, info, dflags)
 {
 	HTAB *hashp;
 
+#ifdef __USE_INTERNAL_STAT64
+        struct stat64 statbuf;
+#else
 	struct stat statbuf;
+#endif
 	DB *dbp;
 	int bpages, hdrsize, new_table, nsegs, save_errno;
 
@@ -307,7 +311,7 @@ static HTAB *
 init_hash(hashp, file, info)
 	HTAB *hashp;
 	const char *file;
-	HASHINFO *info;
+	const HASHINFO *info;
 {
 	struct stat statbuf;
 	int nelem;

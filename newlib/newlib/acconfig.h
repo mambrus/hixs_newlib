@@ -9,6 +9,10 @@
 /* Newlib version */
 #undef _NEWLIB_VERSION
 
+/* C99 formats support (such as %a, %zu, ...) in IO functions like
+ * printf/scanf enabled */
+#undef _WANT_IO_C99_FORMATS
+
 /* long long type support in IO functions like printf/scanf enabled */
 #undef _WANT_IO_LONG_LONG
 
@@ -17,6 +21,10 @@
 
 /* Positional argument support in printf functions enabled.  */
 #undef _WANT_IO_POS_ARGS
+
+/* Optional reentrant struct support.  Used mostly on platforms with
+   very restricted storage.  */
+#undef _WANT_REENT_SMALL
 
 /* Multibyte supported */
 #undef _MB_CAPABLE
@@ -150,4 +158,3 @@
 #undef _ICONV_FROM_ENCODING_WIN_1258
 
 #endif /* !__NEWLIB_H__ */
-

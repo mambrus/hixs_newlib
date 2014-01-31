@@ -1,3 +1,411 @@
+2007-12-01  Hans-Peter Nilsson  <hp@axis.com>
+
+	* cris/Makefile.in (crt0.o): Add CFLAGS when compiling crt0.S.
+
+2007-11-06  Dave Brolley  <brolley@redhat.com>
+ 
+	* syscall.h (SYS_reconfig): New macro.
+
+2007-10-11  Ulrich Weigand  <uweigand@de.ibm.com>
+
+	* spu/crt0.S: Fix so element one of register one is correctly set
+	when compiled with -mstdmain and -fstack-check.
+
+2007-10-02  Markus Deuling  <deuling@de.ibm.com>
+
+	* spu/crt0.S: Initialize __ea_local_store (EA address of the LS)
+	  via register 6.
+
+2007-10-01  Markus Deuling  <deuling@de.ibm.com>
+
+	* spu/Makefile.in: add dependencies for crt files.
+
+2007-10-01  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/sbrk.c: Use the current stack pointer value rather than the
+	maximum available memory to determine the amount of heap space
+	left. Without this change calling sbrk() can allocate space that
+	is currently in use on the stack.
+
+2007-09-26  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/sched_yield.c: New file (missed on 2007-09-21).
+
+2007-09-21  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/Makefile.in: Add new files.
+	* spu/jsre.h: Add JSRE_PREAD, JSRE_PWRITE, JSRE_READV, and
+	JSRE_WRITEV opcodes.
+	* spu/pread.c: New file to add pread via assist call.
+	* spu/pwrite.c: New file to add pwrite via assist call.
+	* spu/readv.c: New file to add readv via assist call.
+	* spu/writev.c: New file to add writev via assist call.
+
+2007-09-21  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/jsre.h: Add JSRE_SCHED_YIELD, JSRE_UMASK, JSRE_UTIME, and
+	JSRE_UTIMES.
+	* spu/sched_yield.c: New file add sched_yield via assist call.
+	* spu/umask.c: New file add umask via assist call.
+	* spu/utime.c: New file add utime via assist call.
+	* spu/utimes.c: New file add utimes via assist call.
+	* spu/Makefile.in: Add new files.
+							
+2007-09-21  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/jsre.h: Add JSRE_SHM_OPEN and JSRE_SHM_UNLINK opcodes.
+	* spu/shm_open.c: New file to add shm_open via assist call.
+	* spu/shm_unlink.c: New file to add shm_unlink via assist call.
+	* spu/Makefile.in: Add shm_open.o and shm_unlink.o
+
+2007-09-21  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/dirfuncs.c: New file, holds the opendir, closedir, readdir,
+	rewinddir, seekdir and telldir implementations. These are
+	grouped in one file so that we do not need a separate file for
+	the struct dirent and DIR allocation code.
+	* spu/jsre.h: Add JSRE_OPENDIR and other dir opcodes.
+	* spu/Makefile.in: Add dirfuncs.o.
+
+2007-08-13  Carlos O'Donell  <carlos@codesourcery.com>
+
+	* arm/crt0.S: Remove '.set' for __stack, hardware_init_hook,
+	and software_init_hook.
+
+2007-08-10  Carlos O'Donell  <carlos@codesourcery.com>
+
+	2007-07-12  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* arm/syscalls.c (_stat): Use _close
+	
+	* arm/syscalls.c (struct poslog): Rename to...
+	(struct fdent): ... this.
+	(FILE_HANDLE_OFFSET): Remove.
+	(findslot): Return a struct fdent* if fd is valid, otherwise return NULL.  
+	(newslot): New function.  
+	(remap_handle): Remove.  
+	(initialise_monitor_handles): Use stdout as fallback for stderr.  
+	(wrap): Rename to...  
+	(checkerror): ...  this.  
+	(_swiread): Use checkerror() for the return of SWI calls.  Correct the use of r0.  
+	(_read): Use findslot().  Return EBADF on bad handle.  
+	(_swilseek): Call findslot().  Check for valid whence.  Check for negative offset when using 
+	SEEK_CUR, and check for overflow.  Use checkerror().  Check *_Flen calls for errors.  
+	(_swiwrite): Correct the use of r0.  
+	(_write): Call findslot().  
+	(_swiopen): Call findslot().  Check for valid flags.  Use checkerror().  Call newslot().  
+	Handle O_TRUNC, and O_WRONLY.  Return index into openfiles[] for fd.  
+	(_swiclose): Correct the use of r0.  
+	(_close): Handle stderr == stdout case.  Only reclaim handle if _swiclose succeeded.  
+	(_getpid): Use __attribute__((unused)).  
+	(_sbrk): Fix formatting.  
+	(_swistat): New function.  
+	(_stat): Call _swistat().  
+	(_fstat): Call _swistat().  
+	(_unlink): Correct the use of r0.  
+	(isatty): Call finslot().  Correct the use of r0.  
+	(_system): Call checkerror().  Correct the use of r0.  
+	(_rename): Correct the use of r0.  
+	
+2007-07-13  Kevin Buettner  <kevinb@redhat.com> 
+
+	* mep/fmax.ld, mep/gmap_default.ld, mep/min.ld, mep/simple.ld (.gcc_except_table): Add pattern 
+	for .gcc_except_table.*.  
+					
+2007-07-06  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* arm/syscalls.c (gettimeofday): Change to POSIX signature
+	where second argument is passed as void *.
+	* bfin/syscalls.c (gettimeofday): Ditto.
+	* cris/gensyscalls (gettimeofday): Ditto.
+	* cris/linunistd.h (gettimeofday): Ditto.
+	* crx/time.c (gettimeofday): Ditto.
+	* frv/sim-time.c (gettimeofday): Ditto.
+	* i386/cygmon-salib.c (gettimeofday): Ditto.
+	* libnosys/gettod.c (gettimeofday): Ditto.
+	* m68k/io-gettimeofday.c (gettimeofday): Ditto.
+	* sparc/cygmon-salib.c (gettimeofday): Ditto.
+	* spu/gettimeofday.c (gettimeofday): Ditto.
+
+2007-06-20  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/jsre.h: Add JSRE_MKSTEMP and JSRE_MKTEMP values.
+	* spu/mkstemp.c: New file to add mkstemp support via assist call.
+	* spu/mktemp.c: New file to add mktemp support via assist call.
+	* spu/Makefile.in: Add mkstemp.o and mktemp.o
+
+2007-06-20  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/jsre.h: Add new JSRE opcodes.
+	* spu/dup2.c: New file to add dup2 support via assist call.
+	* spu/fdatasync.c: New file to add fdatasync support via assist call.
+	* spu/fsync.c: New file to add fsync support via assist call.
+	* spu/lockf.c: New file to add lockf support via assist call.
+	* spu/sync.c: New file to add sync support via assist call.
+	* spu/truncate.c: New file to add truncate support via assist call.
+	* spu/Makefile.in: Add new files.
+
+2007-06-20  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/jsre.h: JSRE_LINK, JSRE_SYMLINK and JSRE_READLINK.
+	* spu/link.c: New file to add link support via an assist call.
+	* spu/readlink.c: New file to add readlink support via an assist call.
+	* spu/symlink.c: New file to add symlink support via an assist call.
+	* spu/Makefile.in: Add new files.
+
+2007-06-20  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/jsre.h: Add JSRE_LSTAT.
+	* spu/lstat.c: New file add lstat support via an assist call.
+	* spu/conv_stat.c: New file, add common stat conversion code.
+	* spu/fstat.c: Use __conv_stat.
+	* spu/stat.c: Use __conv_stat.
+	* spu/Makefile.in: Add conv_stat.o and lstat.o.
+
+2007-06-20  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/jsre.h: Add JSRE_GETCWD.
+	* spu/getcwd.c: New file, implement getcwd with help from an
+	assist call.
+	* spu/Makefile.in: Add getcwd.
+
+2007-06-20  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/jsre.h: Add defines for new assist calls.
+	* spu/chdir.c: New file, support chdir via assist call.
+	* spu/chmod.c: New file, support chmod via assist call.
+	* spu/chown.c: New file, support chown via assist call.
+	* spu/fchdir.c: New file, support fchdir via assist call.
+	* spu/fchmod.c: New file, support fchmod via assist call.
+	* spu/fchown.c: New file, support fchown via assist call.
+	* spu/lchown.c: New file, support lchown via assist call.
+	* spu/mkdir.c: New file, support mkdir via assist call.
+	* spu/mknod.c: New file, support mknod via assist call.
+	* spu/rmdir.c: New file, support rmdir via assist call.
+	* spu/Makefile.in: Add new files.
+
+2007-06-20  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/getpagesize.c: New file add getpagesize via an assist call.
+	* spu/jsre.h: Add JSRE_GETPAGESIZE.
+	* spu/Makefile.in: Add getpagesize.
+
+2007-06-13  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/Makefile.in: Add nanosleep.c.
+	* spu/jsre.h: Add JSRE_NANOSLEEP.
+	* spu/nanosleep.c: New file, supply nanosleep via an assist call.
+
+2007-06-05  Patrick Mansfield  <patman@us.ibm.com>
+
+	* spu/jsre.h: Remove the assist call structs and defines that are
+	specific to one assist call from here.
+	* spu/access.c: Move struct syscall_access_t to here.
+	* spu/fstat.c: Move struct syscall_fstat_t to here.
+	* spu/ftruncate.c: Move struct syscall_ftruncate_t to here.
+	* spu/gettimeofday.c: Move struct syscall_gettimeofday_t to here.
+	* spu/lseek.c: Move struct syscall_lseek_t and JSRE_SEEK defines to 
+	here.
+	* spu/open.c: Move struct syscall_open_t and JSRE_O_ defines to here.
+	* spu/read.c: Move struct syscall_read_t to here, and actually use
+	it (it is the same as syscall_write_t).
+	* spu/stat.c: Move struct syscall_stat_t to here.
+	* spu/write.c: Move struct syscall_write_t to here.
+	* spu/close.c: Pass the address of the first and only argument to
+	__send_to_ppe rather than using an automatic variable and a
+	special struct.
+	* spu/dup.c: Ditto.
+	* spu/unlink.c: Ditto.
+
+2007-05-30  Kazu Hirata  <kazu@codesourcery.com>
+
+	* m68k/cf-crt1.C, m68k/cf.sc, m68k/fido.sc, m68k/fido-crt0.S:
+	Replace __INIT_SECTION__ and __FINI_SECTION__ with _init and
+	_fini, respectively.
+
+2007-05-23 Patrick Mansfield <patmans@us.ibm.com>
+
+	* spu/syscalls.c: Change __send_to_ppe to return the result stored
+	in stored in slot 0 of the data, rather than have each assisted
+	call retrieve the value.
+	* spu/jsre.h: Remove the now unused syscall_out_t.
+	* spu/access.c: Use the __send_to_ppe result instead of the slot 0
+	value, remove unused syscall_out_t variable.
+	* spu/close.c: Ditto.
+	* spu/dup.c: Ditto.
+	* spu/fstat.c: Ditto.
+	* spu/ftruncate.c: Ditto.
+	* spu/gettimeofday.c: Ditto.
+	* spu/lseek.c: Ditto.
+	* spu/open.c: Ditto.
+	* spu/read.c: Ditto.
+	* spu/stat.c: Ditto.
+	* spu/unlink.c: Ditto.
+	* spu/write.c: Ditto.
+
+2007-05-23  Kazu Hirata  <kazu@codesourcery.com>
+
+	* m68k/fido.sc (.data): Move .jcr to .text.  Catch .got.plt
+	and .got.
+
+2007-05-07  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/open.c: Unconditionally set the "mode" to fix a bug where
+	mode was not properly set.
+
+2007-05-03  Kazu Hirata  <kazu@codesourcery.com>
+
+	* m68k/fido-_exit.c (_exit): Use stop #0x700.
+
+2007-04-27  Kazu Hirata  <kazu@codesourcery.com>
+
+	* m68k/fido.sc: Catch .text.*, .rodata.*, .data.*, .bss.*,
+	.ctor.*, and .dtor.*.  Wrap ctor/dtor-related sections with KEEP.
+
+2007-04-04  Patrick Mansfield  <patmans@us.ibm.com>
+ 
+	* spu/syscalls.c: Rename _send_to_ppe __send_to_ppe, and set errno
+	on return from the offload call.
+	* spu/jsre.h: Include sys/syscall.h for the send_to_ppe prototype.
+	* spu/access.c: Call __send_to_ppe instead of _send_to_ppe, and
+	remove the setting of errno.
+	* spu/close.c: Ditto.
+	* spu/dup.c: Ditto.
+	* spu/fstat.c: Ditto.
+	* spu/ftruncate.c: Ditto.
+	* spu/gettimeofday.c: Ditto.
+	* spu/lseek.c: Ditto.
+	* spu/open.c: Ditto.
+	* spu/read.c: Ditto.
+	* spu/stat.c: Ditto.
+	* spu/unlink.c: Ditto.
+	* spu/write.c: Ditto.
+
+2007-03-01  Ben Elliston  <bje@au.ibm.com>
+
+	* spu/sbrk.c (sbrk): Adjust the stack pointer vector correctly so
+	that GCC runtime stack checking works.  Handle the backchain, too.
+
+2007-02-21  Patrick Mansfield  <patmans@us.ibm.com>
+
+	* spu/gettimeofday.c: New file which adds SPU gettimeofday.
+	* spu/jsre.h: Remove time, add gettimeofday.
+	* spu/Makefile.in: Ditto.
+
+2007-02-21  Hans-Peter Nilsson  <hp@axis.com>
+
+	* cris/crt0.S: Use jump, not ba, to skip the interrupt table.  Use
+	"setf", not "nop", for common_v10_v32 compatibility.
+	Move out interrupt table to irqtable.S.  Include here for non-ELF.
+	* cris/irqtable.S: Extracted from cris/crt0.S.  Provide per-entry
+	weak default stub definitions.
+	* cris/crtn.c: Use "setf", not "nop", for common_v10_v32
+	compatibility.
+	* cris/setup.S [__arch_common_v10_v32]: Return.
+	* cris/Makefile.in (BSP_OBJS): Add irqtable.o.
+
+2007-02-15  Nick Clifton  <nickc@redhat.com>
+
+	* sparc/cygmon.ld.src: Link .rodata.* input sections into .text
+	output section.
+	* sparc/cygmon-sparc64-ld.src: Likewise. 
+
+2007-02-08  Dave Brolley  <brolley@redhat.com>
+
+	* mep: New target directory.
+	* README: Add MeP.
+	* configure.in: Add support for MeP.
+	* configure: Regenerated.
+	* mep/configure.in: New file.
+	* mep/configure: Ditto.
+	* mep/Makefile.in: Ditto.
+	* mep/aclocal.m4: Ditto.
+	* mep/crt0.S: Ditto.
+	* mep/crtn.S: Ditto.
+	* mep/sim-crt0.S: Ditto.
+	* mep/sim-crtn.S: Ditto.
+	* mep/fmax.ld: Ditto.
+	* mep/gcov-io.h: Ditto.
+	* mep/gmap_default.ld: Ditto.
+	* mep/handlers.c: Ditto.
+	* mep/h_reset.c: Ditto.
+	* mep/isatty.c: Ditto.
+	* mep/mep-bb.c: Ditto.
+	* mep/mep-gmon.c: Ditto.
+	* mep/min.ld: Ditto.
+	* mep/read.c: Ditto.
+	* mep/sbrk.c: Ditto.
+	* mep/sdram-crt0.S: Ditto.
+	* mep/sdram-crtn.S: Ditto.
+	* mep/simnovec-crt0.S: Ditto.
+	* mep/simple.ld: Ditto.
+	* mep/simsdran-crt0.S: Ditto.
+	* mep/syscalls.S: Ditto.
+	* mep/write.c: Ditto.
+
+2007-01-19  Kazunori Asayama <asayama@sm.sony.co.jp>
+
+	* spu/syscalls.c: Replace vector with __vector.
+
+2007-01-09  Ben Elliston  <bje@au.ibm.com>
+
+	* spu/exit.c (_exit): Finish with an infinite loop to eliminate a
+	warning about this noreturn function returning.
+
+2007-01-04  Kazu Hirata  <kazu@codesourcery.com>
+
+	Merge from newlib-csl-20060320-branch:
+	2006-12-22  Nathan Sidwell  <nathan@codesourcery.com>
+
+	libgloss/
+	* m68k/Makefile.in (CF_ISRS): Remove now shared routines.
+	* m68k/cf-crt0.S (__reset): Define here.
+	* m68k/cf-isrs.c: Share some ISRS.  Add aliases for each IRQ slot.
+	* m68k/cf-isv.S: Move to .interrupt_vector section.  Make each
+	slot a unique routine.
+	* m68k/cf.sc: Adjust for .interrupt_vector section.
+
+	libgloss/
+	* m68k/Makefile.in (m5273c3): Rename to ...
+	(m5272c3): ... here to fix typo.
+	(m5249c3): New.
+	(CF_BOARDS): Add it.
+
+2006-01-03  Kazu Hirata  <kazu@codesourcery.com>
+
+	* arm/Makefile (RDPMON_OBJS): Add _exit.o and _kill.o.
+	(RDIMON_OBJS): Define in terms of RDPMON_OBJS.
+	(rdimon-_exit.o, rdimon-_kill.o): New.
+	* arm/_exit.c, arm/_kill.c: New.
+	* arm/syscalls.c (_exit, _kill): Remove.
+
+2007-01-03  Kazu Hirata  <kazu@codesourcery.com>
+
+	Merge from newlib-csl-20060320-branch:
+	2006-12-22  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/cf-crt0.S (__start): Adjust semihosting.
+
+2007-01-02  Kazu Hirata  <kazu@codesourcery.com>
+
+	Merge from newlib-csl-20060320-branch:
+	2006-12-22  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* m68k/cf-hosted.S (__hosted): Adjust semihosting.
+
+2007-01-02  Ben Elliston  <bje@au.ibm.com>
+
+        * spu/time.c (time): Cast new sys.time value to unsigned int.
+
+2006-12-25  Kazu Hirata  <kazu@codesourcery.com>
+
+	* arm/syscalls.c (_unlink, _system, _rename): Cast arguments
+	to do_AngelSWI to int.
+
+	* arm/licfunc.c (do_AngelSWI): Remove.
+	* arm/syscalls.c (do_AngelSWI): Remove.
+	* arm/swi.h (do_AngelSWI): New.
+
 2006-12-18  Kazu Hirata  <kazu@codesourcery.com>
 
 	Merge from newlib-csl-20060320-branch:

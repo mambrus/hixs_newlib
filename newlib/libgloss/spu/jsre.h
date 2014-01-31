@@ -1,5 +1,5 @@
 /*
-(C) Copyright IBM Corp. 2005, 2006
+(C) Copyright IBM Corp. 2005, 2006, 2007
 
 All rights reserved.
 
@@ -32,145 +32,70 @@ Author: Andreas Neukoetter (ti95neuk@de.ibm.com)
 
 /* this file provides the mappings for the JSRE defined interface for PE assisted libary calls */
 
+#include <sys/stat.h>
+#include <sys/syscall.h>
+
 #ifndef __JSRE_H
 #define __JSRE_H
-
-#define JSRE_SEEK_SET 0
-#define JSRE_SEEK_CUR 1
-#define JSRE_SEEK_END 2
-
-#define JSRE_O_RDONLY 0
-#define JSRE_O_WRONLY 1
-#define JSRE_O_RDWR 2
-
-#define JSRE_O_CREAT 64
-#define JSRE_O_EXCL 128
-#define JSRE_O_NOCTTY 256
-#define JSRE_O_TRUNC 512
-#define JSRE_O_APPEND 1024
-#define JSRE_O_NDELAY 2048
-#define JSRE_O_SYNC 4096
-#define JSRE_O_ASYNC 8192
 
 #define JSRE_POSIX1_SIGNALCODE 0x2101
 
 #define JSRE_CLOSE 2
 #define JSRE_FSTAT 4
+#define JSRE_GETPAGESIZE 6
+#define JSRE_GETTIMEOFDAY 7
 #define JSRE_LSEEK 9
+#define JSRE_LSTAT 10
 #define JSRE_OPEN 15
 #define JSRE_READ 16
+#define JSRE_SHM_OPEN 21
+#define JSRE_SHM_UNLINK 22
 #define JSRE_STAT 23
 #define JSRE_UNLINK 24
 #define JSRE_WRITE 27
 #define JSRE_FTRUNCATE 28
 #define JSRE_ACCESS 29
 #define JSRE_DUP 30
-#define JSRE_TIME 31
+#define JSRE_NANOSLEEP 32
 
-typedef struct
-{
-	unsigned int	pathname;
-	unsigned int	pad0[ 3 ];
-	unsigned int	flags;
-	unsigned int	pad1[ 3 ];
-	unsigned int	mode;
-	unsigned int	pad2[ 3 ];
-} syscall_open_t;
+#define JSRE_CHDIR 33
+#define JSRE_FCHDIR 34
+#define JSRE_MKDIR 35
+#define JSRE_MKNOD 36
+#define JSRE_RMDIR 37
+#define JSRE_CHMOD 38
+#define JSRE_FCHMOD 39
+#define JSRE_CHOWN 40
+#define JSRE_FCHOWN 41
+#define JSRE_LCHOWN 42
+#define JSRE_GETCWD 43
+#define JSRE_LINK 44
+#define JSRE_SYMLINK 45
+#define JSRE_READLINK 46
+#define JSRE_SYNC 47
+#define JSRE_FSYNC 48
+#define JSRE_FDATASYNC 49
+#define JSRE_DUP2 50
+#define JSRE_LOCKF 51
+#define JSRE_TRUNCATE 52
+#define JSRE_MKSTEMP 53
+#define JSRE_MKTEMP 54
+#define JSRE_OPENDIR 55
+#define JSRE_CLOSEDIR 56
+#define JSRE_READDIR 57
+#define JSRE_REWINDDIR 58
+#define JSRE_SEEKDIR 59
+#define JSRE_TELLDIR 60
+#define JSRE_SCHED_YIELD 61
+#define JSRE_UMASK 62
+#define JSRE_UTIME 63
+#define JSRE_UTIMES 64
+#define JSRE_PREAD 65
+#define JSRE_PWRITE 66
+#define JSRE_READV 67
+#define JSRE_WRITEV 68
 
-typedef struct
-{
-	unsigned int	file;
-	unsigned int	pad0[ 3 ];
-	unsigned int	ptr;
-	unsigned int	pad1[ 3 ];
-	unsigned int	len;
-	unsigned int	pad2[ 3 ];
-} syscall_write_t;
-
-typedef struct
-{
-	unsigned int	file;
-	unsigned int	pad0[ 3 ];
-	unsigned int	ptr;
-	unsigned int	pad1[ 3 ];
-	unsigned int	len;
-	unsigned int	pad2[ 3 ];
-} syscall_read_t;
-
-typedef struct
-{
-	unsigned int	file;
-	unsigned int	pad0[ 3 ];
-} syscall_close_t;
-
-typedef struct
-{
-	unsigned int	file;
-	unsigned int	pad0[ 3 ];
-	unsigned int	offset;
-	unsigned int	pad1[ 3 ];
-	unsigned int	whence;
-	unsigned int	pad2[ 3 ];
-} syscall_lseek_t;
-
-typedef struct
-{
-	unsigned int	file;
-	unsigned int	pad0[ 3 ];
-	unsigned int	length;
-	unsigned int	pad1[ 3 ];
-} syscall_ftruncate_t;
-
-typedef struct
-{
-        unsigned int    pathname;
-        unsigned int    pad0[ 3 ];
-        unsigned int    mode;
-        unsigned int    pad1[ 3 ];
-} syscall_access_t;
-
-typedef struct
-{
-	unsigned int	oldfd;
-	unsigned int	pad0[ 3 ];
-} syscall_dup_t;
-
-typedef struct
-{
-	unsigned int	time;
-	unsigned int	pad0[ 3 ];
-} syscall_time_t;
-
-typedef struct
-{
-	unsigned int	pathname;
-	unsigned int	pad0[ 3 ];
-} syscall_unlink_t;
-
-typedef struct
-{
-        unsigned int    file;
-        unsigned int    pad0[ 3 ];
-        unsigned int    ptr;
-        unsigned int    pad1[ 3 ];
-} syscall_fstat_t;
-
-typedef struct
-{
-        unsigned int    pathname;
-        unsigned int    pad0[ 3 ];
-        unsigned int    ptr;
-        unsigned int    pad1[ 3 ];
-} syscall_stat_t;
-
-typedef struct
-{
-	unsigned int	rc;
-	unsigned int	pad0[ 2 ];
-	unsigned int	err;
-} syscall_out_t;
-
-typedef struct {
+struct jsre_stat {
     unsigned int dev;
     unsigned int ino;
     unsigned int mode;
@@ -184,8 +109,8 @@ typedef struct {
     unsigned int atime;
     unsigned int mtime;
     unsigned int ctime;
-} jsre_stat_t;
+};
 
-void _send_to_ppe (unsigned int signalcode, unsigned int opcode, void *data);
+void __conv_stat (struct stat *stat, struct jsre_stat *jstat);
 
 #endif

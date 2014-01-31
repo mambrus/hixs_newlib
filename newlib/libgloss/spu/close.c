@@ -30,20 +30,10 @@ POSSIBILITY OF SUCH DAMAGE.
 Author: Andreas Neukoetter (ti95neuk@de.ibm.com)
 */
 
-#include <errno.h>
 #include "jsre.h"
 
 int
 close (int file)
 {
-        syscall_close_t sys ;
-	syscall_out_t	*psys_out = ( syscall_out_t* )&sys;
-
-	sys.file = file;
-
-        _send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_CLOSE, &sys);
-
-        errno = psys_out->err;
-        return ( psys_out->rc);
+        return __send_to_ppe (JSRE_POSIX1_SIGNALCODE, JSRE_CLOSE, &file);
 }
-

@@ -10,6 +10,10 @@
 #include <varargs.h>
 #endif
 
+#ifdef INTEGER_ONLY
+#  define vsprintf vsiprintf
+#endif
+
 typedef struct
 {
   char *str;
@@ -19,21 +23,23 @@ typedef struct
   va_list ap;
 } c99_vsprintf_t;
 
+#ifndef _REENT_ONLY
+
 int
 _DEFUN (vsprintf, (str, fmt, ap),
      char *str _AND
      _CONST char *fmt _AND
      va_list ap)
 {
-  int* ret;
   c99_vsprintf_t args;
-  ret = (int*) &args;
+
+  CHECK_STR_INIT(_REENT);
 
   args.str = str;
   args.fmt = (char*) fmt;
   va_copy(args.ap,ap);
 
-  send_to_ppe(SPE_C99_SIGNALCODE, SPE_C99_VSPRINTF, &args);
-
-  return *ret;
+  return __send_to_ppe(SPE_C99_SIGNALCODE, SPE_C99_VSPRINTF, &args);
 }
+
+#endif /* ! _REENT_ONLY */

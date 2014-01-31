@@ -78,7 +78,7 @@ made, 0 is returned.
 the converted value is too large, and sets <<errno>> to <<ERANGE>>.
 
 PORTABILITY
-<<strtoll>> is nonstandard.
+<<strtoll>> is ANSI.
 
 No supporting OS subroutines are required.
 */
