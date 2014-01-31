@@ -61,11 +61,7 @@ _DEFUN(__sfvwrite_r, (ptr, fp, uio),
 
   /* make sure we can write */
   if (cantwrite (ptr, fp))
-    {
-      fp->_flags |= __SERR;
-      ptr->_errno = EBADF;
-      return EOF;
-    }
+    return EOF;
 
   iov = uio->uio_iov;
   len = 0;
@@ -159,8 +155,10 @@ _DEFUN(__sfvwrite_r, (ptr, fp, uio),
 							 newsize);
 		      if (!str)
 			{
-			  /* Free buffer which is no longer used.  */
+			  /* Free buffer which is no longer used and clear
+			     __SMBF flag to avoid double free in fclose.  */
 			  _free_r (ptr, fp->_bf._base);
+			  fp->_flags &=  ~__SMBF;
 			  /* Ensure correct errno, even if free changed it.  */
 			  ptr->_errno = ENOMEM;
 			  goto err;

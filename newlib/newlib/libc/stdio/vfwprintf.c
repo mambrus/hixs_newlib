@@ -240,7 +240,7 @@ extern int _EXFUN(_ldcheck,(_LONG_DOUBLE *));
 # endif /* !_NO_LONGDBL */
 
 static wchar_t *wcvt(struct _reent *, _PRINTF_FLOAT_TYPE, int, int, wchar_t *,
-		    int *, int, int *, wchar_t *);
+		    int *, int, int *, wchar_t *, int);
 
 static int wexponent(wchar_t *, int, int);
 
@@ -396,10 +396,11 @@ _DEFUN(_VFWPRINTF_R, (data, fp, fmt0, ap),
 	wchar_t sign;		/* sign prefix (' ', '+', '-', or \0) */
 #ifdef _WANT_IO_C99_FORMATS
 				/* locale specific numeric grouping */
-	wchar_t thousands_sep;
-	const char *grouping;
+	wchar_t thousands_sep = L'\0';
+	const char *grouping = NULL;
 #endif
-#ifdef _MB_CAPABLE
+#if defined (_MB_CAPABLE) && !defined (__HAVE_LOCALE_INFO_EXTENDED__) \
+    && (defined (FLOATING_POINT) || defined (_WANT_IO_C99_FORMATS))
 	mbstate_t state;        /* mbtowc calls from library must not change state */
 #endif
 #ifdef FLOATING_POINT
@@ -415,7 +416,7 @@ _DEFUN(_VFWPRINTF_R, (data, fp, fmt0, ap),
 #if defined (FLOATING_POINT) || defined (_WANT_IO_C99_FORMATS)
 	int ndig = 0;		/* actual number of digits returned by cvt */
 #endif
-#ifdef _WANT_IO_C99_FORMATS
+#if defined (FLOATING_POINT) && defined (_WANT_IO_C99_FORMATS)
 	int nseps;		/* number of group separators with ' */
 	int nrepeats;		/* number of repeats of the last group */
 #endif
@@ -553,20 +554,20 @@ _DEFUN(_VFWPRINTF_R, (data, fp, fmt0, ap),
 #ifndef STRING_ONLY
 	/* Initialize std streams if not dealing with sprintf family.  */
 	CHECK_INIT (data, fp);
-	_flockfile (fp);
+	_newlib_flockfile_start (fp);
 
 	ORIENT(fp, 1);
 
 	/* sorry, fwprintf(read_only_file, "") returns EOF, not 0 */
 	if (cantwrite (data, fp)) {
-		_funlockfile (fp);
+		_newlib_flockfile_exit (fp);
 		return (EOF);
 	}
 
 	/* optimise fwprintf(stderr) (and other unbuffered Unix files) */
 	if ((fp->_flags & (__SNBF|__SWR|__SRW)) == (__SNBF|__SWR) &&
 	    fp->_file >= 0) {
-		_funlockfile (fp);
+		_newlib_flockfile_exit (fp);
 		return (__sbwprintf (data, fp, fmt0, ap));
 	}
 #else /* STRING_ONLY */
@@ -619,9 +620,9 @@ _DEFUN(_VFWPRINTF_R, (data, fp, fmt0, ap),
 		sign = L'\0';
 #ifdef FLOATING_POINT
 		lead = 0;
-#endif
 #ifdef _WANT_IO_C99_FORMATS
 		nseps = nrepeats = 0;
+#endif
 #endif
 #ifndef _NO_POS_ARGS
 		N = arg_index;
@@ -996,7 +997,23 @@ reswitch:	switch (ch) {
 			flags |= FPT;
 
 			cp = wcvt (data, _fpvalue, prec, flags, &softsign,
-				   &expt, ch, &ndig, cp);
+				   &expt, ch, &ndig, cp, BUF);
+
+			/* If buf is not large enough for the converted wchar_t
+			   sequence, call wcvt again with a malloced new buffer.
+			   This should happen fairly rarely.
+			 */
+			if (cp == buf && ndig > BUF && malloc_buf == NULL) {
+				if ((malloc_buf =
+				    (wchar_t *)_malloc_r (data, ndig * sizeof (wchar_t)))
+				    == NULL)
+				  {
+				    fp->_flags |= __SERR;
+				    goto error;
+				  }
+				cp = wcvt (data, _fpvalue, prec, flags, &softsign,
+					   &expt, ch, &ndig, malloc_buf, ndig);
+			}
 
 			if (ch == L'g' || ch == L'G') {
 				if (expt <= -4 || expt > prec)
@@ -1058,6 +1075,15 @@ reswitch:	switch (ch) {
 				sign = L'-';
 			break;
 #endif /* FLOATING_POINT */
+#ifdef _GLIBC_EXTENSION
+		case L'm':  /* GNU extension */
+			{
+				int dummy;
+				cp = (wchar_t *) _strerror_r (data, data->_errno, 1, &dummy);
+			}
+			flags &= ~LONGINT;
+			goto string;
+#endif
 		case L'n':
 #ifndef _NO_LONGLONG
 			if (flags & QUADINT)
@@ -1102,8 +1128,11 @@ reswitch:	switch (ch) {
 #ifdef _WANT_IO_C99_FORMATS
 		case L'S':	/* POSIX extension */
 #endif
-			sign = '\0';
 			cp = GET_ARG (N, ap, wchar_ptr_t);
+#ifdef _GLIBC_EXTENSION
+string:
+#endif
+			sign = '\0';
 #ifndef __OPTIMIZE_SIZE__
 			/* Behavior is undefined if the user passed a
 			   NULL string when precision is not 0.
@@ -1116,7 +1145,7 @@ reswitch:	switch (ch) {
 			else
 #endif /* __OPTIMIZE_SIZE__ */
 #ifdef _MB_CAPABLE
-			if (ch == L's' && !(flags & LONGINT)) {
+			if (ch != L'S' && !(flags & LONGINT)) {
 				char *arg = (char *) cp;
 				size_t insize = 0, nchars = 0, nconv = 0;
 				mbstate_t ps;
@@ -1437,7 +1466,7 @@ error:
 	if (malloc_buf != NULL)
 		_free_r (data, malloc_buf);
 #ifndef STRING_ONLY
-	_funlockfile (fp);
+	_newlib_flockfile_end (fp);
 #endif
 	return (__sferror (fp) ? EOF : ret);
 	/* NOTREACHED */
@@ -1450,11 +1479,15 @@ error:
    to whether trailing zeros must be included.  Set *SIGN to nonzero
    if VALUE was negative.  Set *DECPT to the exponent plus one.  Set
    *LENGTH to the length of the returned string.  CH must be one of
-   [aAeEfFgG]; if it is [aA], then the return string lives in BUF,
-   otherwise the return value shares the mprec reentrant storage.  */
+   [aAeEfFgG]; different from vfprintf.c:cvt(), the return string
+   lives in BUF regardless of CH.  LEN is the length of BUF, except
+   when CH is [aA], in which case LEN is not in use.  If BUF is not
+   large enough for the converted string, only the first LEN number
+   of characters will be returned in BUF, but *LENGTH will be set to
+   the full length of the string before the truncation.  */
 static wchar_t *
 wcvt(struct _reent *data, _PRINTF_FLOAT_TYPE value, int ndigits, int flags,
-     wchar_t *sign, int *decpt, int ch, int *length, wchar_t *buf)
+     wchar_t *sign, int *decpt, int ch, int *length, wchar_t *buf, int len)
 {
 	int mode, dsgn;
 # ifdef _NO_LONGDBL
@@ -1548,12 +1581,13 @@ wcvt(struct _reent *data, _PRINTF_FLOAT_TYPE value, int ndigits, int flags,
 		while (rve < bp)
 			*rve++ = '0';
 	  }
+
+	  *length = rve - digits; /* full length of the string */
 #ifdef _MB_CAPABLE
-	  *length = _mbsnrtowcs_r (data, buf, (const char **) &digits,
-				   rve - digits, BUF, NULL);
+	  _mbsnrtowcs_r (data, buf, (const char **) &digits, *length,
+			 len, NULL);
 #else
-	  *length = rve - digits;
-	  for (i = 0; i < *length && i < BUF; ++i)
+	  for (i = 0; i < *length && i < len; ++i)
 	    buf[i] = (wchar_t) digits[i];
 #endif
 	  return buf;

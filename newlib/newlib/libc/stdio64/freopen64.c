@@ -97,17 +97,24 @@ _DEFUN (_freopen64_r, (ptr, file, mode, fp),
   int flags, oflags;
   int e = 0;
 
-  __sfp_lock_acquire ();
 
   CHECK_INIT (ptr, fp);
 
-  _flockfile(fp);
+  /* We can't use the _newlib_flockfile_XXX macros here due to the
+     interlocked locking with the sfp_lock. */
+#if !defined (__SINGLE_THREAD__) && defined (_POSIX_THREADS)
+  int __oldcancel;
+  pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &__oldcancel);
+#endif
+  _flockfile (fp);
 
   if ((flags = __sflags (ptr, mode, &oflags)) == 0)
     {
-      _funlockfile(fp);
+      _funlockfile (fp);
+#if !defined (__SINGLE_THREAD__) && defined (_POSIX_THREADS)
+      pthread_setcancelstate (__oldcancel, &__oldcancel);
+#endif
       _fclose_r (ptr, fp);
-      __sfp_lock_release ();
       return NULL;
     }
 
@@ -204,13 +211,17 @@ _DEFUN (_freopen64_r, (ptr, file, mode, fp),
 
   if (f < 0)
     {				/* did not get it after all */
+      __sfp_lock_acquire ();
       fp->_flags = 0;		/* set it free */
       ptr->_errno = e;		/* restore in case _close clobbered */
-      _funlockfile(fp);
+      _funlockfile (fp);
 #ifndef __SINGLE_THREAD__
       __lock_close_recursive (fp->_lock);
 #endif
       __sfp_lock_release ();
+#if !defined (__SINGLE_THREAD__) && defined (_POSIX_THREADS)
+      pthread_setcancelstate (__oldcancel, &__oldcancel);
+#endif
       return NULL;
     }
 
@@ -230,8 +241,10 @@ _DEFUN (_freopen64_r, (ptr, file, mode, fp),
 
   fp->_flags |= __SL64;
 
-  _funlockfile(fp);
-  __sfp_lock_release ();
+  _funlockfile (fp);
+#if !defined (__SINGLE_THREAD__) && defined (_POSIX_THREADS)
+  pthread_setcancelstate (__oldcancel, &__oldcancel);
+#endif
   return fp;
 }
 

@@ -8,6 +8,7 @@
 #define __need_size_t
 #define __need_wchar_t
 #define __need_wint_t
+#define __need_NULL
 #include <stddef.h>
 
 #define __need___va_list
@@ -16,9 +17,8 @@
 /* For _mbstate_t definition. */
 #include <sys/_types.h>
 
-#ifndef NULL
-#define NULL	0
-#endif
+/* For __STDC_ISO_10646__ */
+#include <sys/features.h>
 
 #ifndef WEOF
 # define WEOF ((wint_t)-1)

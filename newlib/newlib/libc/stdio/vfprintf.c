@@ -333,8 +333,10 @@ int __sprint_r (struct _reent *, FILE *, register struct __suio *);
  * Helper function for `fprintf to unbuffered unix file': creates a
  * temporary buffer.  We only work on write-only files; this avoids
  * worries about ungetc buffers and so forth.
+ *
+ * Make sure to avoid inlining.
  */
-static int
+_NOINLINE_STATIC int
 _DEFUN(__sbprintf, (rptr, fp, fmt, ap),
        struct _reent *rptr _AND
        register FILE *fp   _AND
@@ -567,9 +569,9 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 	char sign;		/* sign prefix (' ', '+', '-', or \0) */
 #ifdef _WANT_IO_C99_FORMATS
 				/* locale specific numeric grouping */
-	char *thousands_sep;
-	size_t thsnd_len;
-	const char *grouping;
+	char *thousands_sep = NULL;
+	size_t thsnd_len = 0;
+	const char *grouping = NULL;
 #endif
 #ifdef FLOATING_POINT
 	char *decimal_point = _localeconv_r (data)->decimal_point;
@@ -585,7 +587,7 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 #if defined (FLOATING_POINT) || defined (_WANT_IO_C99_FORMATS)
 	int ndig = 0;		/* actual number of digits returned by cvt */
 #endif
-#ifdef _WANT_IO_C99_FORMATS
+#if defined (FLOATING_POINT) && defined (_WANT_IO_C99_FORMATS)
 	int nseps;		/* number of group separators with ' */
 	int nrepeats;		/* number of repeats of the last group */
 #endif
@@ -708,20 +710,20 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 #ifndef STRING_ONLY
 	/* Initialize std streams if not dealing with sprintf family.  */
 	CHECK_INIT (data, fp);
-	_flockfile (fp);
+	_newlib_flockfile_start (fp);
 
 	ORIENT(fp, -1);
 
 	/* sorry, fprintf(read_only_file, "") returns EOF, not 0 */
 	if (cantwrite (data, fp)) {
-		_funlockfile (fp);
+		_newlib_flockfile_exit (fp);
 		return (EOF);
 	}
 
 	/* optimise fprintf(stderr) (and other unbuffered Unix files) */
 	if ((fp->_flags & (__SNBF|__SWR|__SRW)) == (__SNBF|__SWR) &&
 	    fp->_file >= 0) {
-		_funlockfile (fp);
+		_newlib_flockfile_exit (fp);
 		return (__sbprintf (data, fp, fmt0, ap));
 	}
 #else /* STRING_ONLY */
@@ -793,9 +795,9 @@ _DEFUN(_VFPRINTF_R, (data, fp, fmt0, ap),
 		sign = '\0';
 #ifdef FLOATING_POINT
 		lead = 0;
-#endif
 #ifdef _WANT_IO_C99_FORMATS
 		nseps = nrepeats = 0;
+#endif
 #endif
 #ifndef _NO_POS_ARGS
 		N = arg_index;
@@ -1225,6 +1227,15 @@ reswitch:	switch (ch) {
 				sign = '-';
 			break;
 #endif /* FLOATING_POINT */
+#ifdef _GLIBC_EXTENSION
+		case 'm':  /* extension */
+			{
+				int dummy;
+				cp = _strerror_r (data, data->_errno, 1, &dummy);
+			}
+			flags &= ~LONGINT;
+			goto string;
+#endif
 		case 'n':
 #ifndef _NO_LONGLONG
 			if (flags & QUADINT)
@@ -1272,8 +1283,11 @@ reswitch:	switch (ch) {
 #ifdef _WANT_IO_C99_FORMATS
 		case 'S':
 #endif
-			sign = '\0';
 			cp = GET_ARG (N, ap, char_ptr_t);
+#ifdef _GLIBC_EXTENSION
+string:
+#endif
+			sign = '\0';
 #ifndef __OPTIMIZE_SIZE__
 			/* Behavior is undefined if the user passed a
 			   NULL string when precision is not 0.
@@ -1621,7 +1635,7 @@ error:
 	if (malloc_buf != NULL)
 		_free_r (data, malloc_buf);
 #ifndef STRING_ONLY
-	_funlockfile (fp);
+	_newlib_flockfile_end (fp);
 #endif
 	return (__sferror (fp) ? EOF : ret);
 	/* NOTREACHED */

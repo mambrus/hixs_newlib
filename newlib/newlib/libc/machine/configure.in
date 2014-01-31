@@ -24,6 +24,7 @@ fi
 if test -n "${machine_dir}"; then
   case ${machine_dir} in
 	a29k) AC_CONFIG_SUBDIRS(a29k) ;;
+	aarch64) AC_CONFIG_SUBDIRS(aarch64) ;;
 	arm) AC_CONFIG_SUBDIRS(arm) ;;
 	bfin) AC_CONFIG_SUBDIRS(bfin) ;;
 	cr16) AC_CONFIG_SUBDIRS(cr16) ;;
@@ -31,6 +32,7 @@ if test -n "${machine_dir}"; then
 	crx) AC_CONFIG_SUBDIRS(crx) ;;
 	d10v) AC_CONFIG_SUBDIRS(d10v) ;;
 	d30v) AC_CONFIG_SUBDIRS(d30v) ;;
+	epiphany) AC_CONFIG_SUBDIRS(epiphany) ;;
 	fr30) AC_CONFIG_SUBDIRS(fr30) ;;
 	frv) AC_CONFIG_SUBDIRS(frv) ;;
 	h8300) AC_CONFIG_SUBDIRS(h8300) ;;
@@ -54,6 +56,7 @@ if test -n "${machine_dir}"; then
 	mt) AC_CONFIG_SUBDIRS(mt) ;;
 	necv70) AC_CONFIG_SUBDIRS(necv70) ;;
 	powerpc) AC_CONFIG_SUBDIRS(powerpc) ;;
+	rl78) AC_CONFIG_SUBDIRS(rl78) ;;
 	rx) AC_CONFIG_SUBDIRS(rx) ;;
 	sh) AC_CONFIG_SUBDIRS(sh) ;;
 	sparc) AC_CONFIG_SUBDIRS(sparc) ;;
@@ -65,7 +68,6 @@ if test -n "${machine_dir}"; then
 	w65) AC_CONFIG_SUBDIRS(w65) ;;
 	x86_64) AC_CONFIG_SUBDIRS(x86_64) ;;
 	xc16x) AC_CONFIG_SUBDIRS(xc16x) ;;
-	xscale) AC_CONFIG_SUBDIRS(xscale) ;;
 	xstormy16) AC_CONFIG_SUBDIRS(xstormy16) ;;
 	z8k) AC_CONFIG_SUBDIRS(z8k) ;;
   esac;

@@ -281,7 +281,7 @@ _DEFUN(_fmemopen_r, (ptr, buf, size, mode),
 
   if ((flags = __sflags (ptr, mode, &dummy)) == 0)
     return NULL;
-  if (!size || !(buf || flags & __SAPP))
+  if (!size || !(buf || flags & __SRW))
     {
       ptr->_errno = EINVAL;
       return NULL;
@@ -291,12 +291,12 @@ _DEFUN(_fmemopen_r, (ptr, buf, size, mode),
   if ((c = (fmemcookie *) _malloc_r (ptr, sizeof *c + (buf ? 0 : size)))
       == NULL)
     {
-      __sfp_lock_acquire ();
+      _newlib_sfp_lock_start ();
       fp->_flags = 0;		/* release */
 #ifndef __SINGLE_THREAD__
       __lock_close_recursive (fp->_lock);
 #endif
-      __sfp_lock_release ();
+      _newlib_sfp_lock_end ();
       return NULL;
     }
 
@@ -310,7 +310,7 @@ _DEFUN(_fmemopen_r, (ptr, buf, size, mode),
     {
       /* r+/w+/a+, and no buf: file starts empty.  */
       c->buf = (char *) (c + 1);
-      *(char *) buf = '\0';
+      c->buf[0] = '\0';
       c->pos = c->eof = 0;
       c->append = (flags & __SAPP) != 0;
     }
@@ -343,7 +343,7 @@ _DEFUN(_fmemopen_r, (ptr, buf, size, mode),
 	}
     }
 
-  _flockfile (fp);
+  _newlib_flockfile_start (fp);
   fp->_file = -1;
   fp->_flags = flags;
   fp->_cookie = c;
@@ -355,7 +355,7 @@ _DEFUN(_fmemopen_r, (ptr, buf, size, mode),
   fp->_flags |= __SL64;
 #endif
   fp->_close = fmemcloser;
-  _funlockfile (fp);
+  _newlib_flockfile_end (fp);
   return fp;
 }
 

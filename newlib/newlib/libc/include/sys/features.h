@@ -15,7 +15,7 @@
  *  OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY OF THIS
  *  SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
  *
- *  $Id: features.h,v 1.22 2010/08/09 08:29:22 corinna Exp $
+ *  $Id: features.h,v 1.28 2012/10/16 18:45:23 corinna Exp $
  */
 
 #ifndef _SYS_FEATURES_H
@@ -24,6 +24,16 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* Macro to test version of GCC.  Returns 0 for non-GCC or too old GCC. */
+#ifndef __GNUC_PREREQ
+# if defined __GNUC__ && defined __GNUC_MINOR__
+#  define __GNUC_PREREQ(maj, min) \
+	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+# else
+#  define __GNUC_PREREQ(maj, min) 0
+# endif
+#endif /* __GNUC_PREREQ */
 
 /* RTEMS adheres to POSIX -- 1003.1b with some features from annexes.  */
 
@@ -102,8 +112,8 @@ extern "C" {
 /* #define _POSIX_ASYNCHRONOUS_IO		    -1 */
 /* #define _POSIX_BARRIERS			    -1 */
 #define _POSIX_CHOWN_RESTRICTED			     1
-/* #define _POSIX_CLOCK_SELECTION		    -1 */
-/* #define _POSIX_CPUTIME			    -1 */
+#define _POSIX_CLOCK_SELECTION			200112L
+#define _POSIX_CPUTIME			    	200112L
 #define _POSIX_FSYNC				200112L
 #define _POSIX_IPV6				200112L
 #define _POSIX_JOB_CONTROL			     1
@@ -125,12 +135,12 @@ extern "C" {
 #define _POSIX_SHARED_MEMORY_OBJECTS		200112L 
 #define _POSIX_SHELL				     1
 /* #define _POSIX_SPAWN				    -1 */
-/* #define _POSIX_SPIN_LOCKS			    -1 */
+#define _POSIX_SPIN_LOCKS			    200112L
 /* #define _POSIX_SPORADIC_SERVER		    -1 */
 #define _POSIX_SYNCHRONIZED_IO			200112L
-/* #define _POSIX_THREAD_ATTR_STACKADDR		    -1 */
+#define _POSIX_THREAD_ATTR_STACKADDR		200112L
 #define _POSIX_THREAD_ATTR_STACKSIZE		200112L
-/* #define _POSIX_THREAD_CPUTIME		    -1 */
+#define _POSIX_THREAD_CPUTIME			200112L
 /* #define _POSIX_THREAD_PRIO_INHERIT		    -1 */
 /* #define _POSIX_THREAD_PRIO_PROTECT		    -1 */
 #define _POSIX_THREAD_PRIORITY_SCHEDULING	200112L
@@ -178,6 +188,12 @@ extern "C" {
 /* #define _XOPEN_UNIX				    -1 */
 
 #endif /* !__STRICT_ANSI__ || __cplusplus || __STDC_VERSION__ >= 199901L */
+
+/* The value corresponds to UNICODE version 4.0, which is the version
+   supported by XP.  Newlib supports 5.2 (2011) but so far Cygwin needs
+   the MS conversions for double-byte charsets. */
+#define __STDC_ISO_10646__ 200305L
+
 #endif /* __CYGWIN__ */
 
 /* Per the permission given in POSIX.1-2008 section 2.2.1, define

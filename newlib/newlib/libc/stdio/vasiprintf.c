@@ -26,6 +26,8 @@ static char sccsid[] = "%W% (Berkeley) %G%";
 #include <limits.h>
 #include <stdarg.h>
 
+#include "local.h"
+
 #ifndef _REENT_ONLY
 
 int
@@ -57,7 +59,7 @@ _DEFUN(_vasiprintf_r, (ptr, strp, fmt, ap),
   if (ret >= 0)
     {
       *f._p = 0;
-      *strp = f._bf._base;
+      *strp = (char *) f._bf._base;
     }
   return ret;
 }

@@ -10,9 +10,9 @@
 #include "_ansi.h"
 #include <sys/reent.h>
 
-#ifndef NULL
-#define	NULL	0
-#endif
+#define __need_size_t
+#define __need_NULL
+#include <stddef.h>
 
 /* Get _CLOCKS_PER_SEC_ */
 #include <machine/time.h>
@@ -23,8 +23,6 @@
 
 #define CLOCKS_PER_SEC _CLOCKS_PER_SEC_
 #define CLK_TCK CLOCKS_PER_SEC
-#define __need_size_t
-#include <stddef.h>
 
 #include <sys/types.h>
 
@@ -175,6 +173,22 @@ int _EXFUN(nanosleep, (const struct timespec  *rqtp, struct timespec *rmtp));
 #endif
 #endif /* _POSIX_TIMERS */
 
+#if defined(_POSIX_CLOCK_SELECTION)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int _EXFUN(clock_nanosleep,
+  (clockid_t clock_id, int flags, const struct timespec *rqtp,
+   struct timespec *rmtp));
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _POSIX_CLOCK_SELECTION */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -212,7 +226,7 @@ extern "C" {
    the identifier of the CPU_time clock associated with the PROCESS
    making the function call.  */
 
-#define CLOCK_PROCESS_CPUTIME (clockid_t)2
+#define CLOCK_PROCESS_CPUTIME_ID (clockid_t)2
 
 #endif
 
@@ -222,7 +236,7 @@ extern "C" {
     the identifier of the CPU_time clock associated with the THREAD
     making the function call.  */
 
-#define CLOCK_THREAD_CPUTIME (clockid_t)3
+#define CLOCK_THREAD_CPUTIME_ID (clockid_t)3
 
 #endif
 

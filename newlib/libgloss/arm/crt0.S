@@ -1,4 +1,5 @@
 #include "newlib.h"
+#include "arm.h"
 #include "swi.h"
 
 /* ANSI concatenation macros.  */
@@ -16,10 +17,34 @@
 #define _fini	__libc_fini_array
 #endif
 
+#if defined(__ARM_EABI__) && defined(__thumb__) && !defined(__thumb2__)
+/* For Thumb1 we need to force the architecture to be sure that we get the
+   correct attributes on the object file; otherwise the assembler will get
+   confused and mark the object as being v6T2.  */
+#if defined(__ARM_ARCH_4T__)
+	.arch armv4t
+#elif defined(__ARM_ARCH_5T__) || defined(__ARM_ARCH_5TE__)
+	/* Nothing in this object requires higher than v5.  */
+	.arch armv5t
+#elif defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) \
+	|| defined(__ARM_ARCH_6K__) || defined(__ARM_ARCH_6Z__) \
+	|| defined(__ARM_ARCH_6ZK__)
+	/* Nothing in this object requires higher than v6.  */
+	.arch armv6
+#elif defined(__ARM_ARCH_6M__)
+#ifdef ARM_RDP_MONITOR
+	/* Object file uses SVC, so mark as v6s-m.  */
+	.arch armv6s-m
+#else
+	.arch armv6-m
+#endif
+#endif
+#endif
+
 /* .text is used instead of .section .text so it works with arm-aout too.  */
 	.text
-#if defined(__thumb2__)
 	.syntax unified
+#ifdef THUMB_V7_V6M
 	.thumb
 .macro FUNC_START name
 	.global \name
@@ -33,6 +58,16 @@
 \name:
 .endm
 #endif
+
+.macro indirect_call reg
+#ifdef HAVE_CALL_INDIRECT
+	blx \reg
+#else
+	mov	lr, pc
+	mov	pc, \reg
+#endif
+.endm
+
 	.align 	0
 
 	FUNC_START	_mainCRTStartup
@@ -48,25 +83,68 @@
 	/*  Issue Demon SWI to read stack info */
 	swi	SWI_GetEnv	/*  Returns command line in r0 */
 	mov	sp,r1		/*  and the highest memory address in r1 */
-	ldr	sl, .LC2	/*  stack limit is at end of data */
-	add	sl, sl, #256	/*  allow slop for stack overflow handling */
-				/*  and small frames */
+
+	/*  stack limit is at end of data */
+	/*  allow slop for stack overflow handling and small frames */
+#ifdef __ARM_ARCH_6M__
+	ldr	r0, .LC2
+	adds	r0, #128
+	adds	r0, #128
+	mov	sl, r0
+#else
+	ldr	sl, .LC2
+	add	sl, sl, #256
+#endif
 #else
 #ifdef ARM_RDI_MONITOR
 	/*  Issue Angel SWI to read stack info */
-	mov	r0, #AngelSWI_Reason_HeapInfo
+	movs	r0, #AngelSWI_Reason_HeapInfo
 	adr	r1, .LC0	/*  point at ptr to 4 words to receive data */
-#if defined(__thumb2__)
+#ifdef THUMB_V7M_V6M
 	bkpt	AngelSWI
+#elif defined(__thumb2__)
+	/*  We are in thumb mode for startup on armv7 architectures. */
+	AngelSWIAsm	AngelSWI
 #else
-	/*  We are always in ARM mode for startup */
+	/*  We are always in ARM mode for startup on pre armv7 archs. */
 	AngelSWIAsm	AngelSWI_ARM
 #endif
 	ldr	r0, .LC0	/*  point at values read */
-	ldr	sp, [r0, #8]
-	ldr	sl, [r0, #12]
-	add	sl, sl, #256	/*  allow slop for stack overflow handling */
-				/*  and small frames */
+
+	ldr     r1, [r0, #0]
+	cmp     r1, #0
+	bne     .LC32
+	/* If the heap base value [r0, #0] is 0 then the heap base is actually 
+	   at the end of program data (i.e. __end__). See:
+           http://infocenter.arm.com/help/topic/com.arm.doc.dui0471-/Bacbefaa.html
+	   for more information.  */
+	ldr     r1, .LC31
+	str     r1, [r0, #0]
+.LC32:	
+	ldr	r1, [r0, #8]
+	ldr	r2, [r0, #12]
+	/*  We skip setting sp/sl if 0 returned from semihosting. 
+	    - According to semihosting docs, if 0 returned from semihosting,
+	      the system was unable to calculate the real value, so it's ok
+	      to skip setting sp/sl to 0 here.
+	    - Considering M-profile processors, We might want to initialize
+	      sp by the first entry of vector table and return 0 to SYS_HEAPINFO
+	      semihosting call, which will be skipped here. */
+	cmp	r1, #0
+	beq	.LC26
+	mov	sp, r1
+.LC26:
+	cmp	r2, #0
+	beq	.LC27
+	/*  allow slop for stack overflow handling and small frames */
+#ifdef __ARM_ARCH_6M__
+	adds	r2, #128
+	adds	r2, #128
+	mov	sl, r2
+#else
+	add	sl, r2, #256
+#endif
+.LC27:
 #else
 	/*  Set up the stack pointer to a fixed value */
 	/*  Changes by toralf:
@@ -85,13 +163,19 @@
 #ifdef __thumb2__
 	it	eq
 #endif	
+#ifdef __ARM_ARCH_6M__
+	bne	.LC28
+	ldr	r3, .LC0
+.LC28:
+#else
 	ldreq	r3, .LC0
+#endif
 	/* Note: This 'mov' is essential when starting in User, and ensures we
 		 always get *some* sp value for the initial mode, even if we 
 		 have somehow missed it below (in which case it gets the same
 		 value as FIQ - not ideal, but better than nothing.) */
 	mov	sp, r3
-#ifdef __thumb2__
+#ifdef THUMB_V7_V6M
 	/* XXX Fill in stack assignments for interrupt modes.  */
 #else
 	mrs	r2, CPSR
@@ -134,20 +218,27 @@
 	   this default 64k is enough for the program being executed.
 	   However, it ensures that this simple crt0 world will not
 	   immediately cause an overflow event:  */
+#ifdef __ARM_ARCH_6M__
+	movs	r2, #64
+	lsls	r2, r2, #10
+	subs	r2, r3, r2
+	mov	sl, r2
+#else
 	sub	sl, r3, #64 << 10	/* Still assumes 256bytes below sl */
 #endif
 #endif
+#endif
 	/* Zero the memory in the .bss section.  */
-	mov 	a2, #0			/* Second arg: fill value */
+	movs 	a2, #0			/* Second arg: fill value */
 	mov	fp, a2			/* Null frame pointer */
 	mov	r7, a2			/* Null frame pointer for Thumb */
 	
 	ldr	a1, .LC1		/* First arg: start of memory block */
 	ldr	a3, .LC2	
-	sub	a3, a3, a1		/* Third arg: length of block */
+	subs	a3, a3, a1		/* Third arg: length of block */
 	
 
-#if defined(__thumb__) && !defined(__thumb2__)
+#if defined(__thumb__) && !defined(THUMB_V7_V6M)
 	/* Enter Thumb mode.... */
 	add	a4, pc, #1	/* Get the address of the Thumb block */
 	bx	a4		/* Go there and start Thumb decoding  */
@@ -167,41 +258,31 @@ __change_mode:
 	ldr	r3, .Lhwinit
 	cmp	r3, #0
 	beq	.LC24
-#if defined(__thumb__) || defined(__thumb2__)
-	blx   r3
-#else
-	mov	lr, pc
-	mov	pc, r3
-#endif
+	indirect_call r3
 .LC24:	
 	ldr	r3, .Lswinit
 	cmp	r3, #0
 	beq	.LC25
-#if defined(__thumb__) || defined(__thumb2__)
-	blx   r3
-#else
-	mov	lr, pc
-	mov	pc, r3
-#endif
+	indirect_call r3
 
 .LC25:	
-	mov	r0, #0		/*  no arguments  */
-	mov	r1, #0		/*  no argv either */
+	movs	r0, #0		/*  no arguments  */
+	movs	r1, #0		/*  no argv either */
 #else
 	/* Need to set up standard file handles */
 	bl	FUNCTION (initialise_monitor_handles)
 	
 #ifdef ARM_RDP_MONITOR
 	swi	SWI_GetEnv	/*  sets r0 to point to the command line */
-	mov	r1, r0
+	movs	r1, r0
 #else
-	mov	r0, #AngelSWI_Reason_GetCmdLine
+	movs	r0, #AngelSWI_Reason_GetCmdLine
 	adr	r1, .LC30	/*  Space for command line */
 	AngelSWIAsm	AngelSWI
 	ldr	r1, .LC30
 #endif
 	/*  Parse string at r1 */
-	mov	r0, #0		/*  count of arguments so far */
+	movs	r0, #0		/*  count of arguments so far */
 	/* Push a NULL argument onto the end of the list.  */
 #ifdef __thumb__
 	push	{r0}
@@ -212,7 +293,7 @@ __change_mode:
 /*  Skip leading blanks */
 #ifdef __thumb__
 	ldrb	r3, [r1]
-	add	r1, #1
+	adds	r1, #1
 #else
 	ldrb	r3, [r1], #1
 #endif
@@ -228,12 +309,12 @@ __change_mode:
 	cmp	r3, #'\''
 	bne	.LC21
 .LC20:
-	mov	r2, r3
+	movs	r2, r3
 	b	.LC22
 
 .LC21:
-	mov	r2, #' '	/*  terminator type */
-	sub	r1, r1, #1	/*  adjust back to point at start char */
+	movs	r2, #' '	/*  terminator type */
+	subs	r1, r1, #1	/*  adjust back to point at start char */
 .LC22:
 #else
 	cmpne	r3, #'\''
@@ -248,11 +329,11 @@ __change_mode:
 #else
 	stmfd	sp!, {r1}
 #endif
-	add	r0, r0, #1
+	adds	r0, r0, #1
 .LC11:
 #ifdef __thumb__
 	ldrb	r3, [r1]
-	add	r1, #1
+	adds	r1, #1
 #else
 	ldrb	r3, [r1], #1
 #endif
@@ -260,8 +341,8 @@ __change_mode:
 	beq	.LC12
 	cmp	r2, r3		/*  reached terminator? */
 	bne	.LC11
-	mov	r2, #0
-	sub	r3, r1, #1
+	movs	r2, #0
+	subs	r3, r1, #1
 	strb	r2, [r3]	/*  terminate the arg string */
 	b	.LC10
 
@@ -269,24 +350,24 @@ __change_mode:
 	mov	r1, sp		/*  point at stacked arg pointers */
 	/* We've now got the stacked args in order reverse the */
 #ifdef __thumb__
-	mov	r2, r0
-	lsl	r2, #2
+	movs	r2, r0
+	lsls	r2, #2
 	add	r2, sp
 	mov	r3, sp
 .LC15:	cmp	r2, r3
 	bls	.LC14
-	sub	r2, #4
+	subs	r2, #4
 	ldr	r4, [r2]
 	ldr	r5, [r3]
 	str	r5, [r2]
 	str	r4, [r3]
-	add	r3, #4
+	adds	r3, #4
 	b	.LC15
 .LC14:	
 	/* Ensure doubleword stack alignment.  */
 	mov	r4, sp
-	mov	r5, #7
-	bic	r4, r5
+	movs	r5, #7
+	bics	r4, r5
 	mov	sp, r4
 #else
 	add	r2, sp, r0, LSL #2	/* End of args */
@@ -307,19 +388,19 @@ __change_mode:
 	   to create constructors and destructors, and for these
 	   targets we need to call the _init function and arrange
 	   for _fini to be called at program exit.  */
-	mov	r4, r0
-	mov	r5, r1
+	movs	r4, r0
+	movs	r5, r1
 	ldr	r0, .Lfini
 	bl	FUNCTION (atexit)
 	bl	FUNCTION (_init)
-	mov	r0, r4
-	mov	r1, r5
+	movs	r0, r4
+	movs	r1, r5
 #endif	
 	bl	FUNCTION (main)
 
 	bl	FUNCTION (exit)		/* Should not return.  */
 
-#if defined(__thumb__) && !defined(__thumb2__)
+#if defined(__thumb__) && !defined(THUMB_V7_V6M)
 	/* Come out of Thumb mode.  This code should be redundant.  */
 
 	mov	a4, pc
@@ -391,6 +472,8 @@ change_back:
 .LC30:
 	.word	CommandLine
 	.word	255
+.LC31:
+	.word	__end__
 
 /*  Workspace for Angel calls.  */
 	.data

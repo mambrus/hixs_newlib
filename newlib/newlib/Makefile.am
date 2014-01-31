@@ -13,6 +13,10 @@ MULTICLEAN = true
 
 LIBTOOL_VERSION_INFO = 0:0:0
 
+# The newlib hardware floating-point routines have been disabled due to
+# inaccuracy.  If you wish to work on them, you will need to edit the
+# configure.in file to re-enable the configuration option.  By default,
+# the NEWLIB_HW_FP variable will always be false.
 if NEWLIB_HW_FP
 MATHDIR = mathfp
 else
@@ -255,7 +259,7 @@ stmp-targ-include: config.status
 	  done
 	touch $@
 
-CLEANFILES = targ-include stmp-targ-include
+CLEANFILES = stmp-targ-include
 
 install-data-local:	install-toollibLIBRARIES
 if USE_LIBTOOL
@@ -328,6 +332,11 @@ endif
 	  for i in $(srcdir)/libc/sys/$(sys_dir)/machine/$(machine_dir)/include/*.h; do \
 	    if [ -f $$i ]; then \
 	     $(INSTALL_DATA) $$i $(DESTDIR)$(tooldir)/include/machine/`basename $$i`; \
+	    else true; fi ; \
+	  done ; \
+	  for i in $(NO_INCLUDE_LIST); do \
+	    if [ -f $(DESTDIR)$(tooldir)/include/$$i ]; then \
+		rm $(DESTDIR)$(tooldir)/include/$$i; \
 	    else true; fi ; \
 	  done ; \
 	else true; fi
@@ -430,3 +439,6 @@ check-DEJAGNU: site.exp
 	else \
 	   echo "WARNING: could not find \`runtest'" 1>&2 ; \
 	fi
+
+clean-local:
+	-rm -rf targ-include

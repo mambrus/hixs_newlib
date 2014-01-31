@@ -1,3 +1,352 @@
+2012-12-17  Stuart Henderson  <shenders@gcc.gnu.org>
+
+	* bfin/Makefile.in: Add BF60x support.
+	* bfin/basiccrt.S: Add core1 support.
+	* bfin/bf606.ld: New file.
+	* bfin/bf606c0.ld: New file.
+	* bfin/bf606c1.ld: New file.
+	* bfin/bf606m.ld: New file.
+	* bfin/bf607.ld: New file.
+	* bfin/bf607c0.ld: New file.
+	* bfin/bf607c1.ld: New file.
+	* bfin/bf607m.ld: New file.
+	* bfin/bf608.ld: New file.
+	* bfin/bf608c0.ld: New file.
+	* bfin/bf608c1.ld: New file.
+	* bfin/bf608m.ld: New file.
+	* bfin/bf609.ld: New file.
+	* bfin/bf609c0.ld: New file.
+	* bfin/bf609c1.ld: New file.
+	* bfin/bf609m.ld: New file.
+	* bfin/bfin-common-mc0.ld: New file.
+	* bfin/include/cdefBF606.h : New file.
+	* bfin/include/cdefBF607.h : New file.
+	* bfin/include/cdefBF608.h : New file.
+	* bfin/include/cdefBF609.h : New file.
+	* bfin/include/defBF606.h : New file.
+	* bfin/include/defBF607.h : New file.
+	* bfin/include/defBF608.h : New file.
+	* bfin/include/defBF609.h : New file.
+	* bfin/include/sys/_adi_platform.h: Add BF60x support.
+	* bfin/include/sys/anomaly_macros_rtl.h : Clean up.
+
+2012-11-23  Yufeng Zhang  <yufeng.zhang@arm.com>
+
+	* aarch64/configure.in: Replace the direct generation of
+	cpu-init/Makefile.in with AC_CONFIG_SUBDIRS(cpu-init).
+	* aarch64/configure: Re-generate.
+	* aarch64/cpu-init/Makefile.in (objtype): Remove.
+	(Makefile, config.status): Update the rules.
+	* aarch64/cpu-init/aclocal.m4: New file (generated).
+	* aarch64/cpu-init/configure.in: New file.
+	* aarch64/cpu-init/configure: New file (generated).
+
+2012-10-27  Anthony Green  <green@moxielogic.com>
+
+	* moxie/sim-unlink.S (unlink): Loop forever.
+	moxie/sim-time.S (_sim_time): Ditto.
+
+2012-10-27  Anthony Green  <green@moxielogic.com>
+
+	* moxie/crt0.S (_start): Call memset with correct
+	ABI.
+
+2012-10-03  DJ Delorie  <dj@redhat.com>
+
+	* rl78/crt0.S (_interrupt_vector_table): Convert from CPP macros
+	to GAS macros, to avoid dependence on the line separation
+	character.
+
+2012-10-01  DJ Delorie  <dj@redhat.com>
+
+	* v850/sbrk.c (_sbrk): Change heap_start to be an array of
+	undefined size, to avoid problems when compiled with -msda=4.
+
+2012-09-26  Ian Bolton  <ian.bolton@arm.com>
+        Jim MacArthur  <jim.macarthur@arm.com>
+        Marcus Shawcroft  <marcus.shawcroft@arm.com>
+        Nigel Stephens  <nigel.stephens@arm.com>
+        Ramana Radhakrishnan  <ramana.radhakrishnan@arm.com>
+        Richard Earnshaw  <rearnsha@arm.com>
+        Sofiane Naci  <sofiane.naci@arm.com>
+        Tejas Belagod  <tejas.belagod@arm.com>
+        Yufeng Zhang  <yufeng.zhang@arm.com>
+
+	* aarch64/Makefile.in: New file.
+	* aarch64/_exit.c: New file.
+	* aarch64/_kill.c: New file.
+	* aarch64/aclocal.m4: Generated.
+	* aarch64/configure: Generated.
+	* aarch64/configure.in: New file.
+	* aarch64/cpu-init/Makefile.in: New file.
+	* aarch64/cpu-init/rdimon-aem-el3.S: New file.
+	* aarch64/crt0.S: New file.
+	* aarch64/elf-rdimon.specs: New file.
+	* aarch64/libcfunc.c: New file.
+	* aarch64/svc.h: New file.
+	* aarch64/syscalls.c: New file.
+	* configure.in: Add AArch64.
+	* configure: Re-generated.
+
+2012-09-13  Anthony Green  <green@moxielogic.com>
+
+	* moxie/moxie-elf-common.ld: Add bi-endian support.
+
+2012-08-30  DJ Delorie  <dj@redhat.com>
+
+	* rx/rx.ld: Add W_* sections to .rodata.
+	* rx/rx-sim.ld: Likewise.
+
+2012-08-30  Kaushik Phatak  <kaushik.phatak@kpitcummins.com>
+
+	* cr16/sys/syscall.h: New file.
+
+2012-05-02  Greta Yorsh  <Greta.Yorsh@arm.com>
+
+	* arm/redboot-crt0.S (__change_mode): Replace mov with movs.
+
+2012-03-23  Mike Frysinger  <vapier@gentoo.org>
+
+	* cris/Makefile.in (install-lin): Add $(DESTDIR) before ${tooldir}.
+
+2012-03-12  Mike Frysinger  <vapier@gentoo.org>
+
+	* libnosys/Makefile.in (NEWLIB_CFLAGS, NEWLIB_LDFLAGS,
+	INCLUDES, CFLAGS_FOR_TARGET, LDFLAGS_FOR_TARGET,
+	AR_FLAGS, .c.o, .C.o, .s.o, .S.o, .c.s): Delete and replace
+	with @host_makefile_frag@.
+
+2012-03-12  Mike Frysinger  <vapier@gentoo.org>
+
+	* config/default.mh (AR_FLAGS): Set to rc.
+
+2012-03-09  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* epiphany/access.c: Add modification rights to clause as
+	permitted by DJ Delorie.
+	* iq2000/access.c: Ditto.
+	* mn10200/access.c: Ditto.
+	* mn10300/access.c: Ditto.
+	* mt/access.c: Ditto.
+	* v850/access.c: Ditto.
+
+2012-03-02  Bin Cheng  <bin.cheng@arm.com>
+
+	* configure.in: Accept "arm*" target spec instead of just "arm".
+	* configure: Regenerated.
+	* libnosys/configure.in: Likewise.
+	(libc_symbol_prefix): Renamed to libc_cv_symbol_prefix.
+	* libnosys/configure: Regenerated (using autoconf v2.68).
+
+2012-02-21  Jeremy Bennett  <jeremy.bennett@embecosm.com>
+            Alan Lehotsky  <apl@alum.mit.edu>
+            Joern Rennecke  <joern.rennecke@embecosm.com>
+
+	* configure.in: Add Epiphany support.
+	* configure: Regenerate.
+	* epiphany: New directory.
+	* libgloss/README: Add Epiphany entry.
+
+2012-01-23  Stuart Henderson  <stuart.henderson@analog.com>
+
+	* bfin/_exit.c: New file.
+	* bfin/Makefile.in (BOARD_OBJS): Add _exit.o.
+
+2012-01-17  Bin Cheng  <bin.cheng@arm.com>
+
+	* arm/linux-crt0.c: Use ldr instead of adr to get address of
+	_start_thumb.
+
+2011-12-18  Steve Kilbane  <stephen.kilbane@analog.com>
+
+	* bfin/clear_cache_range.c: New file.
+	* bfin/Makefile.in (SIM_OBJS): Add clear_cache_range.o.
+	(BOARD_OBJS): Likewise.
+	(BOARD_BSP): Set to libbfinbsp.a.
+	(${BOARD_BSP}): New rule.
+
+2011-12-15  Konrad Eisele <konrad@gaisler.com>
+
+	* configure.in: Add SPARC LEON support.
+	* configure: Regenerated.
+	* sparc_leon/asm-leon/amba.h, sparc_leon/asm-leon/asmmacro.h,
+	sparc_leon/asm-leon/clock.h, sparc_leon/asm-leon/contextswitch.h,
+	sparc_leon/asm-leon/elfmacro.h, sparc_leon/asm-leon/head.h,
+	sparc_leon/asm-leon/irq.h, sparc_leon/asm-leon/jiffies.h,
+	sparc_leon/asm-leon/lambapp.h, sparc_leon/asm-leon/lambapp_devs.h,
+	sparc_leon/asm-leon/leon.h, sparc_leon/asm-leon/leon3.h,
+	sparc_leon/asm-leon/leonbare_debug.h, sparc_leon/asm-leon/leonbare_kernel.h,
+	sparc_leon/asm-leon/leonbare_kernel_queue.h, sparc_leon/asm-leon/leoncompat.h,
+	sparc_leon/asm-leon/leondbg.h, sparc_leon/asm-leon/leonstack.h,
+	sparc_leon/asm-leon/liblocks.h, sparc_leon/asm-leon/linkage.h,
+	sparc_leon/asm-leon/param.h, sparc_leon/asm-leon/queue.h,
+	sparc_leon/asm-leon/spinlock.h, sparc_leon/asm-leon/stack.h,
+	sparc_leon/asm-leon/time.h, sparc_leon/asm-leon/timer.h,
+	sparc_leon/asm-leon/types.h, sparc_leon/asm-leon/winmacros.h:
+	New file.
+	* sparc_leon/Makefile.in, sparc_leon/_exit.c,
+	sparc_leon/amba.c, sparc_leon/amba_dbg.c,
+	sparc_leon/amba_driver.c, sparc_leon/amba_scan.c,
+	sparc_leon/asm-leon, sparc_leon/bdinit.S,
+	sparc_leon/busscan.S, sparc_leon/cacheA.S,
+	sparc_leon/catch_interrupt.c, sparc_leon/catch_interrupt_mvt.c,
+	sparc_leon/catch_interrupt_pending.c, sparc_leon/catch_interrupt_svt.c,
+	sparc_leon/configure.in,
+	sparc_leon/console.c, sparc_leon/console_dbg.c,
+	sparc_leon/console_init.c, sparc_leon/contextswitch.c,
+	sparc_leon/contextswitch_asm.S, sparc_leon/crt0.S,
+	sparc_leon/crti.S, sparc_leon/crtn.S,
+	sparc_leon/etrap.S, sparc_leon/etrap_fast.S,
+	sparc_leon/fpu.S, sparc_leon/gettimeofday.c,
+	sparc_leon/initcalls.c, sparc_leon/io.c,
+	sparc_leon/irqinstall.S, sparc_leon/irqtrap.S,
+	sparc_leon/irqtrap_fast.S, sparc_leon/jiffies.c,
+	sparc_leon/kernel.c, sparc_leon/kernel_context.S,
+	sparc_leon/kernel_debug.c, sparc_leon/kernel_debug_var.c,
+	sparc_leon/kernel_mm.c, sparc_leon/kernel_mutex.c,
+	sparc_leon/kernel_queue.c, sparc_leon/kernel_sched.c,
+	sparc_leon/kernel_thread.c, sparc_leon/lcpuinit.S,
+	sparc_leon/locore.S, sparc_leon/locore_atexit.c,
+	sparc_leon/locore_clean.S, sparc_leon/locore_mvt.S,
+	sparc_leon/locore_mvt_reset.S, sparc_leon/locore_svt.S,
+	sparc_leon/locore_svt_reset.S, sparc_leon/locore_svtdisp.S,
+	sparc_leon/locore_var.S, sparc_leon/locore_var_svt.S,
+	sparc_leon/mmu_asm.S, sparc_leon/mutex.c,
+	sparc_leon/nocache.S, sparc_leon/pnpinit.c,
+	sparc_leon/pnpinit_malloc.c, sparc_leon/pnpinit_simple.c,
+	sparc_leon/regwin.S, sparc_leon/regwin_patch.c,
+	sparc_leon/regwin_slow.S, sparc_leon/regwinflush.S,
+	sparc_leon/rtc.c, sparc_leon/rtrap.S,
+	sparc_leon/rtrap_fast.S, sparc_leon/stop.S,
+	sparc_leon/timer.c, sparc_leon/times.c:
+	New file
+	* sparc_leon/configure: Regenerate
+
+2011-12-13  Richard Earnshaw  <rearnsha@arm.com>
+            Thomas Klein  <th.r.klein@web.de>
+
+	* arm/crt0.S: Manually set the target architecture
+	when compiling for Thumb1 on EABI targets.
+	Avoid v6-only Thumb-1 MOV instruction.
+
+2011-11-28  DJ Delorie  <dj@redhat.com>
+
+	* configure.in: Add rl78.
+	* configure: Regenerate.
+	* rl78: New directory
+
+2011-11-08  Mike Frysinger  <vapier@gentoo.org>
+
+	* libnosys/Makefile.in (install): Use INSTALL_DATA.
+
+2011-10-07  Nick Clifton  <nickc@redhat.com>
+
+	* rx/crt0.S: Initialise the PID address register.
+	(__pid_base): Define weakly.
+
+2011-09-29  Matthew Gretton-Dann  <matthew.gretton-dann@arm.com>
+
+	* arm/crt0.s: Support 0 heap base response from HeapInfo syscall.
+
+2011-09-29  Bin Cheng  <bin.cheng@arm.com>
+
+	* arm/arm.h (HAVE_CALL_INDIRECT): Define.
+        * arm/crt0.S (indirect_call): New macro.  Encodes indirect
+	function calls.  Does not use blx for pre-armv5 targets.
+
+2011-08-19  Nick Clifton  <nickc@redhat.com>
+
+	* iq2000/sim.ld (.gcc_except_table): Include .gcc_except_table.foo
+	sections as well.
+
+2011-08-08  Mike Stump <mikestump@comcast.net>
+
+	* Makefile.in: Make stmp-bsp and install consistent with
+	subdir_do target with regards to error handling.
+
+2011-07-13  Bin Cheng <bin.cheng@arm.com>
+
+	* arm/crt0.S: Support armv6-m processors in libgloss.
+	* arm/swi.h: Likewise.
+	* arm/trap.S: Likewise.
+	* arm/redboot-crt0.S: Likewise.
+	* arm/linux-crt0.c: Likewise.
+	* arm/arm.h: New.
+
+2011-07-01  Mike Frysinger  <vapier@gentoo.org>
+
+	* bfin/syscalls.c (_getpid): Call do_syscall with func argument n and
+	return the result.
+	(_fstat): Delete stub body.  Add block array and assign file/st to it.
+	Call do_syscall with result.
+	(_stat): Delete stub body.  Add block array and assign fname/st to
+	it.  Call do_syscall with result.
+	(_link): Change func arguments to accept two strings.  Add block array
+	and assign existing/new to it.  Call do_syscall with result.
+	(_unlink): Change func arguments to accept a string.  Call do_syscall
+	with new argument.
+
+2011-07-01  Mike Frysinger  <vapier@gentoo.org>
+
+	* bfin/syscalls.c (_lseek): Change 3rd arg name to whence.  Increase
+	block array to 3 elements.  Set 3rd element to whence.
+
+2011-06-29  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* arm/Makefile.in: Add $CFLAGS to compile commands for specified .o targets.
+
+2011-06-22  Mike Frysinger  <vapier@gentoo.org>
+
+	* bfin/syscalls.c (do_syscall): Delete local variable definitions.
+	Declare result, result2, errcode local ints.  Delete asm inputs
+	and outputs.  Set output constraints to q0/result, q1/result2, and
+	q2/errcode.  Set input constraints to qA/reason and q0/arg.  Set
+	errno to errcode.
+
+2011-06-21  Mike Frysinger  <vapier@gentoo.org>
+
+	* bfin/syscalls.c: Trim trailing whitespace.
+	* bfin/crt0.S: Likewise.
+
+2011-06-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in: Don't handle strongarm, ep9312 and xscale target
+	names.
+	* configure: Regenerate.
+	* libnosys/configure.in: Don't handle strongarm and thumb target
+	names.
+	* libnosys/configure: Regenerate.
+
+2011-05-27  Nick Clifton  <nickc@redhat.com>
+
+	* v8500/sbrk.c (_sbrk): Tidy code.
+	Base start of heap on the "heap_start" symbol.
+
+2011-03-26  Mike Frysinger  <vapier@gentoo.org>
+
+	* bfin/include/builtins.h (__builtin_raise): Change constraint to n.
+	(__builtin_excpt): Likewise.
+
+2011-03-26  Mike Frysinger  <vapier@gentoo.org>
+
+	* bfin/Makefile.in (install-sim): Exit when install fails.
+	(install-board): Likewise.
+
+2011-03-24  Nick Clifton  <nickc@redhat.com>
+
+	* xstormy16/crt0.s (_hwint): Fix .size directive.
+
+	* frv/crt0.S (__frv_fix_usrptrs): Fix .size directive.
+
+2011-03-21  Kevin Buettner  <kevinb@redhat.com>
+
+	* v850/sys/syscall.h (SYS_rename): Define.
+
+2011-01-10  Mike Frysinger  <vapier@gentoo.org>
+
+	* Makefile.in (stmp-bsp): Exit when subdirs fail.
+	(install): Likewise.
+
 2010-12-02  Jayant Sonar  jayant.sonar@kpitcummins.com
 	    Kaushik Phatak  kaushik.phatak@kpitcummins.com
 
