@@ -204,18 +204,18 @@ System calls
 |wait            | hixs_wait          |      |
 |write           | hixs_write         |      |
 
-*Foot-notes for the table above:*
-1)	Newlib does not depend on this function, but either gcc does, or it's
+*Foot-notes for the table above:*<br>
+1.	Newlib does not depend on this function, but either gcc does, or it's
 	provided for your convenience.
-2)	Newlib provides a stubbed and non-functional version of this function.
+2.	Newlib provides a stubbed and non-functional version of this function.
 	For HIXS to be able to over-load fcntl, HAVE_FCNTL must be defined 
 	when *Newlib* is built (this is done internally when you build *Newlib* 
 	for HIXS - i.e. you don't do this yourself).
-3)	The list created by the command above will produce the name
+3.	The list created by the command above will produce the name
 	'gettod', but the function is really called 'gettimeofday'.
-4)	This function is mistakenly not in the syscalls directory. Finding 
+4.	This function is mistakenly not in the syscalls directory. Finding 
 	out that *Newlib* depends upon it can only be done by trial-and-error.
-5)	ANSI states last argument(s) are optional but *Newlib* headers has a 
+5.	ANSI states last argument(s) are optional but *Newlib* headers has a 
 	fixed number of arguments. Always call this function according to
 	*Newlib* definition (i.e. with all the arguments mentioned/required).
 
