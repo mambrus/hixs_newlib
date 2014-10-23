@@ -929,6 +929,10 @@ case "${target}" in
     ;;
   *-*-netware*)
     ;;
+  *-hixs-*)
+    echo "=== >>>> HIXS <<<< ==============================="
+    noconfigdirs="$noconfigdirs target-libgloss ${libgcj}"
+    ;;
   *-*-rtems*)
     noconfigdirs="$noconfigdirs target-libgloss"
     ;;
